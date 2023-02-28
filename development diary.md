@@ -1,5 +1,4 @@
-# Development Notes
-This is a collection of notes and considerations for the development of the project.
+This is a collection of notes and considerations that were made during the development of the project.
 
 <br>
 
