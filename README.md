@@ -39,7 +39,7 @@ cd notionSnapshot
 ### 3. Install dependencies
 This Python project uses [Poetry](https://python-poetry.org/) for dependency management. To install the dependencies install Poetry and then run:
 
-```bash
+```
 poetry install --sync
 ```
 
@@ -53,7 +53,7 @@ Use the `-h` or `--help` flag to see all possible arguments.
 Replace the URL with the one you generated in the first step.
 
 _Unix:_
-```bash
+```
 # if you are running Ubuntu in WSL, you must additionally install Chrome like so
 sudo apt update && sudo apt upgrade -y
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -65,7 +65,7 @@ python3 notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Exampl
 ```
 
 _Windows:_
-```powershell
+```
 py notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
 ```
 
