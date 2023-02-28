@@ -54,8 +54,8 @@ class ArgParser:
         url = urllib.parse.urlparse(url_str)
         if url.scheme != "https":
             raise argparse.ArgumentTypeError("url doesn't start with https://")
-        if not ((url.netloc == "www.notion.so") and (url.netloc.endswith(".notion.site"))):
-            raise argparse.ArgumentTypeError("url not missing 'notion.site' domain)")
+        if not url.netloc.endswith(".notion.site"):
+            raise argparse.ArgumentTypeError("url is missing 'notion.site' domain)")
         if not url.path.startswith("/"):
             raise argparse.ArgumentTypeError("url doesn't contain an id")
         if url.fragment:
