@@ -8,7 +8,7 @@
 
 ```
 
-Export your Notion pages as HTML files - that are styled almost exactly like the original pages.
+Export your Notion pages as HTML files - that look great.
 
 <br>
 
