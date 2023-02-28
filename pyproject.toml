@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "notionsnapshot"
+version = "0.1.0"
+description = ""
+authors = [
+  "Yahya Jabary <jabaryyahya@gmail.com>",
+  "Thomas Biedermann <40736712+ThomasBiede@users.noreply.github.com>"
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+argparse = "^1.4.0"
+webdriver-manager = "^3.8.5"
+bs4 = "^0.0.1"
+black = "^23.1.0"
+cssutils = "^2.6.0"
+selenium = "^4.8.2"
+html5lib = "^1.1"
+termcolor = "^2.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 200
