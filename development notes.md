@@ -38,7 +38,7 @@ But we managed to find a way to install Selenium with `pip` by using the `webdri
 There are already a few tools that do something very similar to what we want to do. We should try to build on top of these tools instead of reinventing the wheel.
 
 - Loconotion: https://github.com/leoncvlt/loconotion/
-- Fruition: https://github.com/stephenou/fruitionsite/
+- Fruition: https://github.com/stephenou/fruitionsite/ (this one inspired locotion)
 
 I've tried all available tools that I could find and I've found that Loconotion mimics the original styling the best. But it is not actively maintained and it does not support all features (e.g. file attachments).
 
