@@ -20,6 +20,7 @@ Original page              |  Export through Notion | **✨NotionSnapshot✨**
 
 <br><br><br>
 
+# How to use
 ### 1. Make a publically accessible page
 Assuming you already have a [www.notion.so](https://www.notion.so/) account, you can make your pages publicly accessible by clicking on the `Share` button in the top right corner of the page and toggling the `Share to web` button.
 
@@ -68,12 +69,16 @@ _Windows:_
 py notionsnapshot https://www.notion.so/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
 ```
 
-<br>
-
-### 5. Enjoy
 The exported HTML file will be saved in the `snapshots` folder.
 
-A big thank you to:
+<br><br><br>
 
-- Leonardo Cavaletti and his team for their fantastic work on the (Loconotion)[https://github.com/leoncvlt] project, which provided the foundation for this project.
-- All the wonderful individuals who have contributed, reported bugs, and made feature requests, helping to make this project a success.
+# Thank you
+I hope you enjoy using this project as much as we enjoyed making it.
+There are a lot of people to thank for this project, so here's a list of everyone who deserves a big thank you:
+
+- [Leonardo Cavaletti](mailto:impeto.blu@gmail.com) and his team for their fantastic work on the (Loconotion)[https://github.com/leoncvlt] project, which provided the foundation for this one.
+- All the wonderful individual contributors, especially:
+  - [stefnotch](https://github.com/stefnotch) the front-end sensei
+- All the users that reported bugs, and made feature requests, helping to make this project a success
+- Notion for making such a terrible HTML export feature, to begin with, that we had to make this project in the first place
