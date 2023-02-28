@@ -81,4 +81,3 @@ There are a lot of people to thank for this project, so here's a list of everyon
 - All the wonderful individual contributors, especially:
   - [stefnotch](https://github.com/stefnotch) the front-end sensei
 - All the users that reported bugs, and made feature requests, helping to make this project a success
-- Notion for making such a terrible HTML export feature, to begin with, that we had to make this project in the first place
