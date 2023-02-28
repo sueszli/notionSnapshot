@@ -61,12 +61,12 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt --fix-broken install
 rm -rf google-chrome-stable_current_amd64.deb
 
-python3 notionsnapshot https://www.notion.so/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
+python3 notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
 ```
 
 _Windows:_
 ```powershell
-py notionsnapshot https://www.notion.so/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
+py notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
 ```
 
 The exported HTML file will be saved in the `snapshots` folder.
