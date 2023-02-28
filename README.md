@@ -5,10 +5,10 @@
  / /|  / /_/ / /_/ / /_/ / / / /   ___/ / / / / /_/ / /_/ (__  ) / / / /_/ / /_  
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/  
                                                     /_/     
-                                                    
-       --- Export your Notion pages as HTML files, that look great! ---
 
 ```
+
+Export your Notion pages as HTML files - that are styled almost exactly like the original pages.
 
 <br>
 
