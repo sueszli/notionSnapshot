@@ -59,6 +59,6 @@ Here are the things that I think we should do differently:
 
 ## Using the Notion.so API
 
-Next I will:
+Next I will research:
 - the features of the Notion.so API (how much of the exported HTML pages can we actually reuse?)
 - existing Notion.so API libraries
