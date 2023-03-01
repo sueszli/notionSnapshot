@@ -1,3 +1,7 @@
+/**
+ * Credits to the Loconotion project on Github for providing this script
+ */
+
 /* enables hover effect on buttons */
 div[role="button"]:not(.notion-record-icon):hover {
   background: rgba(55, 53, 47, 0.08);
