@@ -18,13 +18,6 @@ In short: This should be a simple CLI tool that converts Notion.so pages to HTML
 
 <br><br>
 
-## Choosing a language
-JavaScript, Java, Python have the the best web-scraping libraries. Based on our experience, JavaScript and  were easier to write scripting tools.
-
-We decided to use Python because it is the most popular language for data engineering and in general has the best data related eco-system. This means that there will be a larger community of developers to help with the project. It also means that there will be more resources available to help with the project and that the project will be easier to maintain.
-
-<br><br>
-
 ## Choosing a strategy
 There are 3 ways to fetch the content of a Notion.so page:
 
@@ -44,6 +37,13 @@ There are 3 ways to fetch the content of a Notion.so page:
 The third option is the most complicated to implement but it is also the most powerful. It is also the only option that would result in no styling/information loss (which is why we started in the first place). This is why we decided to go with this option.
 
 If files are too large to be scraped, we can use the official Notion.so API to retrieve the data and then use the HTML scraping tool to retrieve the styling - but this is not a priority and would only be necessary for very large pages.
+
+<br><br>
+
+## Choosing a language
+JavaScript, Java, Python have the the best web-scraping libraries. Based on our experience, JavaScript and  were easier to write scripting tools.
+
+We decided to use Python because it is the most popular language for data engineering and in general has the best data related eco-system. This means that there will be a larger community of developers to help with the project. It also means that there will be more resources available to help with the project and that the project will be easier to maintain.
 
 <br><br>
 
