@@ -58,7 +58,7 @@ But we managed to find a way to install Selenium with `pip` by using the `webdri
 
 <br><br>
 
-## Finding the best scraping tool
+## Finding existing tools to build on top of
 There are already a few tools that do something very similar to what we want to do. We should try to build on top of these tools instead of reinventing the wheel.
 
 I did a thorough research (really, I mean like 2 full days) and found the following tools to have the best replication of the original styling:
