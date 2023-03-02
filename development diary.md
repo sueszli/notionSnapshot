@@ -79,4 +79,3 @@ The is how we can improve on it:
 
 - _making the tool more powerful and reliable:_
   - supporting more blocks (i.e. file attachments, more types of embeds, etc.)
-  - using the official Notion.so API to retrieve some of the data (see below)
