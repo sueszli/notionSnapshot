@@ -27,16 +27,15 @@ There are 3 ways to fetch the content of a Notion.so page:
 2. Using the official Notion.so API
   As done in [notion2html](https://github.com/MerkulovDaniil/notion4ever/tree/main/notion4ever).
   - Would result in some styling/information loss.
-  - Kind of pointless, because it does not have any advantages over the default HTML export tool.
-  - The user would need to generate a token / API key and it would be significantly more complicated to set up for each page.
+  - The user would need to generate a token / API key and it would be significantly more complicated to set up for each page. 
+  - Kind of pointless, because it does not have any advantages over the default HTML export tool. <br>
+  It would only be useful in combination to scraping, if some files are so large that the web driver crashes.
 
 3. Scraping the HTML files directly from the browser
   - Would result in no styling/information loss at all.
   - Would be the most complicated to implement.
 
-The third option is the most complicated to implement but it is also the most powerful. It is also the only option that would result in no styling/information loss (which is why we started in the first place). This is why we decided to go with this option.
-
-If files are too large to be scraped, we can use the official Notion.so API to retrieve the data and then use the HTML scraping tool to retrieve the styling - but this is not a priority and would only be necessary for very large pages.
+This means that the best option we really have is to scrape the HTML files directly from the browser although it feels like a very hacky solution.
 
 <br><br>
 
