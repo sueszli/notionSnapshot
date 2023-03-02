@@ -10,6 +10,7 @@ import mimetypes
 import re
 import sys
 import uuid
+import html5lib
 from pathlib import Path
 from typing import List, Tuple
 from selenium import webdriver
