@@ -82,7 +82,7 @@ class DriverInitializer:
         os.environ["WDM_PROGRESS_BAR"] = str(0)
         os.environ["WDM_LOG"] = str(logging.NOTSET)
         chrome_executable = ChromeService(ChromeDriverManager().install())
-        driver = webdriver.Chrome( executable_path= chrome_executable.path, options=opts)
+        driver = webdriver.Chrome(executable_path=chrome_executable.path, options=opts)
         return driver
 
 
