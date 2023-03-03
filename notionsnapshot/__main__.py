@@ -10,7 +10,6 @@ import mimetypes
 import re
 import sys
 import uuid
-import html5lib  # used by bs4
 from pathlib import Path
 from typing import List, Tuple
 from selenium import webdriver
@@ -21,6 +20,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import TimeoutException
+import html5lib  # used by bs4
 from bs4 import BeautifulSoup
 from bs4 import Tag
 import requests
