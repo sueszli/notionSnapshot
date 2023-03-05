@@ -77,6 +77,5 @@ I hope you enjoy using this project as much as we enjoyed making it.
 There are a lot of people to thank for this project, so here's a list of everyone who deserves a big thank you:
 
 - [Leonardo Cavaletti](mailto:impeto.blu@gmail.com) and his team for their fantastic work on the [Loconotion](https://github.com/leoncvlt/loconotion) project, which provided the foundation for this one.
-- All the wonderful individual contributors, especially:
-  - [ThomasBiede](https://github.com/ThomasBiede) for the argument parser that he implemented
+- All the wonderful individual contributors
 - All the users that reported bugs, and made feature requests, helping to make this project a success
