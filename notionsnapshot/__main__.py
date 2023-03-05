@@ -1,5 +1,6 @@
 import logging
 import inspect
+import functools
 import argparse
 import urllib.parse
 import urllib.request
@@ -52,6 +53,7 @@ log = LoggingWrapper.init()
 
 def trace(print_args: bool = True):
     def decorator(func):
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
             entry_content = ""
             if len(args) > 1:
@@ -60,12 +62,42 @@ def trace(print_args: bool = True):
                 entry_content += f"{func.__name__}({', '.join([str(arg) for arg in args[1:]])})"
             else:
                 entry_content += f"{func.__name__}()"
-            log.info(entry_content)
+            log.info(f"{entry_content}")
+            result = func(*args, **kwargs)
+            if print_args:
+                log.info(f"<= {result}")
+            else:
+                log.info(f"<= ")
             return func(*args, **kwargs)
 
         return wrapper
 
     return decorator
+
+
+@trace(False)
+def f3():
+    pass
+
+
+@trace()
+def f2():
+    f3()
+
+
+@trace()
+def f1():
+    f2()
+
+
+@trace()
+def go():
+    f1()
+    f2()
+    f3()
+
+
+go()
 
 
 class ArgParser:
