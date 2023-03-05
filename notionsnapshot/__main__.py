@@ -474,4 +474,5 @@ class Scraper:
 
 
 if __name__ == "__main__":
-    Scraper().run()
+    # Scraper().run()
+    pass
