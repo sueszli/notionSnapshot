@@ -52,7 +52,7 @@ Use the `-h` or `--help` flag to see all possible arguments.
 Replace the URL with the one you generated in the first step.
 
 _Unix:_
-```
+```bash
 # if you are running Ubuntu in WSL, you must additionally install Chrome like so
 sudo apt update && sudo apt upgrade -y
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
@@ -64,7 +64,7 @@ python3 notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Exampl
 ```
 
 _Windows:_
-```
+```bash
 py notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
 ```
 
@@ -77,6 +77,5 @@ I hope you enjoy using this project as much as we enjoyed making it.
 There are a lot of people to thank for this project, so here's a list of everyone who deserves a big thank you:
 
 - [Leonardo Cavaletti](mailto:impeto.blu@gmail.com) and his team for their fantastic work on the [Loconotion](https://github.com/leoncvlt/loconotion) project, which provided the foundation for this one.
-- All the wonderful individual contributors, especially:
-  - [ThomasBiede](https://github.com/ThomasBiede) for the argument parser that he implemented
+- All the wonderful individual contributors
 - All the users that reported bugs, and made feature requests, helping to make this project a success

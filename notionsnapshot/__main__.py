@@ -1,4 +1,5 @@
 import logging
+import inspect
 import argparse
 import urllib.parse
 import urllib.request
@@ -20,6 +21,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.service import Service
 import html5lib  # used by bs4
 from bs4 import BeautifulSoup
 from bs4 import Tag
@@ -30,15 +32,69 @@ cssutils.log.setLevel(logging.CRITICAL)  # type: ignore pylance type error
 os.system("cls" if os.name == "nt" else "clear")
 
 
+### LOGGING EXPERIMENTS ###
+class LoggingWrapper(logging.LoggerAdapter):
+    baseline = len(inspect.stack())
+
+    def process(self, msg, kwargs):
+        indentation_level = len(inspect.stack()) - self.baseline - 3
+        return f"{'+' * indentation_level}{msg}", kwargs
+
+
+logger = LoggingWrapper(logging.getLogger(__name__), {})
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
+
+def f3():
+    logger.info("I am f3")
+
+
+def f2():
+    logger.info("I am f2")
+    f3()
+
+
+def f1():
+    logger.info("I am f1")
+    f2()
+
+
+def go():
+    logger.info("I am go.")
+    f1()
+    f2()
+    f3()
+
+
+f1()
+go()
+
+
+def trace_decorator(func):
+    def wrapper(*args, **kwargs):
+        entry_content = ""
+        if len(args) > 1:
+            entry_content += f"{args[0].__class__.__name__}."
+        entry_content += f"{func.__name__}({', '.join([str(arg) for arg in args[1:]])})"
+        logger.info(entry_content)
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+### LOGGING EXPERIMENTS ###
+
+
 class ArgParser:
-    def get_arguments(self) -> argparse.Namespace:
-        print(f"ArgParser.get_arguments()")
-        args = self._parse_arguments()
-        self._validate_url(args.url)
-        self._validate_timeout(args.timeout)
+    @staticmethod
+    def get_arguments() -> argparse.Namespace:
+        args = ArgParser._parse_arguments()
+        ArgParser._validate_url(args.url)
+        ArgParser._validate_timeout(args.timeout)
         return args
 
-    def _parse_arguments(self) -> argparse.Namespace:
+    @staticmethod
+    def _parse_arguments() -> argparse.Namespace:
         parser = argparse.ArgumentParser()
         parser.add_argument("-b", "--show-browser", help="disable headless mode and show browser window", action="store_true")
         parser.add_argument("-d", "--dark-mode", help="scrape pages in dark mode", action="store_true")
@@ -47,16 +103,18 @@ class ArgParser:
         parser.parse_args()
         return parser.parse_args()
 
-    def _validate_timeout(self, timeout: int) -> None:
+    @staticmethod
+    def _validate_timeout(timeout: int) -> None:
         if timeout < 0:
             raise argparse.ArgumentTypeError("timeout not positive")
 
-    def _validate_url(self, url_str: str) -> None:
+    @staticmethod
+    def _validate_url(url_str: str) -> None:
         url = urllib.parse.urlparse(url_str)
         if url.scheme != "https":
             raise argparse.ArgumentTypeError("url doesn't start with https://")
         if not url.netloc.endswith(".notion.site"):
-            raise argparse.ArgumentTypeError("url is missing 'notion.site' domain)")
+            raise argparse.ArgumentTypeError("url is missing 'notion.site' domain")
         if not url.path.startswith("/"):
             raise argparse.ArgumentTypeError("url doesn't contain an id")
         if url.fragment:
@@ -64,7 +122,8 @@ class ArgParser:
 
 
 class DriverInitializer:
-    def get_driver(self, args: argparse.Namespace) -> webdriver.Chrome:
+    @staticmethod
+    def get_driver(args: argparse.Namespace) -> webdriver.Chrome:
         print(f"DriverInitializer.get_driver()")
         # chose Selenium instead of Playwright for simpler installation with the webdriver_manager package
         # see flags: https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
@@ -81,8 +140,8 @@ class DriverInitializer:
         opts.add_experimental_option("excludeSwitches", ["enable-logging"])
         os.environ["WDM_PROGRESS_BAR"] = str(0)
         os.environ["WDM_LOG"] = str(logging.NOTSET)
-        chrome_executable = ChromeService(ChromeDriverManager().install())
-        driver = webdriver.Chrome(executable_path=chrome_executable.path, options=opts)
+        chrome_executable: Service = ChromeService(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=chrome_executable, options=opts)
         return driver
 
 
@@ -183,8 +242,8 @@ class FileManager:
 
 
 class Scraper:
-    args = ArgParser().get_arguments()
-    driver = DriverInitializer().get_driver(args)
+    args = ArgParser.get_arguments()
+    driver = DriverInitializer.get_driver(args)
     file_manager = FileManager(args)
 
     will_visit = set([args.url])
@@ -452,8 +511,6 @@ class Scraper:
         print("closed browser")
 
 
-# python3 notionsnapshot -b https://www.notion.so/Media-be1a5c3e1c9640a0ab9ba0ba9b67e6a5
-# python3 notionsnapshot -b https://www.notion.so/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
-
 if __name__ == "__main__":
-    Scraper().run()
+    # Scraper().run()
+    pass
