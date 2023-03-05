@@ -1,5 +1,5 @@
 import logging
-import traceback
+import inspect
 import argparse
 import urllib.parse
 import urllib.request
@@ -32,17 +32,42 @@ cssutils.log.setLevel(logging.CRITICAL)  # type: ignore pylance type error
 os.system("cls" if os.name == "nt" else "clear")
 
 
-class CustomAdapter(logging.LoggerAdapter):
+### LOGGING EXPERIMENTS ###
+class LoggingWrapper(logging.LoggerAdapter):
+    baseline = len(inspect.stack())
+
     def process(self, msg, kwargs):
-        indentation_level = len(traceback.extract_stack()) - 6
-        return f"{'-' * indentation_level}{msg}", kwargs
+        indentation_level = len(inspect.stack()) - self.baseline - 3
+        return f"{'+' * indentation_level}{msg}", kwargs
 
 
-logger = CustomAdapter(logging.getLogger(__name__), {})
-logger.setLevel(logging.DEBUG)
-logger.debug("A debug message")
-logger.error("An error message")
-logger.info("An info message")
+logger = LoggingWrapper(logging.getLogger(__name__), {})
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
+
+def f3():
+    logger.info("I am f3")
+
+
+def f2():
+    logger.info("I am f2")
+    f3()
+
+
+def f1():
+    logger.info("I am f1")
+    f2()
+
+
+def go():
+    logger.info("I am go.")
+    f1()
+    f2()
+    f3()
+
+
+f1()
+go()
 
 
 def trace_decorator(func):
@@ -51,10 +76,13 @@ def trace_decorator(func):
         if len(args) > 1:
             entry_content += f"{args[0].__class__.__name__}."
         entry_content += f"{func.__name__}({', '.join([str(arg) for arg in args[1:]])})"
-        print(entry_content)
+        logger.info(entry_content)
         return func(*args, **kwargs)
 
     return wrapper
+
+
+### LOGGING EXPERIMENTS ###
 
 
 class ArgParser:
@@ -440,4 +468,5 @@ class Scraper:
 
 
 if __name__ == "__main__":
-    Scraper().run()
+    # Scraper().run()
+    pass

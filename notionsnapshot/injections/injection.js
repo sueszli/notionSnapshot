@@ -1,7 +1,3 @@
-/**
- * Credits to the Loconotion project on Github for providing this script
- */
-
 // re-implement toggle blocks
 const showToggle = (content, arrow) => {
   arrow.style.transform = "rotateZ(180deg)";
