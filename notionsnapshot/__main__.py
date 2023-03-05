@@ -28,39 +28,57 @@ from bs4 import Tag
 import requests
 import cssutils
 
-cssutils.log.setLevel(logging.CRITICAL)  # type: ignore pylance type error
-os.system("cls" if os.name == "nt" else "clear")
-
 
 ### LOGGING EXPERIMENTS ###
 class LoggingWrapper(logging.LoggerAdapter):
     baseline = len(inspect.stack())
 
+    @staticmethod
+    def init():
+        cssutils.log.setLevel(logging.CRITICAL)  # type: ignore pylance type error
+        os.system("cls" if os.name == "nt" else "clear")
+        logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
+        return LoggingWrapper(logging.getLogger(__name__), {})
+
     def process(self, msg, kwargs):
+        # override the default logging behavior to add indentation
         indentation_level = len(inspect.stack()) - self.baseline - 3
-        return f"{'+' * indentation_level}{msg}", kwargs
+        tab = " " * 3
+        return f"{tab * indentation_level}{msg}", kwargs
 
 
-logger = LoggingWrapper(logging.getLogger(__name__), {})
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+log = LoggingWrapper.init()
 
 
+def trace(func):
+    def wrapper(*args, **kwargs):
+        entry_content = ""
+        if len(args) > 1:
+            entry_content += f"{args[0].__class__.__name__}."
+        entry_content += f"{func.__name__}({', '.join([str(arg) for arg in args[1:]])})"
+        log.info(entry_content)
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
+@trace
 def f3():
-    logger.info("I am f3")
+    pass
 
 
+@trace
 def f2():
-    logger.info("I am f2")
     f3()
 
 
+@trace
 def f1():
-    logger.info("I am f1")
     f2()
 
 
+@trace
 def go():
-    logger.info("I am go.")
     f1()
     f2()
     f3()
@@ -70,22 +88,8 @@ f1()
 go()
 
 
-def trace_decorator(func):
-    def wrapper(*args, **kwargs):
-        entry_content = ""
-        if len(args) > 1:
-            entry_content += f"{args[0].__class__.__name__}."
-        entry_content += f"{func.__name__}({', '.join([str(arg) for arg in args[1:]])})"
-        logger.info(entry_content)
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
-### LOGGING EXPERIMENTS ###
-
-
 class ArgParser:
+    @trace
     @staticmethod
     def get_arguments() -> argparse.Namespace:
         args = ArgParser._parse_arguments()
