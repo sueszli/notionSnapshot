@@ -161,7 +161,7 @@ class FileManager:
         os.makedirs(FileManager.output_dir, exist_ok=True)
         os.makedirs(FileManager.output_dir + "/assets", exist_ok=True)
 
-    def download_asset(self, url: str, filename: str = "") -> Path:
+    def download_asset(self, url: str, filename: str = "") -> str:
         if not filename:
             parsed_url = urllib.parse.urlparse(url)
             queryless_url = parsed_url.netloc + parsed_url.path
@@ -174,7 +174,7 @@ class FileManager:
 
         matching_file = glob.glob(FileManager.output_dir + "/assets/" + filename + ".*")
         if matching_file:
-            return Path(matching_file[0]).relative_to(FileManager.output_dir)
+            return str(Path(matching_file[0]).relative_to(FileManager.output_dir)).replace("\\", "/")
 
         destination = Path(FileManager.output_dir) / "assets" / filename
         try:
@@ -199,30 +199,23 @@ class FileManager:
 
             with open(destination, "wb") as f:
                 f.write(response.content)
-            return destination.relative_to(FileManager.output_dir)
+            return str(destination.relative_to(FileManager.output_dir)).replace("\\", "/")
 
         except Exception as error:
             print(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead", file=sys.stderr)
             print(error, file=sys.stderr)
-            return Path(url)
+            return str(Path(url)).replace("\\", "/")
 
     def copy_injections_to_assets(self) -> Tuple[str, str]:
         print("\tFileManager.copy_injections_to_assets()")
         injection_dir = Path(__file__).parent / "injections"
         css_out = Path(FileManager.output_dir) / "assets" / "injection.css"
         js_out = Path(FileManager.output_dir) / "assets" / "injection.js"
-        print(f"CSS_OUT: {css_out}  JS_OUT: {js_out}")
         shutil.copy(injection_dir / "injection.js", js_out)
         shutil.copy(injection_dir / "injection.css", css_out)
-
-        # Path Fix
-        relative_css_out = str(css_out.relative_to(FileManager.output_dir)).replace("\\","/")
-        relative_js_out = str(js_out.relative_to(FileManager.output_dir)).replace("\\","/")
-
-       # print(f"RELATIVE CSS: {relative_css_out}")
-       # print(f"RELATIVE JS: {relative_js_out}")
-
-        return relative_css_out,relative_js_out
+        relative_css_out = str(css_out.relative_to(FileManager.output_dir)).replace("\\", "/")
+        relative_js_out = str(js_out.relative_to(FileManager.output_dir)).replace("\\", "/")
+        return relative_css_out, relative_js_out
 
     def save_page(self, soup: BeautifulSoup, url: str) -> None:
         print(f"\tFileManager.save_page({url})")
@@ -252,7 +245,6 @@ class Scraper:
     def run(self) -> None:
         print(f"Scraper.run()")
         while Scraper.will_visit:
-            #self._pages_to_visit(Scraper.will_visit)
             url = Scraper.will_visit.pop()
 
             self._load_page(url)
@@ -269,16 +261,7 @@ class Scraper:
             Scraper.visited.add(url)
 
             [Scraper.will_visit.add(page) for page in subpage_urls if page not in Scraper.visited]
-            #self._pages_to_visit(Scraper.will_visit)
 
-    
-    def _pages_to_visit(self,pages:set | list):
-        print("Pages currently to be looked at: ")
-        for page in pages: 
-            print(page)
-    
-
-                
     def _load_page(self, url: str) -> None:
         print(f"Scraper._load_page({url})")
         prev_page = ""
@@ -380,10 +363,7 @@ class Scraper:
                 img_src = img["src"]
                 if is_notion_asset:
                     img_src = f'https://www.notion.so{img["src"]}'
-                src_link = Scraper.file_manager.download_asset(img_src)
-
-                # Path fix
-                img["src"] = str(src_link).replace("\\","/")
+                img["src"] = Scraper.file_manager.download_asset(img_src)
             elif is_notion_asset:
                 img["src"] = f'https://www.notion.so{img["src"]}'
 
@@ -393,10 +373,10 @@ class Scraper:
             spritesheet = style["background"]
             spritesheet_url = spritesheet[spritesheet.find("(") + 1 : spritesheet.find(")")]
             download_path = Scraper.file_manager.download_asset(f"https://www.notion.so{spritesheet_url}")
-            
+
             # Path fix
-            download_path = str(download_path).replace("\\","/")
-            
+            download_path = str(download_path).replace("\\", "/")
+
             style["background"] = spritesheet.replace(spritesheet_url, download_path)
             img["style"] = style.cssText
 
@@ -406,24 +386,19 @@ class Scraper:
         stylesheets = [link for link in soup.findAll("link", rel="stylesheet") if is_stylesheet(link)]
         for link in stylesheets:
             download_path = Scraper.file_manager.download_asset(f'https://www.notion.so{link["href"]}')
-            with open(FileManager.output_dir / download_path, "rb+") as f:
+            with open(f"{FileManager.output_dir}/{download_path}", "rb+") as f:
                 stylesheet = cssutils.parseString(f.read())
                 for rule in stylesheet.cssRules:
                     if rule.type == cssutils.css.CSSRule.FONT_FACE_RULE:
                         font_file = rule.style["src"].split("url(")[-1].split(")")[0]
                         parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
                         font_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
-                        download_path2 = Scraper.file_manager.download_asset(font_url, Path(font_file).name)
-
-                        # Path Fix
-                        download_path2 = str(download_path2).replace("\\","/")
-                        rule.style["src"] = f"url({download_path2})"
+                        rule.style["src"] = f"url({Scraper.file_manager.download_asset(font_url, Path(font_file).name)})"
                 f.seek(0)
                 f.truncate()
                 f.write(stylesheet.cssText)
-                # Path Fix
-                download_path = str(download_path).replace("\\","/")
-            
+                download_path = str(download_path).replace("\\", "/")
+
             link["href"] = download_path
 
     def _insert_injections(self, soup: BeautifulSoup) -> None:
@@ -443,8 +418,6 @@ class Scraper:
                 toggle_content.attrs["notionsnapshot-toggle-id"] = toggle_button.attrs["notionsnapshot-toggle-id"] = toggle_id
 
         css_path, js_path = Scraper.file_manager.copy_injections_to_assets()
-
-
 
         assert soup.head is not None
         soup.head.insert(-1, soup.new_tag("link", rel="stylesheet", href=str(css_path)))
@@ -470,22 +443,16 @@ class Scraper:
         print("Scraper._link_to_subpages()")
         subpage_urls = []
         domain = f'{Scraper.args.url.split("notion.site")[0]}notion.site'
-        #print(domain)
-        # Locate all links ("a" elements) in the document
         for a in soup.find_all("a", href=True):
             url = a["href"]
             if url.startswith("/"):
                 # if url is a relative path, add the domain to the beginning
                 url = f'{domain}/{a["href"].split("/")[len(a["href"].split("/"))-1]}'
             if not url.startswith(domain):
-                # if the url isnt the domain (notion.page) we don't want it 
+                # if the url isn't from the notion.site domain, ignore
                 continue
-
-            #print(f"URL OF PAGE: {url}")
-
             is_scroller = len(a.find_parents("div", class_="notion-scroller")) > 0
             if is_scroller:
-                #print("ITS A SCROLLER")
                 del a["href"]
                 a.name = "span"
                 children = [child for child in ([a] + a.find_all()) if child.has_attr("style")]
@@ -494,7 +461,6 @@ class Scraper:
                     style["cursor"] = "default"
                     child["style"] = style.cssText
             else:
-                #print("ITS NOT A SCROLLER")
                 if "#" in url:
                     arr = url.split("#")
                     url = arr[0]
@@ -502,7 +468,6 @@ class Scraper:
                     a["class"] = a.get("class", []) + ["notionsnapshot-anchor-link"]
                 else:
                     a["href"] = Scraper.file_manager.get_path_from_url(url)
-                #print(f"THIS IS A URL: {url}")    
                 subpage_urls.append(url)
         return subpage_urls
 
@@ -512,5 +477,4 @@ class Scraper:
 
 
 if __name__ == "__main__":
-    # Scraper().run()
-    pass
+    Scraper().run()
