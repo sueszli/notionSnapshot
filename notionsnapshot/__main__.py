@@ -147,14 +147,23 @@ class FileManager:
             print(error, file=sys.stderr)
             return Path(url)
 
-    def copy_injections_to_assets(self) -> Tuple[Path, Path]:
+    def copy_injections_to_assets(self) -> Tuple[str, str]:
         print("\tFileManager.copy_injections_to_assets()")
         injection_dir = Path(__file__).parent / "injections"
         css_out = Path(FileManager.output_dir) / "assets" / "injection.css"
         js_out = Path(FileManager.output_dir) / "assets" / "injection.js"
+        print(f"CSS_OUT: {css_out}  JS_OUT: {js_out}")
         shutil.copy(injection_dir / "injection.js", js_out)
         shutil.copy(injection_dir / "injection.css", css_out)
-        return js_out.relative_to(FileManager.output_dir), css_out.relative_to(FileManager.output_dir)
+
+        # Path Fix
+        relative_css_out = str(css_out.relative_to(FileManager.output_dir)).replace("\\","/")
+        relative_js_out = str(js_out.relative_to(FileManager.output_dir)).replace("\\","/")
+
+       # print(f"RELATIVE CSS: {relative_css_out}")
+       # print(f"RELATIVE JS: {relative_js_out}")
+
+        return relative_css_out,relative_js_out
 
     def save_page(self, soup: BeautifulSoup, url: str) -> None:
         print(f"\tFileManager.save_page({url})")
@@ -312,7 +321,10 @@ class Scraper:
                 img_src = img["src"]
                 if is_notion_asset:
                     img_src = f'https://www.notion.so{img["src"]}'
-                img["src"] = Scraper.file_manager.download_asset(img_src)
+                src_link = Scraper.file_manager.download_asset(img_src)
+
+                # Path fix
+                img["src"] = str(src_link).replace("\\","/")
             elif is_notion_asset:
                 img["src"] = f'https://www.notion.so{img["src"]}'
 
@@ -322,7 +334,10 @@ class Scraper:
             spritesheet = style["background"]
             spritesheet_url = spritesheet[spritesheet.find("(") + 1 : spritesheet.find(")")]
             download_path = Scraper.file_manager.download_asset(f"https://www.notion.so{spritesheet_url}")
+            
+            # Path fix
             download_path = str(download_path).replace("\\","/")
+            
             style["background"] = spritesheet.replace(spritesheet_url, download_path)
             img["style"] = style.cssText
 
@@ -340,11 +355,17 @@ class Scraper:
                         parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
                         font_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
                         download_path2 = Scraper.file_manager.download_asset(font_url, Path(font_file).name)
+
+                        # Path Fix
+                        download_path2 = str(download_path2).replace("\\","/")
                         rule.style["src"] = f"url({download_path2})"
                 f.seek(0)
                 f.truncate()
                 f.write(stylesheet.cssText)
-            link["href"] = str(download_path)
+                # Path Fix
+                download_path = str(download_path).replace("\\","/")
+            
+            link["href"] = download_path
 
     def _insert_injections(self, soup: BeautifulSoup) -> None:
         print("Scraper._insert_injections()")
@@ -363,6 +384,9 @@ class Scraper:
                 toggle_content.attrs["notionsnapshot-toggle-id"] = toggle_button.attrs["notionsnapshot-toggle-id"] = toggle_id
 
         css_path, js_path = Scraper.file_manager.copy_injections_to_assets()
+
+
+
         assert soup.head is not None
         soup.head.insert(-1, soup.new_tag("link", rel="stylesheet", href=str(css_path)))
         assert soup.body is not None
