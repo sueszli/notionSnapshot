@@ -184,6 +184,7 @@ class Scraper:
     def run(self) -> None:
         print(f"Scraper.run()")
         while Scraper.will_visit:
+            #self._pages_to_visit(Scraper.will_visit)
             url = Scraper.will_visit.pop()
 
             self._load_page(url)
@@ -198,8 +199,18 @@ class Scraper:
 
             Scraper.file_manager.save_page(soup, url)
             Scraper.visited.add(url)
-            [Scraper.will_visit.add(page) for page in subpage_urls if page not in Scraper.visited]
 
+            [Scraper.will_visit.add(page) for page in subpage_urls if page not in Scraper.visited]
+            #self._pages_to_visit(Scraper.will_visit)
+
+    
+    def _pages_to_visit(self,pages:set | list):
+        print("Pages currently to be looked at: ")
+        for page in pages: 
+            print(page)
+    
+
+                
     def _load_page(self, url: str) -> None:
         print(f"Scraper._load_page({url})")
         prev_page = ""
@@ -311,7 +322,8 @@ class Scraper:
             spritesheet = style["background"]
             spritesheet_url = spritesheet[spritesheet.find("(") + 1 : spritesheet.find(")")]
             download_path = Scraper.file_manager.download_asset(f"https://www.notion.so{spritesheet_url}")
-            style["background"] = spritesheet.replace(spritesheet_url, str(download_path))
+            download_path = str(download_path).replace("\\","/")
+            style["background"] = spritesheet.replace(spritesheet_url, download_path)
             img["style"] = style.cssText
 
     def _download_stylesheets(self, soup: BeautifulSoup) -> None:
@@ -375,16 +387,22 @@ class Scraper:
         print("Scraper._link_to_subpages()")
         subpage_urls = []
         domain = f'{Scraper.args.url.split("notion.site")[0]}notion.site'
-
+        #print(domain)
+        # Locate all links ("a" elements) in the document
         for a in soup.find_all("a", href=True):
             url = a["href"]
             if url.startswith("/"):
+                # if url is a relative path, add the domain to the beginning
                 url = f'{domain}/{a["href"].split("/")[len(a["href"].split("/"))-1]}'
             if not url.startswith(domain):
+                # if the url isnt the domain (notion.page) we don't want it 
                 continue
+
+            #print(f"URL OF PAGE: {url}")
 
             is_scroller = len(a.find_parents("div", class_="notion-scroller")) > 0
             if is_scroller:
+                #print("ITS A SCROLLER")
                 del a["href"]
                 a.name = "span"
                 children = [child for child in ([a] + a.find_all()) if child.has_attr("style")]
@@ -393,6 +411,7 @@ class Scraper:
                     style["cursor"] = "default"
                     child["style"] = style.cssText
             else:
+                #print("ITS NOT A SCROLLER")
                 if "#" in url:
                     arr = url.split("#")
                     url = arr[0]
@@ -400,6 +419,7 @@ class Scraper:
                     a["class"] = a.get("class", []) + ["notionsnapshot-anchor-link"]
                 else:
                     a["href"] = Scraper.file_manager.get_path_from_url(url)
+                #print(f"THIS IS A URL: {url}")    
                 subpage_urls.append(url)
         return subpage_urls
 
