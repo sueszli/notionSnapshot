@@ -373,10 +373,6 @@ class Scraper:
             spritesheet = style["background"]
             spritesheet_url = spritesheet[spritesheet.find("(") + 1 : spritesheet.find(")")]
             download_path = Scraper.file_manager.download_asset(f"https://www.notion.so{spritesheet_url}")
-
-            # Path fix
-            download_path = str(download_path).replace("\\", "/")
-
             style["background"] = spritesheet.replace(spritesheet_url, download_path)
             img["style"] = style.cssText
 
@@ -393,7 +389,8 @@ class Scraper:
                         font_file = rule.style["src"].split("url(")[-1].split(")")[0]
                         parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
                         font_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
-                        rule.style["src"] = f"url({Scraper.file_manager.download_asset(font_url, Path(font_file).name)})"
+                        download_path2 = Scraper.file_manager.download_asset(font_url, Path(font_file).name)
+                        rule.style["src"] = f"url({download_path2})"
                 f.seek(0)
                 f.truncate()
                 f.write(stylesheet.cssText)
