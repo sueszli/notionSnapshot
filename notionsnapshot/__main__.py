@@ -31,28 +31,21 @@ import cssutils
 cssutils.log.setLevel(logging.CRITICAL)  # type: ignore pylance type error
 os.system("cls" if os.name == "nt" else "clear")
 
-"""
-TODO:
-    - create custom logger with correct indentation and colors for each level
-    - add logging to all functions with trace decorator
-"""
-
 
 class CustomAdapter(logging.LoggerAdapter):
     def process(self, msg, kwargs):
-        indentation_level = len(traceback.extract_stack())
-        return "{i} [{m}]".format(i="." * indentation_level, m=msg)
+        indentation_level = len(traceback.extract_stack()) - 6
+        return f"{'-' * indentation_level}{msg}", kwargs
 
 
 logger = CustomAdapter(logging.getLogger(__name__), {})
-# set lowest possible level and show everything
 logger.setLevel(logging.DEBUG)
 logger.debug("A debug message")
 logger.error("An error message")
 logger.info("An info message")
 
 
-def trace(func):
+def trace_decorator(func):
     def wrapper(*args, **kwargs):
         entry_content = ""
         if len(args) > 1:
