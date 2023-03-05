@@ -89,7 +89,6 @@ go()
 
 
 class ArgParser:
-    @trace
     @staticmethod
     def get_arguments() -> argparse.Namespace:
         args = ArgParser._parse_arguments()
@@ -126,6 +125,7 @@ class ArgParser:
 
 
 class DriverInitializer:
+    @trace
     @staticmethod
     def get_driver(args: argparse.Namespace) -> webdriver.Chrome:
         print(f"DriverInitializer.get_driver()")
