@@ -76,25 +76,25 @@ def trace(print_args: bool = True):
 
 
 @trace(False)
-def f3():
+def f3(string: str = "default arg in f3"):
     pass
 
 
 @trace()
-def f2():
-    f3()
+def f2(string: str = "default arg in f2"):
+    f3("arg from f2 to f3")
 
 
 @trace()
-def f1():
-    f2()
+def f1(string: str = "default arg in f1"):
+    f2("arg from f1 to f2")
 
 
 @trace()
-def go():
-    f1()
-    f2()
-    f3()
+def go(string: str = "default arg in go"):
+    f1("arg from go to f1")
+    f2("arg from go to f2")
+    f3("arg from go to f3")
 
 
 go()
