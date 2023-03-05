@@ -29,7 +29,6 @@ import requests
 import cssutils
 
 
-### LOGGING EXPERIMENTS ###
 class LoggingWrapper(logging.LoggerAdapter):
     baseline = len(inspect.stack())
 
@@ -37,12 +36,13 @@ class LoggingWrapper(logging.LoggerAdapter):
     def init():
         cssutils.log.setLevel(logging.CRITICAL)  # type: ignore pylance type error
         os.system("cls" if os.name == "nt" else "clear")
-        logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
+        # logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
+        logging.basicConfig(level=logging.INFO, format="%(message)s")
         return LoggingWrapper(logging.getLogger(__name__), {})
 
     def process(self, msg, kwargs):
         # override the default logging behavior to add indentation
-        indentation_level = len(inspect.stack()) - self.baseline - 3
+        indentation_level = len(inspect.stack()) - self.baseline - 4
         tab = " " * 3
         return f"{tab * indentation_level}{msg}", kwargs
 
@@ -50,42 +50,22 @@ class LoggingWrapper(logging.LoggerAdapter):
 log = LoggingWrapper.init()
 
 
-def trace(func):
-    def wrapper(*args, **kwargs):
-        entry_content = ""
-        if len(args) > 1:
-            entry_content += f"{args[0].__class__.__name__}."
-        entry_content += f"{func.__name__}({', '.join([str(arg) for arg in args[1:]])})"
-        log.info(entry_content)
-        return func(*args, **kwargs)
+def trace(print_args: bool = True):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            entry_content = ""
+            if len(args) > 1:
+                entry_content += f"{args[0].__class__.__name__}."
+            if print_args:
+                entry_content += f"{func.__name__}({', '.join([str(arg) for arg in args[1:]])})"
+            else:
+                entry_content += f"{func.__name__}()"
+            log.info(entry_content)
+            return func(*args, **kwargs)
 
-    return wrapper
+        return wrapper
 
-
-@trace
-def f3():
-    pass
-
-
-@trace
-def f2():
-    f3()
-
-
-@trace
-def f1():
-    f2()
-
-
-@trace
-def go():
-    f1()
-    f2()
-    f3()
-
-
-f1()
-go()
+    return decorator
 
 
 class ArgParser:
@@ -125,7 +105,6 @@ class ArgParser:
 
 
 class DriverInitializer:
-    @trace
     @staticmethod
     def get_driver(args: argparse.Namespace) -> webdriver.Chrome:
         print(f"DriverInitializer.get_driver()")
