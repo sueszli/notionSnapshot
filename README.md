@@ -50,6 +50,7 @@ Note: If running Poetry isn't enough, you need to install the missing dependenci
 Use the `-h` or `--help` flag to see all the available options.
 
 Replace the URL with the one you generated in the first step.
+After runnning the script the exported files will be saved in the `snapshots` folder.
 
 _Unix:_
 ```bash
@@ -67,8 +68,6 @@ _Windows:_
 ```bash
 py notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
 ```
-
-The exported HTML file will be saved in the `snapshots` folder.
 
 <br><br><br>
 
