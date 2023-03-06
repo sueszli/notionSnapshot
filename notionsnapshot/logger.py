@@ -1,51 +1,36 @@
-import inspect
 import logging
+import traceback
 import functools
-import argparse
-import urllib.parse
-import urllib.request
 import os
-import shutil
-import glob
-import hashlib
-import mimetypes
-import re
-import sys
-import uuid
-from pathlib import Path
-from typing import List, Tuple
-from selenium import webdriver
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
-from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup
-from bs4 import Tag
-import html5lib  # used by bs4
-import requests
 import cssutils
 
 
 class LoggingWrapper(logging.LoggerAdapter):
-    # wrapper to automatically indent based on the call stack
-    baseline = len(inspect.stack())
+    def process(self, msg, kwargs):
+        # proxy for logs that adds indentation based on the stack depth
+        ignored_stack_frames = 8
+        indentation_level = len(traceback.extract_stack()) - ignored_stack_frames
+        tab = " " * 3
+        return f"{tab * indentation_level}{msg}", kwargs
 
     @staticmethod
-    def get_log():
+    def get_log() -> logging.LoggerAdapter:
+        LoggingWrapper._setup()
         logging.basicConfig(level=logging.INFO, format="%(message)s")
         return LoggingWrapper(logging.getLogger(), {})
 
-    def process(self, msg, kwargs):
-        indentation_level = len(inspect.stack()) - self.baseline - 4
-        tab = " " * 3
-        return f"{tab * indentation_level}{msg}", kwargs
+    @staticmethod
+    def _setup() -> None:
+        os.system("cls" if os.name == "nt" else "clear")
+        cssutils.log.setLevel(logging.CRITICAL)  # type: ignore
 
 
 LOG = LoggingWrapper.get_log()
 
 
 def trace(print_args: bool = True):
-    # decorator to log function calls and return values
+    # used as decorator to log function calls and return values
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -59,7 +44,8 @@ def trace(print_args: bool = True):
 
             LOG.info(log_output)
             result = func(*args, **kwargs)
-            result = str(result) if result is not None else ""
+            if result is None:
+                result = ""
             LOG.info(f"⬅ {result if print_args else ''}")
             return result
 

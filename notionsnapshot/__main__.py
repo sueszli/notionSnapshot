@@ -1,6 +1,3 @@
-import inspect
-import logging
-import functools
 import argparse
 import urllib.parse
 import urllib.request
@@ -27,10 +24,6 @@ import cssutils
 
 from driver import DriverInitializer
 from logger import LOG, trace
-
-cssutils.log.setLevel(logging.CRITICAL)  # type: ignore
-os.system("cls" if os.name == "nt" else "clear")
-
 
 
 class ArgParser:
@@ -201,7 +194,7 @@ class Scraper:
                 all_scrollers_loaded = len(scrollers_with_children) == len(scrollers)
                 if all_scrollers_loaded and not unknown_blocks and not loading_spinners and not page_changed:
                     return True
-                LOG.info(f"\twaiting for: {len(unknown_blocks)} unknown blocks - {len(loading_spinners)} loading spinners - {len(scrollers_with_children)}/{len(scrollers)} scrollers with children")
+                LOG.info(f"waiting for: {len(unknown_blocks)} unknown blocks - {len(loading_spinners)} loading spinners - {len(scrollers_with_children)}/{len(scrollers)} scrollers with children")
             prev_page = d.page_source
             return False
 
