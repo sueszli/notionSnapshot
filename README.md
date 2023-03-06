@@ -6,12 +6,12 @@
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/  
                                                     /_/     
 
-📸💥 Export your Notion pages as pretty HTML files
+:: 📸💥 A CLI tool to export your Notion pages as pretty HTML files ::
 ```
 
 <br>
 
-Original page              |  Export through Notion | **✨NotionSnapshot✨**
+Original page              |  Export through Notion | **✨Notion Snapshot✨**
 :-------------------------:|:-------------------------:|:-------------------------:
 <img width="685" alt="image" src="https://user-images.githubusercontent.com/61852663/221595552-3eebc492-9e64-4cb3-b330-4418961890ce.png">  |  <img width="685" alt="image" src="https://user-images.githubusercontent.com/61852663/221595560-d90a2d41-f7a8-48be-8fe9-e63889126042.png">               | <img width="685" alt="image" src="https://user-images.githubusercontent.com/61852663/221595539-ba0b9dca-4bd4-482e-81f9-64ea12e0ded4.png">
 
