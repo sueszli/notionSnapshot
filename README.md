@@ -47,7 +47,7 @@ Note: If running Poetry isn't enough, you need to install the missing dependenci
 </br>
 
 ### 4. Run
-Use the `-h` or `--help` flag to see all possible arguments.
+Use the `-h` or `--help` flag to see all the available options.
 
 Replace the URL with the one you generated in the first step.
 
