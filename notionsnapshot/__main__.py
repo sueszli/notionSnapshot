@@ -140,7 +140,6 @@ class Scraper:
 
             Scraper.file_manager.save_page(soup, url)
             Scraper.visited.add(url)
-
             [Scraper.will_visit.add(page) for page in subpage_urls if page not in Scraper.visited]
 
     @trace()
