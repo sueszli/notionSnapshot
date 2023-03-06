@@ -167,9 +167,11 @@ class Scraper:
 
         Scraper.driver.get(url)
         WebDriverWait(Scraper.driver, Scraper.args.timeout).until(is_page_loaded)
+        LOG.info("page loaded")
 
         mode = "dark" if Scraper.args.dark_mode else "light"
         Scraper.driver.execute_script("__console.environment.ThemeStore.setState({ mode: '" + mode + "' })")
+        LOG.info(f"set theme to {mode}")
 
     @trace(print_args=False)
     def _expand_toggle_blocks(self, expanded_toggle_blocks=[]) -> None:
