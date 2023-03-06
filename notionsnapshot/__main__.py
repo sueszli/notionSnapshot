@@ -23,14 +23,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.service import Service
-import html5lib  # used by bs4
 from bs4 import BeautifulSoup
 from bs4 import Tag
+import html5lib  # used by bs4
 import requests
 import cssutils
 
 
 class LoggingWrapper(logging.LoggerAdapter):
+    # wrapper to automatically indent based on the call stack
     baseline = len(inspect.stack())
 
     @staticmethod
@@ -41,7 +42,6 @@ class LoggingWrapper(logging.LoggerAdapter):
         return LoggingWrapper(logging.getLogger(__name__), {})
 
     def process(self, msg, kwargs):
-        # wrapper to automatically indent based on the call stack
         indentation_level = len(inspect.stack()) - self.baseline - 4
         tab = " " * 3
         return f"{tab * indentation_level}{msg}", kwargs
@@ -65,7 +65,9 @@ def trace(print_args: bool = True):
 
             LOG.info(before)
             result = func(*args, **kwargs)
-            LOG.info(f"⬅ {result if print_args else '-'}")
+            if result is None:
+                result = ""
+            LOG.info(f"⬅ {result if print_args else ''}")
             return result
 
         return wrapper
@@ -208,6 +210,7 @@ class FileManager:
         soup.prettify()
         html_str = str(soup)
         output_path = self.get_path_from_url(url)
+        LOG.info(f"writing to {output_path}")
         with open(output_path, "wb") as f:
             f.write(html_str.encode("utf-8").strip())
 
