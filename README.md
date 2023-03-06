@@ -6,7 +6,7 @@
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/  
                                                     /_/     
 
-:: 📸💥 A CLI tool to export your Notion pages as pretty HTML files ::
+📸💥 A CLI tool to export your Notion pages as pretty HTML files
 ```
 
 <br>
