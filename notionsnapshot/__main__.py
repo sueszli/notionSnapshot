@@ -16,8 +16,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import TimeoutException
-from bs4 import BeautifulSoup
-from bs4 import Tag
+from bs4 import BeautifulSoup, Tag
 import html5lib  # used by bs4
 import requests
 import cssutils
@@ -125,7 +124,6 @@ class Scraper:
     will_visit = set([args.url])
     visited = set()
 
-    @trace()
     def run(self) -> None:
         while Scraper.will_visit:
             url = Scraper.will_visit.pop()

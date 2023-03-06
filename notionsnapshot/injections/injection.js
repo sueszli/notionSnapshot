@@ -1,4 +1,6 @@
-// re-implement toggle blocks
+/**
+ * re-implement toggle buttons (we remove the original event listeners)
+ */
 const showToggle = (content, arrow) => {
   arrow.style.transform = "rotateZ(180deg)";
   content.style.display = "block";
@@ -10,8 +12,7 @@ const hideToggle = (content, arrow) => {
 };
 
 const toggleButtons = document.getElementsByClassName("notionsnapshot-toggle-button");
-for (let i = 0; i < toggleButtons.length; i++) {
-  const toggleButton = toggleButtons.item(i);
+for (toggleButton of toggleButtons) {
   const toggleId = toggleButton.getAttribute("notionsnapshot-toggle-id");
   const toggleContent = document.querySelector(`.notionsnapshot-toggle-content[notionsnapshot-toggle-id='${toggleId}']`);
   const toggleArrow = toggleButton.querySelector("svg");
@@ -26,6 +27,25 @@ for (let i = 0; i < toggleButtons.length; i++) {
     });
   }
 }
+
+/**
+ * re-implement anchor links (we remove the original event listeners)
+ */
+const anchorLinks = document.querySelectorAll("a.notionsnapshot-anchor-link");
+for (anchorLink of anchorLinks) {
+  const id = anchorLink.getAttribute("href").replace("#", "");
+  const targetBlockId =
+    id.slice(0, 8) + "-" + id.slice(8, 12) + "-" + id.slice(12, 16) + "-" + id.slice(16, 20) + "-" + id.slice(20);
+  anchorLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    console.log(targetBlockId);
+    document.querySelector(`div[data-block-id='${targetBlockId}']`).scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+}
+
 
 // sets all iframes' parent container opacity to 1
 // originally notion has a callback to do that on iframe loaded
@@ -70,22 +90,6 @@ for (let i = 0; i < collectionSearchBoxes.length; i++) {
   collectionSearchBox.style.display = "none";
 }
 
-// re-implement anchor links
-const anchorLinks = document.querySelectorAll("a.notionsnapshot-anchor-link");
-for (let i = 0; i < anchorLinks.length; i++) {
-  const anchorLink = anchorLinks.item(i);
-  const id = anchorLink.getAttribute("href").replace("#", "");
-  const targetBlockId =
-    id.slice(0, 8) + "-" + id.slice(8, 12) + "-" + id.slice(12, 16) + "-" + id.slice(16, 20) + "-" + id.slice(20);
-  anchorLink.addEventListener("click", (e) => {
-    e.preventDefault();
-    console.log(targetBlockId);
-    document.querySelector(`div[data-block-id='${targetBlockId}']`).scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  });
-}
 
 // fix the problem with images having an annoying extra padding in Webkit renderers on iOS devices
 const imgs = document.querySelectorAll("img:not(.notion-emoji)");
