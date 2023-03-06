@@ -205,6 +205,7 @@ class Scraper:
             expanded_toggle_blocks.append(block)
 
         nested_toggle_blocks = [block for block in get_toggle_blocks() if block not in expanded_toggle_blocks]
+        LOG.info(f"expanded {len(expanded_toggle_blocks)} toggle blocks so far - found {len(nested_toggle_blocks)} to expand next")
         if nested_toggle_blocks:
             self._expand_toggle_blocks(expanded_toggle_blocks)
 
