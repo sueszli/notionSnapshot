@@ -52,11 +52,11 @@ class FileManager:
             if "width" in params.keys():
                 queryless_url = queryless_url + f"?width={params['width']}"
             filename = hashlib.sha1(str.encode(queryless_url)).hexdigest()
-            LOG.info("hashed filename: " + filename)
+            LOG.info("no filename, generated hash: " + filename)
 
-        matching_file = glob.glob(FileManager.output_dir + "/assets/" + filename + ".*")
-        if matching_file:
-            return str(Path(matching_file[0]).relative_to(FileManager.output_dir)).replace("\\", "/")
+        already_downloaded = glob.glob(FileManager.output_dir + "/assets/" + filename + ".*")
+        if already_downloaded:
+            return str(Path(already_downloaded[0]).relative_to(FileManager.output_dir)).replace("\\", "/")
 
         destination = Path(FileManager.output_dir) / "assets" / filename
         try:
@@ -65,12 +65,13 @@ class FileManager:
             response = session.get(url)
             response.raise_for_status()
 
-            has_file_extension = bool(destination.suffix)
-            if not has_file_extension:
+            missing_file_extension = not bool(destination.suffix)
+            if missing_file_extension:
                 suffix = Path(urllib.parse.urlparse(url).path).suffix
+                question_mark = "%3f"
                 if suffix:
-                    if "%3f" in suffix.lower():
-                        suffix = re.split("%3f", suffix, flags=re.IGNORECASE)[0]
+                    if question_mark in suffix.lower():
+                        suffix = re.split(question_mark, suffix, flags=re.IGNORECASE)[0]
                     destination = destination.with_suffix(suffix)
                 else:
                     content_type = response.headers.get("content-type")
@@ -103,9 +104,9 @@ class FileManager:
         soup.prettify()
         html_str = str(soup)
         output_path = self.get_path_from_url(url)
-        LOG.info(f"writing to {output_path}")
         with open(output_path, "wb") as f:
             f.write(html_str.encode("utf-8").strip())
+        LOG.info(f"saved page to {output_path}")
 
     @trace()
     def get_path_from_url(self, url: str) -> Path:
@@ -147,6 +148,7 @@ class Scraper:
 
     @trace()
     def _load_page(self, url: str) -> None:
+        LOG.info("loading page")
         prev_page = ""
 
         def is_page_loaded(d: webdriver.Chrome) -> bool:
@@ -237,10 +239,12 @@ class Scraper:
             unwanted_og_tag = soup.find("meta", attrs={"property": tag})
             if unwanted_og_tag and isinstance(unwanted_og_tag, Tag):
                 unwanted_og_tag.decompose()
+        LOG.info("removed unwanted tags from html")
 
     @trace()
     def _download_images(self, soup: BeautifulSoup) -> None:
         images = [img for img in soup.findAll("img") if img.has_attr("src")]
+        LOG.info(f"found {len(images)} images to download")
         for img in images:
             is_notion_asset = img["src"].startswith("/")
             if "data:image" not in img["src"]:
@@ -252,6 +256,7 @@ class Scraper:
                 img["src"] = f'https://www.notion.so{img["src"]}'
 
         emojis = [img for img in soup.findAll("img") if img.has_attr("class") and "notion-emoji" in img["class"]]
+        LOG.info(f"found {len(emojis)} emojis to download")
         for img in emojis:
             style = cssutils.parseStyle(img["style"])
             spritesheet = style["background"]
@@ -260,12 +265,18 @@ class Scraper:
             style["background"] = spritesheet.replace(spritesheet_url, download_path)
             img["style"] = style.cssText
 
+        is_in_both = lambda img: img in images and img in emojis
+        shared = [is_in_both(img) for img in images + emojis]
+        assert not any(shared), "img is both an image and an emoji"
+
     @trace()
     def _download_stylesheets(self, soup: BeautifulSoup) -> None:
         is_stylesheet = lambda link: link.has_attr("href") and link["href"].startswith("/") and not "vendors~" in link["href"]
         stylesheets = [link for link in soup.findAll("link", rel="stylesheet") if is_stylesheet(link)]
+
         for link in stylesheets:
             download_path = Scraper.file_manager.download_asset(f'https://www.notion.so{link["href"]}')
+
             with open(f"{FileManager.output_dir}/{download_path}", "rb+") as f:
                 stylesheet = cssutils.parseString(f.read())
                 for rule in stylesheet.cssRules:
@@ -273,12 +284,11 @@ class Scraper:
                         font_file = rule.style["src"].split("url(")[-1].split(")")[0]
                         parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
                         font_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
-                        download_path2 = Scraper.file_manager.download_asset(font_url, Path(font_file).name)
-                        rule.style["src"] = f"url({download_path2})"
+                        font_download_path = Scraper.file_manager.download_asset(font_url, Path(font_file).name)
+                        rule.style["src"] = f"url({font_download_path})"
                 f.seek(0)
                 f.truncate()
                 f.write(stylesheet.cssText)
-                download_path = str(download_path).replace("\\", "/")
 
             link["href"] = download_path
 
