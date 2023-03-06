@@ -279,12 +279,14 @@ class Scraper:
 
             with open(f"{FileManager.output_dir}/{download_path}", "rb+") as f:
                 stylesheet = cssutils.parseString(f.read())
+
+                # additionally download fonts used in the stylesheet
                 for rule in stylesheet.cssRules:
                     if rule.type == cssutils.css.CSSRule.FONT_FACE_RULE:
                         font_file = rule.style["src"].split("url(")[-1].split(")")[0]
                         parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
-                        font_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
-                        font_download_path = Scraper.file_manager.download_asset(font_url, Path(font_file).name)
+                        font_download_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
+                        font_download_path = Scraper.file_manager.download_asset(font_download_url, Path(font_file).name)
                         rule.style["src"] = f"url({font_download_path})"
                 f.seek(0)
                 f.truncate()
@@ -294,7 +296,7 @@ class Scraper:
 
     @trace()
     def _insert_injections(self, soup: BeautifulSoup) -> None:
-        # add ids and classes to toggle blocks for the injections, inserted next
+        # add ids and classes for 'injection.js' to work
         toggle_blocks = soup.findAll("div", {"class": "notion-toggle-block"})
         for query in ["header", "sub_header", "sub_sub_header"]:
             header_toggle_blocks = soup.findAll("div", {"class": f"notion-selectable notion-{query}-block"})
@@ -316,21 +318,28 @@ class Scraper:
 
     @trace()
     def _link_to_table_view_subpages(self, soup: BeautifulSoup) -> None:
-        # add links to the title rows (which are identical to the data-block-id without dashes)
-        for table_view in soup.findAll("div", {"class": "notion-table-view"}):
-            for table_row in table_view.findAll("div", {"class": "notion-collection-item"}):
-                table_row_block_id = table_row["data-block-id"]
-                table_row_href = "/" + table_row_block_id.replace("-", "")
-                row_target_span = table_row.find("span")
+        # THIS DOESN'T WORK YET
+
+        # test with: https://eager-waterfall-308.notion.site/2604ce45890645c79f67d92833083fee?v=e138f6fdcea24f87b442577732b2052d
+        tables = soup.findAll("div", {"class": "notion-table-view"})
+        LOG.info(f"found {len(tables)} tables")
+        for table in tables:
+            rows = table.findAll("div", {"class": "notion-collection-item"})
+            LOG.info(f"found {len(rows)} rows in table")
+            for row in rows:
+                row_href = "/" + row["data-block-id"].replace("-", "")
+                row_target_span = row.find("span")
                 row_target_span["style"] = row_target_span["style"].replace("pointer-events: none;", "")
                 row_link_wrapper = soup.new_tag(
                     "a",
-                    attrs={"href": table_row_href, "style": "cursor: pointer; color: inherit; text-decoration: none; fill: inherit;"},
+                    attrs={"href": row_href, "style": "cursor: pointer; color: inherit; text-decoration: none; fill: inherit;"},
                 )
                 row_target_span.wrap(row_link_wrapper)
 
     @trace()
     def _link_to_subpages(self, soup: BeautifulSoup) -> List[str]:
+        # THIS DOESN'T WORK YET
+
         subpage_urls = []
         domain = f'{Scraper.args.url.split("notion.site")[0]}notion.site'
         for a in soup.find_all("a", href=True):
@@ -352,6 +361,7 @@ class Scraper:
                     child["style"] = style.cssText
             else:
                 if "#" in url:
+                    # add ids and classes for 'injection.js' to work
                     arr = url.split("#")
                     url = arr[0]
                     a["href"] = f"#{arr[-1]}"
