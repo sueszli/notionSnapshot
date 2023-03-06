@@ -30,6 +30,7 @@ from argparser import ArgParser
 class FileManager:
     output_dir = ""
 
+    @trace()
     def __init__(self, args: argparse.Namespace) -> None:
         id = urllib.parse.urlparse(args.url).path[1:]
         name = id[: id.rfind("-")].lower()
@@ -124,6 +125,7 @@ class Scraper:
     will_visit = set([args.url])
     visited = set()
 
+    @trace()
     def run(self) -> None:
         while Scraper.will_visit:
             url = Scraper.will_visit.pop()
@@ -141,6 +143,9 @@ class Scraper:
             Scraper.file_manager.save_page(soup, url)
             Scraper.visited.add(url)
             [Scraper.will_visit.add(page) for page in subpage_urls if page not in Scraper.visited]
+
+        Scraper.driver.quit()
+        LOG.info("exiting scraper")
 
     @trace()
     def _load_page(self, url: str) -> None:
@@ -345,10 +350,6 @@ class Scraper:
                     a["href"] = Scraper.file_manager.get_path_from_url(url)
                 subpage_urls.append(url)
         return subpage_urls
-
-    def __del__(self):
-        Scraper.driver.quit()
-        LOG.info("finished scraping, quit driver")
 
 
 if __name__ == "__main__":
