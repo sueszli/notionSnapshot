@@ -1,5 +1,5 @@
 /**
- * re-implement toggle buttons (we remove the original event listeners)
+ * re-implements toggle buttons (we remove the original event listeners)
  */
 const showToggle = (content, arrow) => {
   arrow.style.transform = "rotateZ(180deg)";
@@ -29,7 +29,7 @@ for (toggleButton of toggleButtons) {
 }
 
 /**
- * re-implement anchor links (we remove the original event listeners)
+ * re-implements anchor links (we remove the original event listeners)
  */
 const anchorLinks = document.querySelectorAll("a.notionsnapshot-anchor-link");
 for (anchorLink of anchorLinks) {
@@ -47,8 +47,10 @@ for (anchorLink of anchorLinks) {
 }
 
 
-// sets all iframes' parent container opacity to 1
-// originally notion has a callback to do that on iframe loaded
+/**
+ * sets all iframes' parent container opacity to 1
+ * originally notion has a callback to do that on iframe loaded
+ */
 const pendingIframes = document.getElementsByTagName("iframe");
 for (let i = 0; i < pendingIframes.length; i++) {
   pendingIframes.item(i).parentElement.style.opacity = 1;
@@ -82,16 +84,19 @@ for (let i = 0; i < pendingIframes.length; i++) {
 //   pendingIframe.appendChild(iframe);
 // }
 
-// hide search box on inline databases
-// couldn't find a reliable way to do this in css
+
+/**
+ * hide search box on inline databases
+ */
 const collectionSearchBoxes = document.getElementsByClassName("collectionSearch");
 for (let i = 0; i < collectionSearchBoxes.length; i++) {
   const collectionSearchBox = collectionSearchBoxes.item(i).parentElement;
   collectionSearchBox.style.display = "none";
 }
 
-
-// fix the problem with images having an annoying extra padding in Webkit renderers on iOS devices
+/**
+ * removes extra padding in Webkit renderers on iOS devices
+ */
 const imgs = document.querySelectorAll("img:not(.notion-emoji)");
 for (let i = 0; i < imgs.length; i++) {
   parent = imgs[i].parentElement
