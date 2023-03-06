@@ -17,7 +17,7 @@ BANNER_ASCII = """
 
 class LoggingWrapper(logging.LoggerAdapter):
     def process(self, msg, kwargs):
-        # proxy for logging module that adds indentation based on the stack depth
+        # proxy for 'logging' module that adds indentation based on the stack depth
         ignored_stack_frames = 8
         indentation_level = len(traceback.extract_stack()) - ignored_stack_frames
         tab = " " * 3
@@ -40,7 +40,7 @@ LOG = LoggingWrapper.get_log()
 
 
 def trace(print_args: bool = True):
-    # for @trace decorator to log functions arguments and return values
+    # decorator for @trace() to log functions arguments and return values
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
