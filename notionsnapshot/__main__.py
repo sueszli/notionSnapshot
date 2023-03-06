@@ -1,5 +1,5 @@
-import logging
 import inspect
+import logging
 import functools
 import argparse
 import urllib.parse
@@ -15,19 +15,20 @@ import uuid
 from pathlib import Path
 from typing import List, Tuple
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.service import Service
 from bs4 import BeautifulSoup
 from bs4 import Tag
 import html5lib  # used by bs4
 import requests
 import cssutils
+
+from driver import DriverInitializer
+
+cssutils.log.setLevel(logging.CRITICAL)  # type: ignore
+os.system("cls" if os.name == "nt" else "clear")
 
 
 class LoggingWrapper(logging.LoggerAdapter):
@@ -36,10 +37,8 @@ class LoggingWrapper(logging.LoggerAdapter):
 
     @staticmethod
     def get_log():
-        os.system("cls" if os.name == "nt" else "clear")
         logging.basicConfig(level=logging.INFO, format="%(message)s")
-        cssutils.log.setLevel(logging.CRITICAL)  # type: ignore
-        return LoggingWrapper(logging.getLogger(__name__), {})
+        return LoggingWrapper(logging.getLogger(), {})
 
     def process(self, msg, kwargs):
         indentation_level = len(inspect.stack()) - self.baseline - 4
@@ -109,29 +108,6 @@ class ArgParser:
             raise argparse.ArgumentTypeError("url doesn't contain an id")
         if url.fragment:
             raise argparse.ArgumentTypeError("url contains a fragment ('#')")
-
-
-class DriverInitializer:
-    @staticmethod
-    def get_driver(args: argparse.Namespace) -> webdriver.Chrome:
-        # chose Selenium instead of Playwright for simpler installation with the webdriver_manager package
-        # see flags: https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
-        opts = Options()
-        opts.add_argument("--disable-client-side-phishing-detection")
-        opts.add_argument("--no-first-run")
-        opts.add_argument("--enable-automation")
-        opts.add_argument("--no-sandbox")
-        opts.add_argument("--disable-dev-shm-usage")
-        opts.add_argument("--disable-gpu")
-        opts.add_argument("--silent")
-        opts.add_argument("--disable-logging")
-        opts.add_argument("--headless=new") if not args.show_browser else opts.add_argument("window-size=900,1200")
-        opts.add_experimental_option("excludeSwitches", ["enable-logging"])
-        os.environ["WDM_PROGRESS_BAR"] = str(0)
-        os.environ["WDM_LOG"] = str(logging.NOTSET)
-        chrome_executable: Service = ChromeService(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=chrome_executable, options=opts)
-        return driver
 
 
 class FileManager:
