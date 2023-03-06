@@ -345,12 +345,12 @@ class Scraper:
         for a in soup.find_all("a", href=True):
             url = a["href"]
 
-            # add missing domain to relative urls
-            if url.startswith("/"):
+            is_relative_url = url.startswith("/")
+            if is_relative_url:
                 url = f'{domain}/{a["href"].split("/")[len(a["href"].split("/"))-1]}'
 
-            # ignore external links
-            if not url.startswith(domain):
+            is_external_url = not url.startswith(domain)
+            if is_external_url:
                 continue
 
             is_scroller = len(a.find_parents("div", class_="notion-scroller")) > 0
@@ -363,12 +363,14 @@ class Scraper:
                     style = cssutils.parseStyle(child["style"])
                     style["cursor"] = "default"
                     child["style"] = style.cssText
+
             elif is_table_of_contents:
                 # add ids and classes for 'injection.js' to work
                 arr = url.split("#")
                 url = arr[0]
                 a["href"] = f"#{arr[-1]}"
                 a["class"] = a.get("class", []) + ["notionsnapshot-anchor-link"]
+
             else:
                 a["href"] = Scraper.file_manager.get_path_from_url(url)
                 subpage_urls.append(url)
