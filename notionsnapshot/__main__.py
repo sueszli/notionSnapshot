@@ -26,52 +26,11 @@ import requests
 import cssutils
 
 from driver import DriverInitializer
+from logger import LOG, trace
 
 cssutils.log.setLevel(logging.CRITICAL)  # type: ignore
 os.system("cls" if os.name == "nt" else "clear")
 
-
-class LoggingWrapper(logging.LoggerAdapter):
-    # wrapper to automatically indent based on the call stack
-    baseline = len(inspect.stack())
-
-    @staticmethod
-    def get_log():
-        logging.basicConfig(level=logging.INFO, format="%(message)s")
-        return LoggingWrapper(logging.getLogger(), {})
-
-    def process(self, msg, kwargs):
-        indentation_level = len(inspect.stack()) - self.baseline - 4
-        tab = " " * 3
-        return f"{tab * indentation_level}{msg}", kwargs
-
-
-LOG = LoggingWrapper.get_log()
-
-
-def trace(print_args: bool = True):
-    # decorator to log function calls and return values
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            log_output = "⮕ "
-            # before += f"{args[0].__class__.__name__}."
-            log_output += f"\033[92m{func.__name__}(\033[0m"
-            if print_args:
-                not_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
-                log_output += ", ".join([str(arg) for arg in not_html[1:]])
-            log_output += f"\033[92m)\033[0m"
-
-            LOG.info(log_output)
-            result = func(*args, **kwargs)
-            if result is None:
-                result = ""
-            LOG.info(f"⬅ {result if print_args else ''}")
-            return result
-
-        return wrapper
-
-    return decorator
 
 
 class ArgParser:
