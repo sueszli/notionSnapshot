@@ -55,15 +55,15 @@ def trace(print_args: bool = True):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            before = "⮕ "
+            log_output = "⮕ "
             # before += f"{args[0].__class__.__name__}."
-            before += f"\033[92m{func.__name__}(\033[0m"
+            log_output += f"\033[92m{func.__name__}(\033[0m"
             if print_args:
                 not_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
-                before += ", ".join([str(arg) for arg in not_html[1:]])
-            before += f"\033[92m)\033[0m"
+                log_output += ", ".join([str(arg) for arg in not_html[1:]])
+            log_output += f"\033[92m)\033[0m"
 
-            LOG.info(before)
+            LOG.info(log_output)
             result = func(*args, **kwargs)
             if result is None:
                 result = ""
