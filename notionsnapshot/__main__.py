@@ -401,11 +401,10 @@ class Scraper:
                 toggle_content.attrs["notionsnapshot-toggle-id"] = toggle_button.attrs["notionsnapshot-toggle-id"] = toggle_id
 
         css_path, js_path = Scraper.file_manager.copy_injections_to_assets()
-
         assert soup.head is not None
-        soup.head.insert(-1, soup.new_tag("link", rel="stylesheet", href=str(css_path)))
+        soup.head.insert(-1, soup.new_tag("link", rel="stylesheet", href=css_path))
         assert soup.body is not None
-        soup.body.insert(-1, soup.new_tag("script", type="text/javascript", src=str(js_path)))
+        soup.body.insert(-1, soup.new_tag("script", type="text/javascript", src=js_path))
 
     @trace()
     def _link_to_table_view_subpages(self, soup: BeautifulSoup) -> None:
