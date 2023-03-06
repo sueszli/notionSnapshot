@@ -11,7 +11,7 @@ from selenium.webdriver.common.service import Service
 class DriverInitializer:
     @staticmethod
     def get_driver(args: argparse.Namespace) -> webdriver.Chrome:
-        # auto downloader and installer for chrome driver
+        # auto downloader and installer of chrome driver for selenium4
         # see flags here: https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
         opts = Options()
         opts.add_argument("--disable-client-side-phishing-detection")
