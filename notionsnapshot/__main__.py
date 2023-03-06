@@ -34,70 +34,43 @@ class LoggingWrapper(logging.LoggerAdapter):
     baseline = len(inspect.stack())
 
     @staticmethod
-    def init():
-        cssutils.log.setLevel(logging.CRITICAL)  # type: ignore pylance type error
+    def get_log():
         os.system("cls" if os.name == "nt" else "clear")
-        # logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
         logging.basicConfig(level=logging.INFO, format="%(message)s")
+        cssutils.log.setLevel(logging.CRITICAL)  # type: ignore
         return LoggingWrapper(logging.getLogger(__name__), {})
 
     def process(self, msg, kwargs):
-        # override the default logging behavior to add indentation
+        # wrapper to automatically indent based on the call stack
         indentation_level = len(inspect.stack()) - self.baseline - 4
         tab = " " * 3
         return f"{tab * indentation_level}{msg}", kwargs
 
 
-log = LoggingWrapper.init()
+LOG = LoggingWrapper.get_log()
 
 
 def trace(print_args: bool = True):
+    # decorator to log function calls and return values
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            entry_content = ""
-            if len(args) > 1:
-                entry_content += f"{args[0].__class__.__name__}."
+            before = "⮕ "
+            # before += f"{args[0].__class__.__name__}."
+            before += f"\033[92m{func.__name__}(\033[0m"
             if print_args:
-                entry_content += f"{func.__name__}({', '.join([str(arg) for arg in args[1:]])})"
-            else:
-                entry_content += f"{func.__name__}()"
-            log.info(f"{entry_content}")
+                not_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
+                before += ", ".join([str(arg) for arg in not_html[1:]])
+            before += f"\033[92m)\033[0m"
+
+            LOG.info(before)
             result = func(*args, **kwargs)
-            if print_args:
-                log.info(f"<= {result}")
-            else:
-                log.info(f"<= ")
-            return func(*args, **kwargs)
+            LOG.info(f"⬅ {result if print_args else '-'}")
+            return result
 
         return wrapper
 
     return decorator
-
-
-@trace(False)
-def f3(string: str = "default arg in f3"):
-    pass
-
-
-@trace()
-def f2(string: str = "default arg in f2"):
-    f3("arg from f2 to f3")
-
-
-@trace()
-def f1(string: str = "default arg in f1"):
-    f2("arg from f1 to f2")
-
-
-@trace()
-def go(string: str = "default arg in go"):
-    f1("arg from go to f1")
-    f2("arg from go to f2")
-    f3("arg from go to f3")
-
-
-go()
 
 
 class ArgParser:
@@ -139,7 +112,6 @@ class ArgParser:
 class DriverInitializer:
     @staticmethod
     def get_driver(args: argparse.Namespace) -> webdriver.Chrome:
-        print(f"DriverInitializer.get_driver()")
         # chose Selenium instead of Playwright for simpler installation with the webdriver_manager package
         # see flags: https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
         opts = Options()
@@ -164,18 +136,18 @@ class FileManager:
     output_dir = ""
 
     def __init__(self, args: argparse.Namespace) -> None:
-        print(f"FileManager.__init__()")
         id = urllib.parse.urlparse(args.url).path[1:]
         name = id[: id.rfind("-")].lower()
         FileManager.output_dir = os.path.join("snapshots", name)
 
         if os.path.exists(FileManager.output_dir):
             shutil.rmtree(FileManager.output_dir)
-            print(f"\tremoved previous snapshot for this url")
+            LOG.info(f"removed previous snapshot for this url")
 
         os.makedirs(FileManager.output_dir, exist_ok=True)
         os.makedirs(FileManager.output_dir + "/assets", exist_ok=True)
 
+    @trace()
     def download_asset(self, url: str, filename: str = "") -> str:
         if not filename:
             parsed_url = urllib.parse.urlparse(url)
@@ -185,7 +157,7 @@ class FileManager:
             if "width" in params.keys():
                 queryless_url = queryless_url + f"?width={params['width']}"
             filename = hashlib.sha1(str.encode(queryless_url)).hexdigest()
-        print(f"\tFileManager.download_asset({filename})")
+            LOG.info("hashed filename: " + filename)
 
         matching_file = glob.glob(FileManager.output_dir + "/assets/" + filename + ".*")
         if matching_file:
@@ -217,12 +189,11 @@ class FileManager:
             return str(destination.relative_to(FileManager.output_dir)).replace("\\", "/")
 
         except Exception as error:
-            print(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead", file=sys.stderr)
-            print(error, file=sys.stderr)
+            LOG.warning(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead \n {error}", file=sys.stderr)
             return str(Path(url)).replace("\\", "/")
 
+    @trace()
     def copy_injections_to_assets(self) -> Tuple[str, str]:
-        print("\tFileManager.copy_injections_to_assets()")
         injection_dir = Path(__file__).parent / "injections"
         css_out = Path(FileManager.output_dir) / "assets" / "injection.css"
         js_out = Path(FileManager.output_dir) / "assets" / "injection.js"
@@ -232,16 +203,16 @@ class FileManager:
         relative_js_out = str(js_out.relative_to(FileManager.output_dir)).replace("\\", "/")
         return relative_css_out, relative_js_out
 
+    @trace()
     def save_page(self, soup: BeautifulSoup, url: str) -> None:
-        print(f"\tFileManager.save_page({url})")
         soup.prettify()
         html_str = str(soup)
         output_path = self.get_path_from_url(url)
         with open(output_path, "wb") as f:
             f.write(html_str.encode("utf-8").strip())
 
+    @trace()
     def get_path_from_url(self, url: str) -> Path:
-        print(f"\tFileManager.get_path_from_url({url})")
         id = urllib.parse.urlparse(url).path[1:]
         filename = id[: id.rfind("-")].lower() + ".html"
         if url == Scraper.args.url:
@@ -258,7 +229,6 @@ class Scraper:
     visited = set()
 
     def run(self) -> None:
-        print(f"Scraper.run()")
         while Scraper.will_visit:
             url = Scraper.will_visit.pop()
 
@@ -277,8 +247,8 @@ class Scraper:
 
             [Scraper.will_visit.add(page) for page in subpage_urls if page not in Scraper.visited]
 
+    @trace()
     def _load_page(self, url: str) -> None:
-        print(f"Scraper._load_page({url})")
         prev_page = ""
 
         def is_page_loaded(d: webdriver.Chrome) -> bool:
@@ -293,7 +263,7 @@ class Scraper:
                 all_scrollers_loaded = len(scrollers_with_children) == len(scrollers)
                 if all_scrollers_loaded and not unknown_blocks and not loading_spinners and not page_changed:
                     return True
-                print(f"\twaiting for: {len(unknown_blocks)} unknown blocks - {len(loading_spinners)} loading spinners - {len(scrollers_with_children)}/{len(scrollers)} scrollers with children")
+                LOG.info(f"\twaiting for: {len(unknown_blocks)} unknown blocks - {len(loading_spinners)} loading spinners - {len(scrollers_with_children)}/{len(scrollers)} scrollers with children")
             prev_page = d.page_source
             return False
 
@@ -303,9 +273,8 @@ class Scraper:
         mode = "dark" if Scraper.args.dark_mode else "light"
         Scraper.driver.execute_script("__console.environment.ThemeStore.setState({ mode: '" + mode + "' })")
 
+    @trace(print_args=False)
     def _expand_toggle_blocks(self, expanded_toggle_blocks=[]) -> None:
-        print(f"Scraper._expand_toggle_blocks() - {len(expanded_toggle_blocks)} expanded so far")
-
         def get_toggle_blocks() -> List[WebElement]:
             toggle_blocks = Scraper.driver.find_elements(By.CLASS_NAME, "notion-toggle-block")
             header_toggle_blocks = []
@@ -335,17 +304,16 @@ class Scraper:
                 try:
                     WebDriverWait(Scraper.driver, Scraper.args.timeout).until(lambda d: is_block_expanded(block))
                 except TimeoutException:
-                    print("timeout while expanding block - manually check if it's expanded in the snapshot", file=sys.stderr)
+                    LOG.warning("timeout while expanding block - manually check if it's expanded in the snapshot", file=sys.stderr)
                     continue
             expanded_toggle_blocks.append(block)
 
         nested_toggle_blocks = [block for block in get_toggle_blocks() if block not in expanded_toggle_blocks]
-        print(f"\texpanded {len(toggle_blocks)} toggleable blocks, found {len(nested_toggle_blocks)} children to expand next")
         if nested_toggle_blocks:
             self._expand_toggle_blocks(expanded_toggle_blocks)
 
+    @trace()
     def _clean_up(self, soup: BeautifulSoup) -> None:
-        print("Scraper._clean_up()")
         for script in soup.findAll("script"):
             script.decompose()
         for aif_production in soup.findAll("iframe", {"src": "https://aif.notion.so/aif-production.soup"}):
@@ -369,8 +337,8 @@ class Scraper:
             if unwanted_og_tag and isinstance(unwanted_og_tag, Tag):
                 unwanted_og_tag.decompose()
 
+    @trace()
     def _download_images(self, soup: BeautifulSoup) -> None:
-        print("Scraper._download_images()")
         images = [img for img in soup.findAll("img") if img.has_attr("src")]
         for img in images:
             is_notion_asset = img["src"].startswith("/")
@@ -391,8 +359,8 @@ class Scraper:
             style["background"] = spritesheet.replace(spritesheet_url, download_path)
             img["style"] = style.cssText
 
+    @trace()
     def _download_stylesheets(self, soup: BeautifulSoup) -> None:
-        print("Scraper._download_stylesheets()")
         is_stylesheet = lambda link: link.has_attr("href") and link["href"].startswith("/") and not "vendors~" in link["href"]
         stylesheets = [link for link in soup.findAll("link", rel="stylesheet") if is_stylesheet(link)]
         for link in stylesheets:
@@ -413,8 +381,8 @@ class Scraper:
 
             link["href"] = download_path
 
+    @trace()
     def _insert_injections(self, soup: BeautifulSoup) -> None:
-        print("Scraper._insert_injections()")
         # add ids and classes to toggle blocks for the injections, inserted next
         toggle_blocks = soup.findAll("div", {"class": "notion-toggle-block"})
         for query in ["header", "sub_header", "sub_sub_header"]:
@@ -436,8 +404,8 @@ class Scraper:
         assert soup.body is not None
         soup.body.insert(-1, soup.new_tag("script", type="text/javascript", src=str(js_path)))
 
+    @trace()
     def _link_to_table_view_subpages(self, soup: BeautifulSoup) -> None:
-        print("Scraper._link_to_table_view_subpages()")
         # add links to the title rows (which are identical to the data-block-id without dashes)
         for table_view in soup.findAll("div", {"class": "notion-table-view"}):
             for table_row in table_view.findAll("div", {"class": "notion-collection-item"}):
@@ -451,8 +419,8 @@ class Scraper:
                 )
                 row_target_span.wrap(row_link_wrapper)
 
+    @trace()
     def _link_to_subpages(self, soup: BeautifulSoup) -> List[str]:
-        print("Scraper._link_to_subpages()")
         subpage_urls = []
         domain = f'{Scraper.args.url.split("notion.site")[0]}notion.site'
         for a in soup.find_all("a", href=True):
@@ -485,9 +453,8 @@ class Scraper:
 
     def __del__(self):
         Scraper.driver.quit()
-        print("closed browser")
+        LOG.info("finished scraping, quit driver")
 
 
 if __name__ == "__main__":
-    # Scraper().run()
-    pass
+    Scraper().run()
