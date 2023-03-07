@@ -318,7 +318,7 @@ class Scraper:
 
     @trace()
     def _link_to_table_view_subpages(self, soup: BeautifulSoup) -> None:
-        # THIS DOESN'T WORK YET (table rows should link to their own subpages)
+        # TODO: refactor -> this is actually a part of _link_to_subpages()
         # test with: https://eager-waterfall-308.notion.site/2604ce45890645c79f67d92833083fee?v=e138f6fdcea24f87b442577732b2052d
 
         tables = soup.findAll("div", {"class": "notion-table-view"})
@@ -327,14 +327,14 @@ class Scraper:
             rows = table.findAll("div", {"class": "notion-collection-item"})
             LOG.info(f"found {len(rows)} rows in table")
             for row in rows:
-                row_href = "/" + row["data-block-id"].replace("-", "")
-                row_target_span = row.find("span")
-                row_target_span["style"] = row_target_span["style"].replace("pointer-events: none;", "")
-                row_link_wrapper = soup.new_tag(
+                subpage_url = "/" + row["data-block-id"].replace("-", "")
+                row_name_span = row.find("span")
+                row_name_span["style"] = row_name_span["style"].replace("pointer-events: none;", "")
+                subpage_anchor = soup.new_tag(
                     "a",
-                    attrs={"href": row_href, "style": "cursor: pointer; color: inherit; text-decoration: none; fill: inherit;"},
+                    attrs={"href": subpage_url, "style": "cursor: pointer; color: inherit; text-decoration: none; fill: inherit;"},
                 )
-                row_target_span.wrap(row_link_wrapper)
+                row_name_span.wrap(subpage_anchor)
 
     @trace()
     def _link_to_subpages(self, soup: BeautifulSoup) -> List[str]:
