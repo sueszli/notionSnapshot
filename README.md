@@ -71,6 +71,13 @@ py notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Example-03c
 
 <br><br><br>
 
+# Testing
+For now, we are trying to refactor Loconotion before improving upon it and adding new features:
+- Input URL: https://eager-waterfall-308.notion.site/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef
+- Expected output: https://loconotion-example.netlify.app/
+
+<br><br><br>
+
 # Thank you
 I hope you enjoy using this project as much as we enjoyed making it.
 There are a lot of people to thank for this project, so here's a list of everyone who deserves a big thank you:
