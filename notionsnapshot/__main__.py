@@ -25,6 +25,8 @@ from logger import LOG, trace
 from driver import DriverInitializer
 from argparser import ArgParser
 
+# TODO: turn FileManager() into Downloader() and couple it more tightly with the Scraper() functions that are related
+
 
 class FileManager:
     output_dir = ""
