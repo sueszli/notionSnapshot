@@ -136,8 +136,8 @@ class Scraper:
             self._download_images(soup)
             self._download_stylesheets(soup)
             self._insert_injections(soup)
-            self._link_to_table_view_subpages(soup)
             subpage_urls = self._link_to_subpages(soup)
+            self._link_to_table_view_subpages(soup)
 
             Scraper.file_manager.save_page(soup, url)
             Scraper.visited.add(url)
