@@ -25,8 +25,6 @@ from logger import LOG, trace
 from driver import DriverInitializer
 from argparser import ArgParser
 
-# TODO: turn FileManager() into Downloader() and couple it more tightly with the Scraper() functions that are related
-
 
 class FileManager:
     output_dir = ""
@@ -327,14 +325,14 @@ class Scraper:
         LOG.info(f"found {len(tables)} tables")
         for table in tables:
             rows = table.findAll("div", {"class": "notion-collection-item"})
-            LOG.info(f"found {len(rows)} rows in table")
+            LOG.info(f"found {len(rows)} rows with links to subpages in table")
             for row in rows:
-                subpage_url = "/" + row["data-block-id"].replace("-", "")
+                subpage_path = "/" + row["data-block-id"].replace("-", "")
                 row_name_span = row.find("span")
                 row_name_span["style"] = row_name_span["style"].replace("pointer-events: none;", "")
                 subpage_anchor = soup.new_tag(
                     "a",
-                    attrs={"href": subpage_url, "style": "cursor: pointer; color: inherit; text-decoration: none; fill: inherit;"},
+                    attrs={"href": subpage_path, "style": "cursor: pointer; color: inherit; text-decoration: none; fill: inherit;"},
                 )
                 row_name_span.wrap(subpage_anchor)
 
