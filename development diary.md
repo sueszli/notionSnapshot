@@ -40,7 +40,7 @@ This means that the best option we really have is to scrape the HTML files direc
 <br><br>
 
 ## Choosing a language
-JavaScript, Java, Python have the the best web-scraping libraries. Based on our experience, JavaScript and  were easier to write scripting tools.
+JavaScript, Java, Python have the the best web-scraping libraries. Based on our experience, Java is too verbose.
 
 We decided to use Python because it is the most popular language for data engineering and in general has the best data related eco-system. This means that there will be a larger community of developers to help with the project. It also means that there will be more resources available to help with the project and that the project will be easier to maintain.
 
