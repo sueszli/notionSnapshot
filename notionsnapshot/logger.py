@@ -27,7 +27,7 @@ class LoggingWrapper(logging.LoggerAdapter):
     def get_log() -> logging.LoggerAdapter:
         LoggingWrapper._setup()
         logging.basicConfig(level=logging.INFO, format="%(message)s")
-        return LoggingWrapper(logging.getLogger(), {})
+        return LoggingWrapper(logging.getLogger("scrape-logger"), {})
 
     @staticmethod
     def _setup() -> None:
