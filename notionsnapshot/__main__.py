@@ -85,7 +85,7 @@ class FileManager:
             return str(destination.relative_to(FileManager.output_dir)).replace("\\", "/")
 
         except Exception as error:
-            LOG.warning(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead \n {error}", file=sys.stderr)
+            LOG.warning(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead \n {error}")
             return str(Path(url)).replace("\\", "/")
 
     @trace()
@@ -108,12 +108,16 @@ class FileManager:
             f.write(html_str.encode("utf-8").strip())
         LOG.info(f"saved page to {output_path}")
 
-    @trace()
-    def get_path_from_url(self, url: str) -> Path:
+    def get_filename_from_url(self, url: str) -> str:
         id = urllib.parse.urlparse(url).path[1:]
         filename = id[: id.rfind("-")].lower() + ".html"
         if url == Scraper.args.url:
             filename = "index.html"
+        return filename
+
+    @trace()
+    def get_path_from_url(self, url: str) -> Path:
+        filename = self.get_filename_from_url(url)
         return Path(FileManager.output_dir + "/" + filename)
 
 
@@ -141,7 +145,7 @@ class Scraper:
 
             Scraper.file_manager.save_page(soup, url)
             Scraper.visited.add(url)
-            # (Scraper.will_visit.add(page) for page in subpage_urls if page not in Scraper.visited)
+            Scraper.will_visit.update(page for page in subpage_urls if page not in Scraper.visited)
 
         Scraper.driver.quit()
         LOG.info("exiting scraper")
@@ -168,7 +172,12 @@ class Scraper:
             return False
 
         Scraper.driver.get(url)
-        WebDriverWait(Scraper.driver, Scraper.args.timeout).until(is_page_loaded)
+        # In tests there were always infinite spinners so we ignore the timeout
+        # Maybe fix later
+        try:
+            WebDriverWait(Scraper.driver, Scraper.args.timeout).until(is_page_loaded)
+        except Exception:
+            LOG.info("Timed out waiting for page to load, proceeding anyways")
         LOG.info("page loaded")
 
         mode = "dark" if Scraper.args.dark_mode else "light"
@@ -243,7 +252,7 @@ class Scraper:
 
     @trace()
     def _download_images(self, soup: BeautifulSoup) -> None:
-        images = [img for img in soup.findAll("img") if img.has_attr("src")]
+        images = [img for img in soup.findAll("img") if img.has_attr("src") and not (img.has_attr("class") and "notion-emoji" in img["class"])]
         LOG.info(f"found {len(images)} images to download")
         for img in images:
             is_notion_asset = img["src"].startswith("/")
@@ -342,20 +351,34 @@ class Scraper:
 
         subpage_urls = []
         domain = f'{Scraper.args.url.split("notion.site")[0]}notion.site'
-        for a in soup.find_all("a", href=True):
+        anchors = soup.find_all("a", href=True)
+        for a in anchors:
             url = a["href"]
 
             is_relative_url = url.startswith("/")
             if is_relative_url:
-                url = f'{domain}/{a["href"].split("/")[len(a["href"].split("/"))-1]}'
+                url = f'{domain}/{a["href"].split("/")[-1]}'
 
             is_external_url = not url.startswith(domain)
             if is_external_url:
                 continue
-
-            is_scroller = len(a.find_parents("div", class_="notion-scroller")) > 0
+            scroller_parent = a.find_parent("div", class_="notion-scroller")
+            is_scroller = scroller_parent is not None and len(scroller_parent) > 0
             is_table_of_contents = "#" in url
-            if is_scroller:
+
+            if is_table_of_contents:
+                # add ids and classes for 'injection.js' to work
+                arr = url.split("#")
+                url = arr[0]
+                a["href"] = f"#{arr[-1]}"
+                a["class"] = a.get("class", []) + ["notionsnapshot-anchor-link"]
+
+            elif is_scroller:
+                filename = Scraper.file_manager.get_filename_from_url(url)
+                LOG.info("file: " + filename)
+                a["href"] = filename
+                subpage_urls.append(url)
+            else:
                 del a["href"]
                 a.name = "span"
                 children = [child for child in ([a] + a.find_all()) if child.has_attr("style")]
@@ -363,17 +386,6 @@ class Scraper:
                     style = cssutils.parseStyle(child["style"])
                     style["cursor"] = "default"
                     child["style"] = style.cssText
-
-            elif is_table_of_contents:
-                # add ids and classes for 'injection.js' to work
-                arr = url.split("#")
-                url = arr[0]
-                a["href"] = f"#{arr[-1]}"
-                a["class"] = a.get("class", []) + ["notionsnapshot-anchor-link"]
-
-            else:
-                a["href"] = Scraper.file_manager.get_path_from_url(url)
-                subpage_urls.append(url)
 
         return subpage_urls
 
