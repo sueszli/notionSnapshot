@@ -1,4 +1,5 @@
 import argparse
+import logging
 import urllib.parse
 import urllib.request
 import os
@@ -401,4 +402,8 @@ if __name__ == "__main__":
     file_manager = FileManager(args.url)
     driver = DriverInitializer.get_driver(args)
     soup = BeautifulSoup(driver.page_source, "html5lib")
+
+    if args.debug:
+        LOG.setLevel(logging.DEBUG)
+
     Scraper(args.url, soup, driver, file_manager, timeout=args.timeout, dark_mode=args.dark_mode).run()
