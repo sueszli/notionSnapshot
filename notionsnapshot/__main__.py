@@ -1,4 +1,3 @@
-import argparse
 import logging
 import urllib.parse
 import urllib.request
@@ -12,6 +11,7 @@ import sys
 import uuid
 from pathlib import Path
 from typing import List, Tuple
+
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -21,6 +21,7 @@ from bs4 import BeautifulSoup, Tag
 import html5lib  # used by bs4
 import requests
 import cssutils
+from appdirs import user_cache_dir
 
 from logger import LOG, trace
 from driver import DriverInitializer
@@ -34,17 +35,24 @@ class FileManager:
         id = urllib.parse.urlparse(self.url).path[1:]
         name = id[: id.rfind("-")].lower()
         self.output_dir = os.path.join("snapshots", name)
+        cache_base_dir = user_cache_dir(appname="notion-snapshot", appauthor="suezli")
+        self.cache_dir = os.path.join(cache_base_dir, name)
 
         self._setup()
 
     @trace()
     def _setup(self) -> None:
         if os.path.exists(self.output_dir):
+            if os.path.exists(self.output_dir + "/assets"):
+                LOG.info("Copying assets to caching directory")
+                shutil.copytree(self.output_dir + "/assets", self.cache_dir, dirs_exist_ok=True)
+
             shutil.rmtree(self.output_dir)
             LOG.info(f"removed previous snapshot for this url")
 
         os.makedirs(self.output_dir, exist_ok=True)
         os.makedirs(self.output_dir + "/assets", exist_ok=True)
+        os.makedirs(self.cache_dir, exist_ok=True)
 
     @trace()
     def download_asset(self, url: str, filename: str = "") -> str:
@@ -57,6 +65,12 @@ class FileManager:
                 queryless_url = queryless_url + f"?width={params['width']}"
             filename = hashlib.sha1(str.encode(queryless_url)).hexdigest()
             LOG.info("no filename, generated hash: " + filename)
+        cache_path = os.path.join(self.cache_dir, filename + ".*")
+        cached = glob.glob(cache_path)
+        if cached:
+            LOG.debug(f"File {filename} found in cache. Using cached version")
+            shutil.copy(cached[0], self.output_dir + "/assets")
+            return os.path.join("assets", os.path.basename(cached[0]))
 
         already_downloaded = glob.glob(self.output_dir + "/assets/" + filename + ".*")
         if already_downloaded:
@@ -293,7 +307,7 @@ class Scraper:
         for link in stylesheets:
             download_path = self.file_manager.download_asset(f'https://www.notion.so{link["href"]}')
 
-            with open(f"{self.file_manager.output_dir}/{download_path}", "rb+") as f:
+            with open(os.path.join(self.file_manager.output_dir, download_path), "rb+") as f:
                 stylesheet = cssutils.parseString(f.read())
 
                 # additionally download fonts used in the stylesheet
