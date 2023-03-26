@@ -1,28 +1,3 @@
-```
-    _   __      __  _                _____                        __          __ 
-   / | / /___  / /_(_)___  ____     / ___/____  ____ _____  _____/ /_  ____  / /_
-  /  |/ / __ \/ __/ / __ \/ __ \    \__ \/ __ \/ __ `/ __ \/ ___/ __ \/ __ \/ __/
- / /|  / /_/ / /_/ / /_/ / / / /   ___/ / / / / /_/ / /_/ (__  ) / / / /_/ / /_  
-/_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/  
-                                                    /_/     
-
-📸💥 the html export tool that actually works
-
-- free yourself from the Notion lock-in
-- use Notion as your content management system
-- share your Notion pages with custom domain names
-```
-
-<br>
-
-Original page              |  Export through Notion | **✨Notion Snapshot✨**
-:-------------------------:|:-------------------------:|:-------------------------:
-<img width="685" alt="image" src="https://user-images.githubusercontent.com/61852663/221595552-3eebc492-9e64-4cb3-b330-4418961890ce.png">  |  <img width="685" alt="image" src="https://user-images.githubusercontent.com/61852663/221595560-d90a2d41-f7a8-48be-8fe9-e63889126042.png">               | <img width="685" alt="image" src="https://user-images.githubusercontent.com/61852663/221595539-ba0b9dca-4bd4-482e-81f9-64ea12e0ded4.png">
-
-<br><br><br>
-
-# How to use
-
 ### 1. Make your Notion page publicly accessible
 Assuming that you already have a [www.notion.so](https://www.notion.so/) account, you can make your pages publicly accessible by clicking on the `Share` button in the top right corner of the page and toggling the `Share to web` button.
 
