@@ -1,21 +1,4 @@
 This is a collection of notes and considerations that were made during the development of the project.
-
-<br><br>
-
-## Defining the problem
-The default HTML export tool in Notion.so does not keep the pages original styling and formatting. Providing an alternative HTML export tool that keeps the pages original styling and formatting would also enable people to ...
-
-- leave the Notion.so ecosystem by backing up their data.
-- use Notion.so as a CMS for their website (so they no longer need super.so, potion.so, etc.) - additionally the pages could also be immediately hosted on GitHub-Pages.
-
-We initially wanted to build a GUI such that non-technical users could use the tool. We decided to build a CLI tool instead because ...
-- it is easier to build and maintain
-- it is easier to integrate with other tools, that is, it is easier to build a GUI on top of a CLI tool than the other way around.
-
-Ideally the tool should be a standalone library that can be used by other developers to build their own tools.
-
-In short: This should be a simple CLI tool that converts Notion.so pages to HTML files (for developers).
-
 <br><br>
 
 ## Choosing a strategy

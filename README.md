@@ -6,7 +6,11 @@
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/  
                                                     /_/     
 
-📸💥 A CLI tool to export your Notion pages as pretty HTML files
+📸💥 the html export tool that actually looks like Notion
+
+- free yourself from the Notion lock-in
+- use Notion as your content management system
+- share your Notion pages with custom domain names
 ```
 
 <br>
@@ -20,14 +24,24 @@ Original page              |  Export through Notion | **✨Notion Snapshot✨**
 <br><br><br>
 
 # How to use
-### 1. Make a publically accessible page
-Assuming you already have a [www.notion.so](https://www.notion.so/) account, you can make your pages publicly accessible by clicking on the `Share` button in the top right corner of the page and toggling the `Share to web` button.
 
-You will need the generated link for the next step.
+### 1. Make your Notion page publicly accessible
+Assuming that you already have a [www.notion.so](https://www.notion.so/) account, you can make your pages publicly accessible by clicking on the `Share` button in the top right corner of the page and toggling the `Share to web` button.
+
+You then need to `Copy web link` for the next steps.
 
 <br>
 
-### 2. Clone this repository
+### 2a. Download the executalbe
+
+```bash
+git clone https://github.com/sueszli/notionSnapshot.git
+cd notionSnapshot
+``` 
+
+</br>
+
+### 2b. Clone this repository
 ```bash
 git clone https://github.com/sueszli/notionSnapshot.git
 cd notionSnapshot
