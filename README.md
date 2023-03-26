@@ -6,7 +6,7 @@
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/  
                                                     /_/     
 
-📸💥 the html export tool that actually looks like Notion
+📸💥 the html export tool that actually works
 
 - free yourself from the Notion lock-in
 - use Notion as your content management system
