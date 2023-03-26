@@ -17,6 +17,8 @@ class ArgParser:
         parser.add_argument("-b", "--show-browser", help="disable headless mode and show browser window", action="store_true")
         parser.add_argument("-d", "--dark-mode", help="scrape pages in dark mode", action="store_true")
         parser.add_argument("--timeout", help="specify download timeout in seconds (default: 10s)", type=int, default=10, metavar="TIMEOUT")
+        parser.add_argument("--debug", help="enable debugging", action="store_true")
+        parser.add_argument("--no-cache", help="disabled asset cache", action="store_true")
         parser.add_argument("url", help="url of the Notion page to scrape", metavar="URL")
         parser.parse_args()
         return parser.parse_args()
