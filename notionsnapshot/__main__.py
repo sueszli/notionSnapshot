@@ -27,20 +27,23 @@ from argparser import ArgParser
 
 
 class FileManager:
-    output_dir = ""
+    @trace()
+    def __init__(self, url: str) -> None:
+        self.url = url
+        id = urllib.parse.urlparse(self.url).path[1:]
+        name = id[: id.rfind("-")].lower()
+        self.output_dir = os.path.join("snapshots", name)
+
+        self._setup()
 
     @trace()
-    def __init__(self, args: argparse.Namespace) -> None:
-        id = urllib.parse.urlparse(args.url).path[1:]
-        name = id[: id.rfind("-")].lower()
-        FileManager.output_dir = os.path.join("snapshots", name)
-
-        if os.path.exists(FileManager.output_dir):
-            shutil.rmtree(FileManager.output_dir)
+    def _setup(self) -> None:
+        if os.path.exists(self.output_dir):
+            shutil.rmtree(self.output_dir)
             LOG.info(f"removed previous snapshot for this url")
 
-        os.makedirs(FileManager.output_dir, exist_ok=True)
-        os.makedirs(FileManager.output_dir + "/assets", exist_ok=True)
+        os.makedirs(self.output_dir, exist_ok=True)
+        os.makedirs(self.output_dir + "/assets", exist_ok=True)
 
     @trace()
     def download_asset(self, url: str, filename: str = "") -> str:
@@ -54,11 +57,11 @@ class FileManager:
             filename = hashlib.sha1(str.encode(queryless_url)).hexdigest()
             LOG.info("no filename, generated hash: " + filename)
 
-        already_downloaded = glob.glob(FileManager.output_dir + "/assets/" + filename + ".*")
+        already_downloaded = glob.glob(self.output_dir + "/assets/" + filename + ".*")
         if already_downloaded:
-            return str(Path(already_downloaded[0]).relative_to(FileManager.output_dir)).replace("\\", "/")
+            return str(Path(already_downloaded[0]).relative_to(self.output_dir)).replace("\\", "/")
 
-        destination = Path(FileManager.output_dir) / "assets" / filename
+        destination = Path(self.output_dir) / "assets" / filename
         try:
             session = requests.Session()
             session.trust_env = False
@@ -82,7 +85,7 @@ class FileManager:
 
             with open(destination, "wb") as f:
                 f.write(response.content)
-            return str(destination.relative_to(FileManager.output_dir)).replace("\\", "/")
+            return str(destination.relative_to(self.output_dir)).replace("\\", "/")
 
         except Exception as error:
             LOG.warning(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead \n {error}")
@@ -91,12 +94,12 @@ class FileManager:
     @trace()
     def copy_injections_to_assets(self) -> Tuple[str, str]:
         injection_dir = Path(__file__).parent / "injections"
-        css_out = Path(FileManager.output_dir) / "assets" / "injection.css"
-        js_out = Path(FileManager.output_dir) / "assets" / "injection.js"
+        css_out = Path(self.output_dir) / "assets" / "injection.css"
+        js_out = Path(self.output_dir) / "assets" / "injection.js"
         shutil.copy(injection_dir / "injection.js", js_out)
         shutil.copy(injection_dir / "injection.css", css_out)
-        relative_css_out = str(css_out.relative_to(FileManager.output_dir)).replace("\\", "/")
-        relative_js_out = str(js_out.relative_to(FileManager.output_dir)).replace("\\", "/")
+        relative_css_out = str(css_out.relative_to(self.output_dir)).replace("\\", "/")
+        relative_js_out = str(js_out.relative_to(self.output_dir)).replace("\\", "/")
         return relative_css_out, relative_js_out
 
     @trace()
@@ -111,31 +114,34 @@ class FileManager:
     def get_filename_from_url(self, url: str) -> str:
         id = urllib.parse.urlparse(url).path[1:]
         filename = id[: id.rfind("-")].lower() + ".html"
-        if url == Scraper.args.url:
+        if url == self.url:
             filename = "index.html"
         return filename
 
     @trace()
     def get_path_from_url(self, url: str) -> Path:
         filename = self.get_filename_from_url(url)
-        return Path(FileManager.output_dir + "/" + filename)
+        return Path(self.output_dir + "/" + filename)
 
 
 class Scraper:
-    args = ArgParser.get_arguments()
-    driver = DriverInitializer.get_driver(args)
-    file_manager = FileManager(args)
-
-    will_visit = set([args.url])
-    visited = set()
+    def __init__(self, url: str, soup: BeautifulSoup, driver: webdriver.Chrome, file_manager: FileManager, timeout: float = 10, dark_mode: bool = False):
+        self.url = url
+        self.soup = soup
+        self.driver = driver
+        self.file_manager = file_manager
+        self.timeout = timeout
+        self.dark_mode = dark_mode
+        self.will_visit = set([url])
+        self.visited = set()
 
     def run(self) -> None:
-        while Scraper.will_visit:
-            url = Scraper.will_visit.pop()
+        while self.will_visit:
+            url = self.will_visit.pop()
 
             self._load_page(url)
             self._expand_toggle_blocks()
-            soup = BeautifulSoup(Scraper.driver.page_source, "html5lib")
+            soup = BeautifulSoup(self.driver.page_source, "html5lib")
             self._clean_up(soup)
             self._download_images(soup)
             self._download_stylesheets(soup)
@@ -143,11 +149,11 @@ class Scraper:
             subpage_urls = self._link_to_subpages(soup)
             self._link_to_table_view_subpages(soup)
 
-            Scraper.file_manager.save_page(soup, url)
-            Scraper.visited.add(url)
-            Scraper.will_visit.update(page for page in subpage_urls if page not in Scraper.visited)
+            self.file_manager.save_page(soup, url)
+            self.visited.add(url)
+            self.will_visit.update(page for page in subpage_urls if page not in self.visited)
 
-        Scraper.driver.quit()
+        self.driver.quit()
         LOG.info("exiting scraper")
 
     @trace()
@@ -171,27 +177,27 @@ class Scraper:
             prev_page = d.page_source
             return False
 
-        Scraper.driver.get(url)
+        self.driver.get(url)
         # In tests there were always infinite spinners so we ignore the timeout
         # Maybe fix later
         try:
-            WebDriverWait(Scraper.driver, Scraper.args.timeout).until(is_page_loaded)
+            WebDriverWait(self.driver, self.timeout).until(is_page_loaded)
         except Exception:
             LOG.info("Timed out waiting for page to load, proceeding anyways")
         LOG.info("page loaded")
 
-        mode = "dark" if Scraper.args.dark_mode else "light"
-        Scraper.driver.execute_script("__console.environment.ThemeStore.setState({ mode: '" + mode + "' })")
+        mode = "dark" if self.dark_mode else "light"
+        self.driver.execute_script("__console.environment.ThemeStore.setState({ mode: '" + mode + "' })")
         LOG.info(f"set theme to {mode}")
 
     @trace(print_args=False)
     def _expand_toggle_blocks(self, expanded_toggle_blocks=[]) -> None:
         def get_toggle_blocks() -> List[WebElement]:
-            toggle_blocks = Scraper.driver.find_elements(By.CLASS_NAME, "notion-toggle-block")
+            toggle_blocks = self.driver.find_elements(By.CLASS_NAME, "notion-toggle-block")
             header_toggle_blocks = []
             queries = [f"notion-selectable.notion-{type}-block" for type in ["header", "sub_header", "sub_sub_header"]]
             for query in queries:
-                blocks = Scraper.driver.find_elements(By.CLASS_NAME, query)
+                blocks = self.driver.find_elements(By.CLASS_NAME, query)
                 for block in blocks:
                     if block.find_elements(By.CSS_SELECTOR, "div[role=button]"):
                         header_toggle_blocks.append(block)
@@ -211,9 +217,9 @@ class Scraper:
             toggle_block_button = block.find_element(By.CSS_SELECTOR, "div[role=button]")
             is_expanded = "(180deg)" in (toggle_block_button.find_element(By.TAG_NAME, "svg").get_attribute("style"))
             if not is_expanded:
-                Scraper.driver.execute_script("arguments[0].click();", toggle_block_button)
+                self.driver.execute_script("arguments[0].click();", toggle_block_button)
                 try:
-                    WebDriverWait(Scraper.driver, Scraper.args.timeout).until(lambda d: is_block_expanded(block))
+                    WebDriverWait(self.driver, self.timeout).until(lambda d: is_block_expanded(block))
                 except TimeoutException:
                     LOG.warning("timeout while expanding block - manually check if it's expanded in the snapshot", file=sys.stderr)
                     continue
@@ -260,7 +266,7 @@ class Scraper:
                 img_src = img["src"]
                 if is_notion_asset:
                     img_src = f'https://www.notion.so{img["src"]}'
-                img["src"] = Scraper.file_manager.download_asset(img_src)
+                img["src"] = self.file_manager.download_asset(img_src)
             elif is_notion_asset:
                 img["src"] = f'https://www.notion.so{img["src"]}'
 
@@ -270,7 +276,7 @@ class Scraper:
             style = cssutils.parseStyle(img["style"])
             spritesheet = style["background"]
             spritesheet_url = spritesheet[spritesheet.find("(") + 1 : spritesheet.find(")")]
-            download_path = Scraper.file_manager.download_asset(f"https://www.notion.so{spritesheet_url}")
+            download_path = self.file_manager.download_asset(f"https://www.notion.so{spritesheet_url}")
             style["background"] = spritesheet.replace(spritesheet_url, download_path)
             img["style"] = style.cssText
 
@@ -284,9 +290,9 @@ class Scraper:
         stylesheets = [link for link in soup.findAll("link", rel="stylesheet") if is_stylesheet(link)]
 
         for link in stylesheets:
-            download_path = Scraper.file_manager.download_asset(f'https://www.notion.so{link["href"]}')
+            download_path = self.file_manager.download_asset(f'https://www.notion.so{link["href"]}')
 
-            with open(f"{FileManager.output_dir}/{download_path}", "rb+") as f:
+            with open(f"{self.file_manager.output_dir}/{download_path}", "rb+") as f:
                 stylesheet = cssutils.parseString(f.read())
 
                 # additionally download fonts used in the stylesheet
@@ -295,7 +301,7 @@ class Scraper:
                         font_file = rule.style["src"].split("url(")[-1].split(")")[0]
                         parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
                         font_download_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
-                        font_download_path = Scraper.file_manager.download_asset(font_download_url, Path(font_file).name)
+                        font_download_path = self.file_manager.download_asset(font_download_url, Path(font_file).name)
                         rule.style["src"] = f"url({font_download_path})"
                 f.seek(0)
                 f.truncate()
@@ -319,7 +325,7 @@ class Scraper:
                 toggle_content["class"] = toggle_content.get("class", []) + ["notionsnapshot-toggle-content"]
                 toggle_content.attrs["notionsnapshot-toggle-id"] = toggle_button.attrs["notionsnapshot-toggle-id"] = toggle_id
 
-        css_path, js_path = Scraper.file_manager.copy_injections_to_assets()
+        css_path, js_path = self.file_manager.copy_injections_to_assets()
         assert soup.head is not None
         soup.head.insert(-1, soup.new_tag("link", rel="stylesheet", href=css_path))
         assert soup.body is not None
@@ -350,7 +356,7 @@ class Scraper:
         # THIS DOESN'T WORK YET
 
         subpage_urls = []
-        domain = f'{Scraper.args.url.split("notion.site")[0]}notion.site'
+        domain = f'{self.url.split("notion.site")[0]}notion.site'
         anchors = soup.find_all("a", href=True)
         for a in anchors:
             url = a["href"]
@@ -374,7 +380,7 @@ class Scraper:
                 a["class"] = a.get("class", []) + ["notionsnapshot-anchor-link"]
 
             elif is_scroller:
-                filename = Scraper.file_manager.get_filename_from_url(url)
+                filename = self.file_manager.get_filename_from_url(url)
                 LOG.info("file: " + filename)
                 a["href"] = filename
                 subpage_urls.append(url)
@@ -391,4 +397,8 @@ class Scraper:
 
 
 if __name__ == "__main__":
-    Scraper().run()
+    args = ArgParser.get_arguments()
+    file_manager = FileManager(args.url)
+    driver = DriverInitializer.get_driver(args)
+    soup = BeautifulSoup(driver.page_source, "html5lib")
+    Scraper(args.url, soup, driver, file_manager, timeout=args.timeout, dark_mode=args.dark_mode).run()
