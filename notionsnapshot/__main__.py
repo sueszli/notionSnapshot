@@ -68,12 +68,12 @@ class FileManager:
             filename = hashlib.sha1(str.encode(queryless_url)).hexdigest()
             LOG.info("no filename, generated hash: " + filename)
 
-        if self.cache_assets and (cached := self._load_from_cache(filename)) is not None:
-            return cached
-
         already_downloaded = glob.glob(self.output_dir + "/assets/" + filename + ".*")
         if already_downloaded:
             return str(Path(already_downloaded[0]).relative_to(self.output_dir)).replace("\\", "/")
+
+        if self.cache_assets and (cached := self._load_from_cache(filename)) is not None:
+            return cached
 
         destination = Path(self.output_dir) / "assets" / filename
         try:
