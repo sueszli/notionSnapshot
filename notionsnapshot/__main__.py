@@ -1,4 +1,4 @@
-import argparse
+import logging
 import urllib.parse
 import urllib.request
 import os
@@ -10,7 +10,8 @@ import re
 import sys
 import uuid
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Optional, Tuple
+
 from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -20,6 +21,7 @@ from bs4 import BeautifulSoup, Tag
 import html5lib  # used by bs4
 import requests
 import cssutils
+from appdirs import user_cache_dir
 
 from logger import LOG, trace
 from driver import DriverInitializer
@@ -28,22 +30,31 @@ from argparser import ArgParser
 
 class FileManager:
     @trace()
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str, cache_assets: bool = True) -> None:
         self.url = url
         id = urllib.parse.urlparse(self.url).path[1:]
         name = id[: id.rfind("-")].lower()
         self.output_dir = os.path.join("snapshots", name)
+        self.cache_assets = cache_assets
+        cache_base_dir = user_cache_dir(appname="notion-snapshot", appauthor="suezli")
+        self.cache_dir = os.path.join(cache_base_dir, name)
 
         self._setup()
 
     @trace()
     def _setup(self) -> None:
         if os.path.exists(self.output_dir):
+            if self.cache_assets and os.path.exists(self.output_dir + "/assets"):
+                LOG.info("Copying assets to caching directory")
+                shutil.copytree(self.output_dir + "/assets", self.cache_dir, dirs_exist_ok=True)
+
             shutil.rmtree(self.output_dir)
             LOG.info(f"removed previous snapshot for this url")
 
         os.makedirs(self.output_dir, exist_ok=True)
         os.makedirs(self.output_dir + "/assets", exist_ok=True)
+        if self.cache_assets:
+            os.makedirs(self.cache_dir, exist_ok=True)
 
     @trace()
     def download_asset(self, url: str, filename: str = "") -> str:
@@ -60,6 +71,9 @@ class FileManager:
         already_downloaded = glob.glob(self.output_dir + "/assets/" + filename + ".*")
         if already_downloaded:
             return str(Path(already_downloaded[0]).relative_to(self.output_dir)).replace("\\", "/")
+
+        if self.cache_assets and (cached := self._load_from_cache(filename)) is not None:
+            return cached
 
         destination = Path(self.output_dir) / "assets" / filename
         try:
@@ -90,6 +104,17 @@ class FileManager:
         except Exception as error:
             LOG.warning(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead \n {error}")
             return str(Path(url)).replace("\\", "/")
+
+    def _load_from_cache(self, filename: str) -> Optional[str]:
+        filename = filename if Path(filename).suffix else filename + ".*"
+        cache_path = os.path.join(self.cache_dir, filename)
+        cached = glob.glob(cache_path)
+        LOG.debug("cached: " + str(cached))
+        if cached:
+            LOG.debug(f"File {filename} found in cache. Using cached version")
+            shutil.copy(cached[0], self.output_dir + "/assets")
+            return os.path.join("assets", os.path.basename(cached[0]))
+        return None
 
     @trace()
     def copy_injections_to_assets(self) -> Tuple[str, str]:
@@ -290,17 +315,28 @@ class Scraper:
         stylesheets = [link for link in soup.findAll("link", rel="stylesheet") if is_stylesheet(link)]
 
         for link in stylesheets:
+            LOG.debug("link:" + link["href"])
             download_path = self.file_manager.download_asset(f'https://www.notion.so{link["href"]}')
 
-            with open(f"{self.file_manager.output_dir}/{download_path}", "rb+") as f:
+            with open(os.path.join(self.file_manager.output_dir, download_path), "rb+") as f:
                 stylesheet = cssutils.parseString(f.read())
 
                 # additionally download fonts used in the stylesheet
                 for rule in stylesheet.cssRules:
                     if rule.type == cssutils.css.CSSRule.FONT_FACE_RULE:
-                        font_file = rule.style["src"].split("url(")[-1].split(")")[0]
+                        # for some reason the url becomes https:/www.notion.so/https:/not.../<the url>
+                        url_regex = re.compile(r"url\((/?https:/www.notion.so)*(.+?)\).*")
+                        LOG.debug(rule.style["src"])
+                        m = url_regex.match(rule.style["src"])
+                        if m is None:
+                            raise ValueError("Could not parse stylesheet source of font face rule")
+                        # first capture group the repeating notion url
+                        font_file = re.sub(r"assets/", "", m.group(2))
                         parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
+                        LOG.debug("parent_css_path: " + parent_css_path)
+                        LOG.debug("font_file: " + font_file)
                         font_download_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
+                        LOG.debug("font_download_url: " + font_download_url)
                         font_download_path = self.file_manager.download_asset(font_download_url, Path(font_file).name)
                         rule.style["src"] = f"url({font_download_path})"
                 f.seek(0)
@@ -398,7 +434,11 @@ class Scraper:
 
 if __name__ == "__main__":
     args = ArgParser.get_arguments()
-    file_manager = FileManager(args.url)
+    file_manager = FileManager(args.url, cache_assets=(not args.no_cache))
     driver = DriverInitializer.get_driver(args)
     soup = BeautifulSoup(driver.page_source, "html5lib")
+
+    if args.debug:
+        LOG.setLevel(logging.DEBUG)
+
     Scraper(args.url, soup, driver, file_manager, timeout=args.timeout, dark_mode=args.dark_mode).run()
