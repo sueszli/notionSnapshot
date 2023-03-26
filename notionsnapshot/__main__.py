@@ -305,6 +305,7 @@ class Scraper:
         stylesheets = [link for link in soup.findAll("link", rel="stylesheet") if is_stylesheet(link)]
 
         for link in stylesheets:
+            LOG.debug("link:" + link["href"])
             download_path = self.file_manager.download_asset(f'https://www.notion.so{link["href"]}')
 
             with open(os.path.join(self.file_manager.output_dir, download_path), "rb+") as f:
@@ -313,9 +314,18 @@ class Scraper:
                 # additionally download fonts used in the stylesheet
                 for rule in stylesheet.cssRules:
                     if rule.type == cssutils.css.CSSRule.FONT_FACE_RULE:
-                        font_file = rule.style["src"].split("url(")[-1].split(")")[0]
+                        # for some reason the url becomes https:/www.notion.so/https:/not.../<the url>
+                        url_regex = re.compile(r"url\((/?https:/www.notion.so)*(.+)\)")
+                        m = url_regex.match(rule.style["src"])
+                        if m is None:
+                            raise ValueError("Could not parse stylesheet source of font face rule")
+                        # first capture group the repeating notion url
+                        font_file = m.group(2)
                         parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
+                        LOG.debug("parent_css_path: " + parent_css_path)
+                        LOG.debug("font_file: " + font_file)
                         font_download_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
+                        LOG.debug("font_download_url: " + font_download_url)
                         font_download_path = self.file_manager.download_asset(font_download_url, Path(font_file).name)
                         rule.style["src"] = f"url({font_download_path})"
                 f.seek(0)
