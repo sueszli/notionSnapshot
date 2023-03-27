@@ -18,7 +18,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import TimeoutException
 from bs4 import BeautifulSoup, Tag
-import html5lib  # used by bs4
+import html5lib  # implicitly used by bs4
 import requests
 import cssutils
 from appdirs import user_cache_dir
