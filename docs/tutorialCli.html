@@ -27,8 +27,8 @@
   </header>
 
   <blockquote>
-    ... in the future, you'll be able to install the CLI via PIP, but for now, you'll have to
-    clone the repo and install it manually.
+    ... we are planning to make this tool available through PIP, but for now you have to clone the
+    repository and install the dependencies manually.
   </blockquote>
 
   <br>
@@ -36,16 +36,25 @@
   <section>
     <h2>1. Setup</h2>
     <p>
-      If you havent already, you first need to install Python3 with Pip and Poetry.
+      If you havent already, you first need to install:
     </p>
-  
+
+    <ul>
+      <li><a href="https://www.python.org/downloads/">Python 3</a></li>
+      <li><a href="https://pip.pypa.io/en/stable/installation/">PIP</a></li>
+      <li><a href="https://python-poetry.org/docs/#installation">Poetry</a></li>
+    </ul>
+
     <p>
-      Also if you are on Windows you additionally need to install WSL (Windows Subsystem for Linux) and 
-      Chrome.
+      Additionally if you are on a Windows machine you need to install: 
     </p>
-  
+    <ul>
+      <li><a href="https://learn.microsoft.com/en-us/windows/wsl/install">WSL (Windows Subsystem for Linux)</a></li>
+      <li>All the dependencies above + Chrome inside your WSL</li>
+    </ul>
+
     <p>
-      This is how you install Chrome in WSL/Ubuntu:
+      Installing Chrome in Ubuntu / WSL can be a bit tricky, but here is what worked for me:
     </p>
   
     <pre><code>
@@ -61,6 +70,10 @@
 
   <section>
     <h2>2. Cloning the repository</h2>
+
+    <p>
+      Next you have to clone the repository.
+    </p>
 
     <pre><code>
     git clone https://github.com/sueszli/notionSnapshot.git
@@ -82,28 +95,66 @@
     </code></pre>
 
     <p>
-      But be careful because some dependencies might be missing and you might have to install them again
-      with pip manually (e.g. <code>pip install xyz</code>).
+      But be careful because some dependencies might still be missing after this step.
+      You then might have to install them again with pip manually (e.g. <code>pip install xyz</code>).
     </p>
   </section>
 
   <br>
 
   <section>
-    <h2>4. Running the</h2>
+    <h2>4. Running the application</h2>
 
     <p>
       Use the <code>-h</code> or <code>--help</code> flag when running the script to see all the options that
-      are available.
+      are available:
+    </p>
+  
+    <pre><code>
+    python3 notionsnapshot --help      
+    </code></pre>
+  
+    <p>
+      You can for instance scrape the pages in dark mode by using the <code>--dark-mode</code> option or display
+      the browser while scraping by using the <code>--show-browser</code> option.
+    </p>
+
+    <p>
+      Once you've made up your mind, you can run the script with the URL of the Notion page you want to scrape:
     </p>
 
     <pre><code>
-    python3 notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef      
-    </code></pre>
+    python3 notionsnapshot https://....notion.site/... 
+    </code></pre>  
 
     <p>
       After runnning the script the exported files will be saved in the <code>snapshots</code> folder.
     </p>
+  </section>
+
+  <br>
+
+  <section>
+    <h2>Optional: Testing the application</h2>
+
+    <p>
+      If you want to, you can also use the test page that we made just for this project:
+      <a href="https://sueszli.notion.site/Notion-Snapshot-Test-Page-5ab361d19688436fb22f319e84b53a07">
+        https://sueszli.notion.site/Notion-Snapshot-Test-Page-5ab361d19688436fb22f319e84b53a07
+      </a>
+    </p>
+
+    <p>
+      Scraping the entire thing will definitely take a while – so we suggest that you choose a specific page from there.
+    </p>
+
+    <p>
+      This page could be a good start:
+    </p>
+
+    <pre><code>
+    python3 notionsnapshot https://sueszli.notion.site/Blog-Post-aca367b524e3498482fb57812853ce27      
+    </code></pre>
   </section>
   
   <br>
