@@ -16,24 +16,22 @@ BANNER_ASCII = """
 
 
 class LoggingWrapper(logging.LoggerAdapter):
+    # proxy for 'logging' module that adds indentation based on the stack depth
     def process(self, msg, kwargs):
-        # proxy for 'logging' module that adds indentation based on the stack depth
+        tab = " " * 3
         ignored_stack_frames = 8
         indentation_level = len(traceback.extract_stack()) - ignored_stack_frames
-        tab = " " * 3
         return f"{tab * indentation_level}{msg}", kwargs
 
     @staticmethod
     def get_log() -> logging.LoggerAdapter:
-        LoggingWrapper._setup()
         logging.basicConfig(level=logging.INFO, format="%(message)s")
-        return LoggingWrapper(logging.getLogger("scrape-logger"), {})
-
-    @staticmethod
-    def _setup() -> None:
         cssutils.log.setLevel(logging.CRITICAL)  # type: ignore
+
         os.system("cls" if os.name == "nt" else "clear")
         print(BANNER_ASCII)
+
+        return LoggingWrapper(logging.getLogger("scrape-logger"), {})
 
 
 LOG = LoggingWrapper.get_log()
@@ -44,19 +42,22 @@ def trace(print_args: bool = True):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            log_input = "⮕ "
-            # log_input += f"{args[0].__class__.__name__}."
-            log_input += f"\033[92m{func.__name__}(\033[0m"
+            input_string = "⮕ "
+            class_name = f"{args[0].__class__.__name__}." if isinstance(args[0], object) else ""
+            function_name = f"\033[92m{func.__name__}(\033[0m"
+            input_string += function_name
             if print_args:
-                not_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
-                log_input += ", ".join([str(arg) for arg in not_html[1:]])
-            log_input += f"\033[92m)\033[0m"
-            LOG.info(log_input)
+                args_without_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
+                input_string += ", ".join([str(arg) for arg in args_without_html[1:]])
+            input_string += f"\033[92m)\033[0m"
+            LOG.info(input_string)
 
             result = func(*args, **kwargs)
 
-            r = result if result is not None else ""
-            LOG.info(f"⬅ {r if print_args else ''}")
+            output_string = "⬅ "
+            if print_args:
+                output_string += result if result is not None else ""
+            LOG.info(output_string)
             return result
 
         return wrapper
