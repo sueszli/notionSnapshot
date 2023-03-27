@@ -32,7 +32,11 @@
     <p>
       If you have ever used the default HTML export feature in Notion, you already know that the
       exported files are not very useful. They are not styled the same way as the original page and
-      even miss some of your content.
+      even miss some content.
+    </p>
+
+    <p>
+      Because the Notion API is just as helpful as the HTML export tool, we had to resort to web scraping.
     </p>
 
     <p>
@@ -45,7 +49,8 @@
     </ul>
 
     <p>
-      Here is a side-by-side comparison of between the tools:
+      Here is a side-by-side comparison of between the default export tool and this web scraper – just
+      to show how much of an improvement it really is:
     </p>
 
     <table>
@@ -57,21 +62,21 @@
           </span>
         </td>
         <td>
-          <img src="./assets/original.jpeg">
-          <span>
-            Original page
-          </span>
-        </td>
-        <td>
           <img src="./assets/snapshot.jpeg">
           <span>
             ✨ Notion Snapshot ✨
           </span>
         </td>
+        <td>
+          <img src="./assets/original.jpeg">
+          <span>
+            Original page
+          </span>
+        </td>
       </tr>
     </table>
   </section>
-  
+
   <br>
 
   <section>
@@ -80,18 +85,18 @@
       First you must set the page that you want to export to be publicly accessible:
     </p>
     <ol>
-      <li>Open the page you want to export</li>
+      <li>Open the page you want to export to HTML in Notion</li>
       <li>Click on the <code>Share</code> button in the top right corner</li>
-      <li>Toggle on the <code>Share to web</code> button</li>
+      <li>Toggle the <code>Share to web</code> button (if not already enabled)</li>
       <li>Copy the link to the page by clicking on the <code>Copy link</code> button</li>
     </ol>
 
     <p>
-      Store the link somewhere safe, you will need it later.
+      Make sure to store the link you just copied somewhere safe, you will need it later.
     </p>
     
     <p>
-      Next you will need to install the app.
+      Next you will need to install the app:
     </p>
 
     <!--      
