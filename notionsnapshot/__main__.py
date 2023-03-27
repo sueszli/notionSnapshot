@@ -370,8 +370,6 @@ class Scraper:
     @trace()
     def _link_to_table_view_subpages(self, soup: BeautifulSoup) -> None:
         # TODO: refactor -> this is actually a part of _link_to_subpages()
-        # test with: https://eager-waterfall-308.notion.site/2604ce45890645c79f67d92833083fee?v=e138f6fdcea24f87b442577732b2052d
-
         tables = soup.findAll("div", {"class": "notion-table-view"})
         LOG.info(f"found {len(tables)} tables")
         for table in tables:
@@ -389,8 +387,6 @@ class Scraper:
 
     @trace()
     def _link_to_subpages(self, soup: BeautifulSoup) -> List[str]:
-        # THIS DOESN'T WORK YET
-
         subpage_urls = []
         domain = f'{self.url.split("notion.site")[0]}notion.site'
         anchors = soup.find_all("a", href=True)
