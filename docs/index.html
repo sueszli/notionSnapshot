@@ -4,11 +4,93 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>notionSnapshot tutorial</title>
+  <title>Notion Snapshot</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+  <link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+  <link rel="manifest" href="favicons/site.webmanifest">
+  <link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
 </head>
-<body>
+<body> 
+  <header>
+    <h1 style="margin-bottom: -1rem">
+      📸 Notion Snapshot
+    </h1>
+    <h4>
+      The HTML export tool for Notion that actually works!
+    </h4>
+  </header>
 
-<h1>This is another test</h1>
+  <br>
 
+  <section>
+    <p>
+      If you have ever used the default HTML export feature in Notion, you already know that the
+      exported files are not very useful. They are not styled the same way as the original page and
+      even miss some of your content.
+    </p>
+
+    <p>
+      With this tool you now can:
+    </p>
+    <ul>
+      <li>free yourself from the Notion lock-in</li>
+      <li>use Notion as your content management system</li>
+      <li>share your content with custom domain names</li>
+    </ul>
+
+    <p>
+      Here is a side-by-side comparison of the default tool and this one:
+    </p>
+
+    <table>
+      <tr>
+        <th>Notion page</th>
+        <th>Default export</th>
+        <th>✨ Notion Snapshot ✨</th>
+      </tr>
+      <tr>
+        <td>add screenshot here ...</td>
+        <td>add screenshot here ...</td>
+        <td>add screenshot here ...</td>
+      </tr>
+    </table>
+  </section>
+  
+  <br>
+
+  <section>
+    <h2>How to install</h2>
+    <p>
+      You can install this tool either as a command line interface (CLI) or as a graphical user
+      interface (GUI).
+    </p>
+    <p>
+      If you don't know what that means, you probably want to use the GUI.
+    </p>
+
+    <button id="gui-button">GUI tutorial</button>
+    <button id="cli-button">CLI tutorial</button>
+  </section>
+
+  <footer>
+    <a href="https://github.com/sueszli/notionSnapshot">Github</a> |
+    <a href="https://github.com/sueszli/notionSnapshot/blob/master/LICENSE">License</a> |
+    <a href="./contributors.html">Contributors</a>
+  </footer>
 </body>
+
+<script>
+  document.getElementById('cli-button').addEventListener('click', () => {
+    window.location.href = './tutorialCli.html';
+  });
+  document.getElementById('gui-button').addEventListener('click', () => {
+    window.location.href = './tutorialGui.html';
+  });
+</script>
+
 </html>
