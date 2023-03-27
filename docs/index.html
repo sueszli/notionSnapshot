@@ -16,6 +16,7 @@
   <meta name="theme-color" content="#ffffff">
 </head>
 <body> 
+
   <header>
     <h1 style="margin-bottom: -1rem">
       📸 Notion Snapshot
@@ -49,14 +50,24 @@
 
     <table>
       <tr>
-        <th>Notion page</th>
-        <th>Default export</th>
-        <th>✨ Notion Snapshot ✨</th>
-      </tr>
-      <tr>
-        <td>add screenshot here ...</td>
-        <td>add screenshot here ...</td>
-        <td>add screenshot here ...</td>
+        <td>
+          <img src="./assets/tmp.jpeg">
+          <span>
+            Notion page
+          </span>
+        </td>
+        <td>
+          <img src="./assets/tmp.jpeg">
+          <span>
+            Default export
+          </span>
+        </td>
+        <td>
+          <img src="./assets/tmp.jpeg">
+          <span>
+            ✨ Notion Snapshot ✨
+          </span>
+        </td>
       </tr>
     </table>
   </section>
@@ -64,24 +75,34 @@
   <br>
 
   <section>
-    <h2>How to install</h2>
+    <h2>How to use</h2>
     <p>
-      You can install this tool either as a command line interface (CLI) or as a graphical user
-      interface (GUI).
+      To be able to export a page with this tool, you must first set that page to be publicly accessible:
     </p>
-    <p>
-      If you don't know what that means, you probably want to use the GUI.
-    </p>
+    <ol>
+      <li>Open the page you want to export</li>
+      <li>Click on the <i>"Share"</i> button in the top right corner</li>
+      <li>Toggle the <i>"Share to web"</i> switch to <i>"On"</i></li>
+      <li>Copy the link to the page by clicking on the <i>"Copy link"</i> button</li>
+    </ol>
 
-    <button id="gui-button">GUI tutorial</button>
-    <button id="cli-button">CLI tutorial</button>
+    <p>
+      Next you download the app and run it with the link you just copied.
+    </p>
+    
+    <p>
+      If you are a software developer or familiar with the command line check out the CLI version of this app  -
+      else just click the download button below to continue.
+    </p>
+    <button id="gui-button">Download app</button>
+    <button id="cli-button">Install CLI</button>
   </section>
 
   <footer>
-    <a href="https://github.com/sueszli/notionSnapshot">Github</a> |
-    <a href="https://github.com/sueszli/notionSnapshot/blob/master/LICENSE">License</a> |
-    <a href="./contributors.html">Contributors</a>
+    <a href="https://github.com/sueszli/notionSnapshot" style="color: inherit">Github</a> |
+    <a href="https://github.com/sueszli/notionSnapshot/blob/master/LICENSE" style="color: inherit">License</a>
   </footer>
+
 </body>
 
 <script>

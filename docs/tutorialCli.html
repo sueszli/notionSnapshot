@@ -4,19 +4,114 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Notion Snapshot</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+  <link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+  <link rel="manifest" href="favicons/site.webmanifest">
+  <link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
 </head>
-<body>
+<body> 
 
-  <pre>
-    <code>
-const notionSnapshot = require('notion-snapshot');
-const { exportPage } = notionSnapshot;
-const { exportPage } = require('notion-snapshot');
-    </code>
-  </pre>
-      
+  <header>
+    <h1 style="margin-bottom: -1rem">
+      📂 Install CLI
+    </h1>
+    <h4>
+      Notion Snapshot: The HTML export tool for Notion that actually works!
+    </h4>
+  </header>
 
+  <blockquote>
+    ... in the future, you'll be able to install the CLI via PIP, but for now, you'll have to
+    clone the repo and install it manually.
+  </blockquote>
+
+  <br>
   
+  <section>
+    <h2>Setup</h2>
+    <p>
+      If you havent already, you first need to install Python3 with Pip and Poetry.
+    </p>
+  
+    <p>
+      Also if you are on Windows you additionally need to install WSL (Windows Subsystem for Linux) and 
+      Chrome.
+    </p>
+  
+    <p>
+      This is how you install Chrome in WSL/Ubuntu:
+    </p>
+  
+    <pre><code>
+    sudo apt update && sudo apt upgrade -y
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo dpkg -i google-chrome-stable_current_amd64.deb
+    sudo apt --fix-broken install
+    rm -rf google-chrome-stable_current_amd64.deb
+    </code></pre>
+  </section>
+
+  <br>
+
+  <section>
+    <h2>Cloning the repository</h2>
+
+    <pre><code>
+    git clone https://github.com/sueszli/notionSnapshot.git
+    cd notionSnapshot      
+    </code></pre>
+  </section>
+  
+  <br>
+
+  <section>
+    <h2>Installing the dependencies</h2>
+
+    <p>
+      To install the dependencies with Poetry, run:
+    </p>
+
+    <pre><code>
+    poetry install --sync
+    </code></pre>
+
+    <p>
+      But be careful because some dependencies might be missing and you might have to install them again
+      with pip.
+    </p>
+  </section>
+
+  <br>
+
+  <section>
+    <h2>Running</h2>
+
+    <p>
+      Use the <code>-h</code> or <code>--help</code> flag when running the script to see all the options that
+      are available.
+    </p>
+
+    <pre><code>
+    python3 notionsnapshot https://eager-waterfall-308.notion.site/Loconotion-Example-03c403f4fdc94cc1b315b9469a8950ef      
+    </code></pre>
+
+    <p>
+      After runnning the script the exported files will be saved in the <code>snapshots</code> folder.
+    </p>
+  </section>
+  
+  <br>
+
+  <footer>
+    <a href="https://github.com/sueszli/notionSnapshot" style="color: inherit">Github</a> |
+    <a href="https://github.com/sueszli/notionSnapshot/blob/master/LICENSE" style="color: inherit">License</a>
+  </footer>
+
 </body>
 </html>
