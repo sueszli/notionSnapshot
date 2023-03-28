@@ -8,27 +8,21 @@
 
 - [ ] finish up uniCourseSummary project (see: https://github.com/sueszli/uniCourseSummaries)
 
-<br>
-
----
-
-<br>
-
-then optionally:
-
 - [ ] advertise
   - [ ] on loconotion
   - [ ] on reddit (see: https://www.reddit.com/r/Notion/)
   - [ ] on hackernews (see: https://news.ycombinator.com/item?id=35316679)
 
+---
+
+if the project actually gets some traction, here are some ideas for the future:
+
 - [ ] make project more accessible for people who don't code, don't have python (= most notion users) 
   - [ ] build simple gui with tkinter (see: https://github.com/stars/sueszli/lists/python-guis)
-  - [ ] build executables for windows and mac
+  - [ ] build executables for windows and osx
 
-then wait 1 month to see if this project gained traction, any issues were reported, any pull requests were made, etc. to decide whether it is worth continuing to work on.
-
-some ideas for the future:
 - [ ] make contributing easier
   - [ ] automated CI/CD end-to-end tests for PRs
+
 - [ ] improve performance
   - [ ] concurrently download assets (https://docs.aiohttp.org/en/stable/client_quickstart.html#streaming-response-content)
