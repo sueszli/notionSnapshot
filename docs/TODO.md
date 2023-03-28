@@ -1,7 +1,8 @@
 # TODO
 
-- [ ] implement feature to download attachments to pages
-- [ ] fix css for tables
+- [ ] support the most important blocks missing (see: [supported blocks](supported%20blocks.md))
+  - [ ] implement feature to download attachments to pages 
+  - [ ] fix css for tables
 
 <br>
 
@@ -30,4 +31,4 @@
 
 <br>
 
-then wait 1 month to see if this project gained traction, any issues were reported, any pull requests were made, etc.
+then wait 1 month to see if this project gained traction, any issues were reported, any pull requests were made, etc. to decide whether it is worth continuing to work on.
