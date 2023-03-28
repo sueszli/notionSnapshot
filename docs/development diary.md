@@ -2,7 +2,7 @@ This is a collection of notes and considerations that were made during the devel
 
 <br><br>
 
-## Downloading 
+## Choosing a strategy to download the content of a Notion page ✅
 
 There are 3 ways to download the content of a Notion page:
 
@@ -10,14 +10,14 @@ There are 3 ways to download the content of a Notion page:
   This sucks - it is the very thing we are trying to avoid.
  
 2. Using the official Notion.so API
-  As done in [notion2html](https://github.com/MerkulovDaniil/notion4ever/tree/main/notion4ever): The user would need to generate a token / API key and it would be significantly more complicated to set up for each page. 
+  As done in [notion4ever](https://github.com/MerkulovDaniil/notion4ever/tree/main/notion4ever): The user would need to generate a token / API key and it would be significantly more complicated to set up for each page. 
 
 3. Scraping the HTML files directly from the browser
   This is the best option because the user does not have to do any extra work to get the app to work - but it is also the most complicated option.
 
 <br><br>
 
-## Choosing a scraping library
+## Choosing a scraping library ✅
 
 The following libraries were considered because they are the most popular and well supported (for Python as of March 2023):
 
@@ -34,7 +34,7 @@ But we managed to find a way to install Selenium with `pip` by using the `webdri
 
 <br><br>
 
-## Similar projects
+## Building on top of similar projects ✅
 
 There are already a few tools that do something very similar to what we want to do. We should try to build on top of these tools instead of reinventing the wheel.
 
