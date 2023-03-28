@@ -9,6 +9,10 @@
   - [ ] fix poetry (some dependencies are not installed correctly and need to be installed manually with pip)
   - [ ] push everything to pypi with poetry
 
+- [ ] finish up uniCourseSummary project (see: https://github.com/sueszli/uniCourseSummaries)
+
+---
+
 <br>
 
 then optionally:
