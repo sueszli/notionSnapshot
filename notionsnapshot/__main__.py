@@ -208,6 +208,7 @@ class Scraper:
         try:
             WebDriverWait(self.driver, self.timeout).until(is_page_loaded)
         except Exception:
+            # TODO: change to timeoutException
             LOG.info("Timed out waiting for page to load, proceeding anyways")
         LOG.info("page loaded")
 
