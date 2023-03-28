@@ -13,6 +13,8 @@ BANNER_ASCII = """
 /_/ |_/\\____/\\__/_/\\____/_/ /_/   /____/_/ /_/\\__,_/ .___/____/_/ /_/\\____/\\__/  
                                                     /_/     
 """
+GREEN_START = "\033[92m"
+GREEN_END = "\033[0m"
 
 
 class LoggingWrapper(logging.LoggerAdapter):
@@ -43,7 +45,7 @@ def trace(print_args: bool = True):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             input_string = "⮕ "
-            input_string += f"\033[92m{func.__name__}(\033[0m"
+            input_string += GREEN_START + func.__name__ + "(" + GREEN_END
             if print_args:
                 not_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
                 input_string += ", ".join([str(arg) for arg in not_html[1:]])

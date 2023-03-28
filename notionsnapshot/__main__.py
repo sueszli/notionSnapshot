@@ -129,7 +129,6 @@ class FileManager:
 
     @trace()
     def save_page(self, soup: BeautifulSoup, url: str) -> None:
-        soup.prettify()
         html_str = str(soup)
         output_path = self.get_path_from_url(url)
         with open(output_path, "wb") as f:
