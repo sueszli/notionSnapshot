@@ -6,8 +6,6 @@
 
 - [ ] fix dependencies / issue with poetry, put everything on pypi
 
-- [ ] finish up uniCourseSummary project (see: https://github.com/sueszli/uniCourseSummaries)
-
 - [ ] advertise on loconotion, reddit, hackernews (see: https://news.ycombinator.com/item?id=35316679)
 
 ---
