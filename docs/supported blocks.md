@@ -2,6 +2,10 @@
 
 <br>
 
+this list is based on the [notion snapshot test page](https://sueszli.notion.site/NotionSnapshot-Test-5ab361d19688436fb22f319e84b53a07).
+
+<br>
+
 ## blocks
 
 - [x] basic blocks
