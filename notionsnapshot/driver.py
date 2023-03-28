@@ -7,6 +7,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.service import Service
 
+from argparser import ARGS
+
 
 class DriverInitializer:
     @staticmethod
@@ -29,3 +31,6 @@ class DriverInitializer:
         chrome_executable: Service = ChromeService(ChromeDriverManager().install())
         driver = webdriver.Chrome(service=chrome_executable, options=opts)
         return driver
+
+
+DRIVER_SINGLETON = DriverInitializer.get_driver(ARGS)
