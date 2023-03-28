@@ -1,19 +1,19 @@
-/* enables hover effect on buttons */
+/* enable hover effect on buttons */
 div[role="button"]:not(.notion-record-icon):hover {
   background: rgba(55, 53, 47, 0.08);
 }
 
-/* hides loading spinners */
+/* hide loading spinners */
 .loading-spinner {
   display: none !important;
 }
 
-/* hides elements on the top right (search box, duplicate, notion shortcut) */
+/* hide elements on the top right (search box, duplicate, notion shortcut) */
 .notion-topbar > div > div:not(:first-child) {
   display: none !important;
 }
 
-/* stops inline databases from overflowing horizontally */
+/* stop inline databases from overflowing horizontally */
 .notion-frame {
   max-width: 100%;
   width: 100vw !important;
@@ -28,7 +28,7 @@ div[role="button"]:not(.notion-record-icon):hover {
   max-width: 100% !important;
 }
 
-/* Resizes inlines databases */
+/* resize inline databases */
 .notion-scroller .notion-collection_view-block > div,
 .notion-scroller .notion-collection_view-block > div > div > div,
 .notion-scroller .notion-collection_view-block .notion-list-view,
@@ -47,12 +47,12 @@ svg.alias {
   height: auto !important;
 }
 
-/* stops text from overflowing past max-width on bookmark blocks; */
+/* stop text from overflowing past max-width on bookmark blocks; */
 .notion-bookmark-block div {
   white-space: unset !important;
 }
 
-/* fixes oversized page properties on Safari */
+/* fix oversized page properties on Safari */
 .notion-scroller
   > div:nth-child(2):not(.notion-page-content)
   > div:not([data-block-id])
@@ -60,19 +60,19 @@ svg.alias {
   height: auto !important;
 }
 
-/* fixes possible stray header on tables */
+/* fix possible stray header on tables */
 .notion-collection_view_page-block > div:first-child {
   transform: unset !important;
 }
 
-/* fixes oversize icons in inline page links */
+/* fix oversize icons in inline page links */
 a[data-token-index] svg.page {
   height: auto !important;
 }
 
 /* mobile fixes */
 @media only screen and (max-width: 960px) {
-  /* normalizes banner / page title width */
+  /* normalize banner / page title width */
   .notion-scroller > div:not([class]),
   .notion-scroller > div > div:not([class]) {
     width: 100% !important;
@@ -81,7 +81,7 @@ a[data-token-index] svg.page {
     padding-right: 0 !important;
   }
 
-  /* normalizes content width */
+  /* normalize content width */
   .notion-page-content,
   .notion-page-content > .notion-collection_view-block,
   .notion-page-content > .notion-collection_view-block > div,
@@ -111,7 +111,7 @@ a[data-token-index] svg.page {
     flex-wrap: wrap
   }
 
-  /* collapses flex rows into columns */
+  /* collapse flex rows into columns */
   .notion-column_list-block > div {
     flex-direction: column;
   }
@@ -119,7 +119,7 @@ a[data-token-index] svg.page {
     width: unset !important;
   }
 
-  /* forces gallery to wrap around pages */
+  /* force gallery to wrap around pages */
   .notion-gallery-view {
     width: 100vw;
   }
@@ -135,7 +135,7 @@ a[data-token-index] svg.page {
     overflow-x: scroll;
   }
 
-  /* makes the top border on overflowing list reach the full width of the list */
+  /* make the top border on overflowing list reach the full width of the list */
   .notion-list-view > .notion-collection_view_page-block {
     width: fit-content;
   }
