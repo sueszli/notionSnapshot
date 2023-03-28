@@ -14,7 +14,7 @@
 - [ ] make projects easily accessible and ready for use
   - [x] make a dedicated website for documentation (most notion users don't know what github is)
   - [ ] fix poetry (some dependencies are not installed correctly and need to be installed manually with pip)
-  - [ ] push everything to pypi
+  - [ ] push everything to pypi with poetry
   - [ ] build simple gui with tkinter (see: https://github.com/stars/sueszli/lists/python-guis)
   - [ ] build executables for windows and mac (most notion users don't have python installed)
 
@@ -24,10 +24,6 @@
   - [ ] on loconotion page (in issues section, only if we could successfully resolve any of them)
   - [ ] on reddit (see: https://www.reddit.com/r/Notion/)
   - [ ] on hackernews (see: https://news.ycombinator.com/item?id=35316679)
-
-<br>
-
-- [ ] use to finish the uniCourseSummaries project (https://github.com/sueszli/uniCourseSummaries)
 
 <br>
 
