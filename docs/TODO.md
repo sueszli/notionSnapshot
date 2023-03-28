@@ -1,13 +1,13 @@
 # TODO
 
-- [ ] add missing support for important blocks (see: [supported blocks](supported%20blocks.md))
+- [ ] add missing support for the 2 most important blocks (see: [supported blocks](supported%20blocks.md))
   - [ ] file attachments (pdf)
   - [ ] table view (glitches horizontally, doesn't link to subpages correctly) 
 
 <br>
 
-- [ ] majorly refactor code (put trivial parts without a state into modules)
-  - [ ] make a dedicated module for just downloading files, saving assets, etc.
+- [ ] majorly refactor code (put trivial, stateless parts without into their modules)
+  - [ ] make a dedicated module just for downloading, just for writing into memory, etc.
 
 <br>
 
@@ -16,14 +16,14 @@
   - [ ] fix poetry (some dependencies are not installed correctly and need to be installed manually with pip)
   - [ ] push everything to pypi
   - [ ] build simple gui with tkinter (see: https://github.com/stars/sueszli/lists/python-guis)
-  - [ ] provide executables for windows and mac on the website (most notion users don't have python installed)
+  - [ ] build executables for windows and mac (most notion users don't have python installed)
 
 <br>
 
 - [ ] advertise everywhere
-  - [ ] on loconotion issues page (only if we could resolve any of them)
-  - [ ] on reddit
-  - [ ] on hackernews (see this similar project: https://news.ycombinator.com/item?id=35316679)
+  - [ ] on loconotion page (in issues section, only if we could successfully resolve any of them)
+  - [ ] on reddit (see: https://www.reddit.com/r/Notion/)
+  - [ ] on hackernews (see: https://news.ycombinator.com/item?id=35316679)
 
 <br>
 
