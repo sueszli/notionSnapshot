@@ -43,21 +43,17 @@ def trace(print_args: bool = True):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             input_string = "⮕ "
-            class_name = f"{args[0].__class__.__name__}." if isinstance(args[0], object) else ""
-            function_name = f"\033[92m{func.__name__}(\033[0m"
-            input_string += function_name
+            input_string += f"\033[92m{func.__name__}(\033[0m"
             if print_args:
-                args_without_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
-                input_string += ", ".join([str(arg) for arg in args_without_html[1:]])
+                not_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
+                input_string += ", ".join([str(arg) for arg in not_html[1:]])
             input_string += f"\033[92m)\033[0m"
             LOG.info(input_string)
 
             result = func(*args, **kwargs)
 
-            output_string = "⬅ "
-            if print_args:
-                output_string += result if result is not None else ""
-            LOG.info(output_string)
+            output_string = result if result is not None else ""
+            LOG.info(f"⬅ {output_string if print_args else ''}")
             return result
 
         return wrapper
