@@ -1,4 +1,4 @@
-# list of blocks currently supported by this version
+# list of blocks supported by the current version
 
 <br>
 
