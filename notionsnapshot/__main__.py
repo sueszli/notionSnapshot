@@ -122,6 +122,7 @@ class FileManager:
 
     @trace()
     def copy_injections_to_assets(self) -> Tuple[str, str]:
+        # refactor: copy injections to assets dir in setup_directories and write getters to just return the paths
         injection_dir = Path(__file__).parent / "injections"
         css_out = Path(self.output_dir) / "assets" / "injection.css"
         js_out = Path(self.output_dir) / "assets" / "injection.js"
