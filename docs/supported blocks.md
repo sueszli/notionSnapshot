@@ -11,7 +11,7 @@ this list is based on the [notion snapshot test page](https://sueszli.notion.sit
 - [x] basic blocks
 - [ ] media
   - [ ] embedded video (mp4) 
-  - [ ] file attachments (pdf) 
+  - [ ] file attachments (pdf)
 - [ ] databases
   - [ ] table view (glitches horizontally, doesn't link to subpages correctly)
   - [ ] timeline view (completely broken)
