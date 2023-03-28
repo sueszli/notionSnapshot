@@ -32,8 +32,8 @@ class FileManager:
     @trace()
     def __init__(self, url: str, cache_assets: bool = True) -> None:
         self.url = url
-        id = urllib.parse.urlparse(self.url).path[1:]
-        name = id[: id.rfind("-")].lower()
+        page_id = urllib.parse.urlparse(self.url).path[1:]
+        name = page_id[: page_id.rfind("-")].lower()
         self.output_dir = os.path.join("snapshots", name)
         self.cache_assets = cache_assets
         cache_base_dir = user_cache_dir(appname="notion-snapshot", appauthor="suezli")
