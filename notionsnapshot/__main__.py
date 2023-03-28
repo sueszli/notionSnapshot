@@ -97,6 +97,7 @@ class FileManager:
             LOG.critical(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead \n {error}")
             return str(Path(url)).replace("\\", "/")
 
+    @trace()
     def _generate_filename(self, url: str) -> str:
         parsed_url = urllib.parse.urlparse(url)
         queryless_url = parsed_url.netloc + parsed_url.path
@@ -107,6 +108,7 @@ class FileManager:
         filename = hashlib.sha1(str.encode(queryless_url)).hexdigest()
         return filename
 
+    @trace()
     def _load_from_cache(self, filename: str) -> Optional[str]:
         filename = filename if Path(filename).suffix else filename + ".*"
         cache_path = os.path.join(self.cache_dir, filename)
@@ -151,13 +153,9 @@ class FileManager:
 
 
 class Scraper:
+    @trace()
     def __init__(self, file_manager: FileManager):
-        self.url = ARGS.url
-        self.soup = BeautifulSoup(DRIVER.page_source, "html5lib")
-        self.driver = DRIVER
         self.file_manager = file_manager
-        self.timeout = ARGS.timeout
-        self.dark_mode = ARGS.dark_mode
         self.will_visit = set([ARGS.url])
         self.visited = set()
 
@@ -167,7 +165,7 @@ class Scraper:
 
             self._load_page(url)
             self._expand_toggle_blocks()
-            soup = BeautifulSoup(self.driver.page_source, "html5lib")
+            soup = BeautifulSoup(DRIVER.page_source, "html5lib")
             self._clean_up(soup)
             self._download_images(soup)
             self._download_stylesheets(soup)
@@ -179,7 +177,7 @@ class Scraper:
             self.visited.add(url)
             self.will_visit.update(page for page in subpage_urls if page not in self.visited)
 
-        self.driver.quit()
+        DRIVER.quit()
         LOG.info("exiting scraper")
 
     @trace()
@@ -203,28 +201,27 @@ class Scraper:
             prev_page = d.page_source
             return False
 
-        self.driver.get(url)
+        DRIVER.get(url)
         # In tests there were always infinite spinners so we ignore the timeout
         # Maybe fix later
         try:
-            WebDriverWait(self.driver, self.timeout).until(is_page_loaded)
-        except Exception:
-            # TODO: change to timeoutException
+            WebDriverWait(DRIVER, ARGS.timeout).until(is_page_loaded)
+        except TimeoutException:
             LOG.info("Timed out waiting for page to load, proceeding anyways")
         LOG.info("page loaded")
 
-        mode = "dark" if self.dark_mode else "light"
-        self.driver.execute_script("__console.environment.ThemeStore.setState({ mode: '" + mode + "' })")
+        mode = "dark" if ARGS.dark_mode else "light"
+        DRIVER.execute_script("__console.environment.ThemeStore.setState({ mode: '" + mode + "' })")
         LOG.info(f"set theme to {mode}")
 
     @trace(print_args=False)
     def _expand_toggle_blocks(self, expanded_toggle_blocks=[]) -> None:
         def get_toggle_blocks() -> List[WebElement]:
-            toggle_blocks = self.driver.find_elements(By.CLASS_NAME, "notion-toggle-block")
+            toggle_blocks = DRIVER.find_elements(By.CLASS_NAME, "notion-toggle-block")
             header_toggle_blocks = []
             queries = [f"notion-selectable.notion-{type}-block" for type in ["header", "sub_header", "sub_sub_header"]]
             for query in queries:
-                blocks = self.driver.find_elements(By.CLASS_NAME, query)
+                blocks = DRIVER.find_elements(By.CLASS_NAME, query)
                 for block in blocks:
                     if block.find_elements(By.CSS_SELECTOR, "div[role=button]"):
                         header_toggle_blocks.append(block)
@@ -244,11 +241,11 @@ class Scraper:
             toggle_block_button = block.find_element(By.CSS_SELECTOR, "div[role=button]")
             is_expanded = "(180deg)" in (toggle_block_button.find_element(By.TAG_NAME, "svg").get_attribute("style"))
             if not is_expanded:
-                self.driver.execute_script("arguments[0].click();", toggle_block_button)
+                DRIVER.execute_script("arguments[0].click();", toggle_block_button)
                 try:
-                    WebDriverWait(self.driver, self.timeout).until(lambda d: is_block_expanded(block))
+                    WebDriverWait(DRIVER, ARGS.timeout).until(lambda d: is_block_expanded(block))
                 except TimeoutException:
-                    LOG.warning("timeout while expanding block - manually check if it's expanded in the snapshot", file=sys.stderr)
+                    LOG.critical("timeout while expanding block - manually check if it's expanded in the snapshot", file=sys.stderr)
                     continue
             expanded_toggle_blocks.append(block)
 
@@ -371,7 +368,7 @@ class Scraper:
 
     @trace()
     def _link_to_table_view_subpages(self, soup: BeautifulSoup) -> None:
-        # TODO: refactor -> this is actually a part of _link_to_subpages()
+        # refactor: this is actually a part of _link_to_subpages()
         tables = soup.findAll("div", {"class": "notion-table-view"})
         LOG.info(f"found {len(tables)} tables")
         for table in tables:
@@ -390,7 +387,7 @@ class Scraper:
     @trace()
     def _link_to_subpages(self, soup: BeautifulSoup) -> List[str]:
         subpage_urls = []
-        domain = f'{self.url.split("notion.site")[0]}notion.site'
+        domain = f'{ARGS.url.split("notion.site")[0]}notion.site'
         anchors = soup.find_all("a", href=True)
         for a in anchors:
             url = a["href"]
@@ -431,11 +428,5 @@ class Scraper:
 
 
 if __name__ == "__main__":
-    LOG.debug("test")
-    LOG.info("test")
-    LOG.warning("test")
-    LOG.error("test")
-    LOG.critical("test")
-
     file_manager = FileManager()
     Scraper(file_manager).run()

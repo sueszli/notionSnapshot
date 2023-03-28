@@ -13,7 +13,7 @@ from argparser import ARGS
 class DriverInitializer:
     @staticmethod
     def get_driver(args: argparse.Namespace) -> webdriver.Chrome:
-        # chrome docs: https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
+        # see: https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
         opts = Options()
         opts.add_argument("--disable-client-side-phishing-detection")
         opts.add_argument("--no-first-run")
