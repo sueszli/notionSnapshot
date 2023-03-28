@@ -2,11 +2,9 @@
 
 - [ ] add missing support for file attachments (also see: [supported blocks](supported%20blocks.md))
 
-- [ ] refactor code (ie. put downloading / saving functionality into a separate module)
-  - [ ] file_downloader.py
-  - [ ] file_saver.py
+- [ ] refactor code
 
-- [ ] fix depsendencies / issue with poetry, put everything on pypi
+- [ ] fix dependencies / issue with poetry, put everything on pypi
 
 - [ ] advertise on loconotion, reddit, hackernews (see: https://news.ycombinator.com/item?id=35316679)
 

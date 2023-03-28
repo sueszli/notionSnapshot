@@ -18,24 +18,27 @@ class ArgParser:
         parser.add_argument("-d", "--dark-mode", help="scrape pages in dark mode", action="store_true")
         parser.add_argument("--timeout", help="specify download timeout in seconds (default: 10s)", type=int, default=10, metavar="TIMEOUT")
         parser.add_argument("--debug", help="display debug log output", action="store_true")
-        parser.add_argument("--no-cache", help="disable asset caching", action="store_true")
-        parser.add_argument("url", help="url of the Notion page to scrape", metavar="URL")
+        parser.add_argument("--disable-caching", help="disable caching of assets", action="store_true")
+        parser.add_argument("url", help="url of the notion.so page to scrape", metavar="URL")
         parser.parse_args()
         return parser.parse_args()
 
     @staticmethod
     def _validate_timeout(timeout: int) -> None:
         if timeout < 0:
-            raise argparse.ArgumentTypeError("timeout not positive")
+            raise argparse.ArgumentTypeError("timeout argument not a positive integer")
 
     @staticmethod
     def _validate_url(url_str: str) -> None:
         url = urllib.parse.urlparse(url_str)
         if url.scheme != "https":
-            raise argparse.ArgumentTypeError("url doesn't start with https://")
+            raise argparse.ArgumentTypeError("url argument doesn't start with https://")
         if not url.netloc.endswith(".notion.site"):
-            raise argparse.ArgumentTypeError("url is missing 'notion.site' domain")
+            raise argparse.ArgumentTypeError("url argument is missing 'notion.site' domain")
         if not url.path.startswith("/"):
-            raise argparse.ArgumentTypeError("url doesn't contain an id")
+            raise argparse.ArgumentTypeError("url argument doesn't contain an id")
         if url.fragment:
-            raise argparse.ArgumentTypeError("url contains a fragment ('#')")
+            raise argparse.ArgumentTypeError("url argument contains a fragment ('#')")
+
+
+ARGS = ArgParser.get_arguments()

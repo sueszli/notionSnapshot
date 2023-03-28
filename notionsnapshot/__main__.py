@@ -23,56 +23,48 @@ import requests
 import cssutils
 from appdirs import user_cache_dir
 
-from logger import LOG, trace
-from driver import DriverInitializer
-from argparser import ArgParser
+from argparser import ARGS
+from driver import DRIVER_SINGLETON as DRIVER
+from logger import LOG_SINGLETON as LOG, trace
 
 
 class FileManager:
     @trace()
-    def __init__(self, url: str, cache_assets: bool = True) -> None:
-        self.url = url
-        page_id = urllib.parse.urlparse(self.url).path[1:]
-        name = page_id[: page_id.rfind("-")].lower()
-        self.output_dir = os.path.join("snapshots", name)
-        self.cache_assets = cache_assets
-        cache_base_dir = user_cache_dir(appname="notion-snapshot", appauthor="suezli")
-        self.cache_dir = os.path.join(cache_base_dir, name)
+    def __init__(self) -> None:
+        page_id = urllib.parse.urlparse(ARGS.url).path[1:]
+        page_name = page_id[: page_id.rfind("-")].lower()
+        cache_base_dir = user_cache_dir(appname="notion-snapshot", appauthor="sueszli")
 
-        self._setup()
+        self.output_dir = os.path.join("snapshots", page_name)
+        self.cache_dir = os.path.join(cache_base_dir, page_name)
+        self._setup_directories()
 
     @trace()
-    def _setup(self) -> None:
+    def _setup_directories(self) -> None:
         if os.path.exists(self.output_dir):
-            if self.cache_assets and os.path.exists(self.output_dir + "/assets"):
-                LOG.info("Copying assets to caching directory")
+            LOG.info("found previous snapshot for this url")
+            if not ARGS.disable_caching and os.path.exists(self.output_dir + "/assets"):
                 shutil.copytree(self.output_dir + "/assets", self.cache_dir, dirs_exist_ok=True)
+                LOG.info("copied assets from previous snapshot to cache")
 
             shutil.rmtree(self.output_dir)
             LOG.info(f"removed previous snapshot for this url")
 
         os.makedirs(self.output_dir, exist_ok=True)
         os.makedirs(self.output_dir + "/assets", exist_ok=True)
-        if self.cache_assets:
+        if not ARGS.disable_caching:
             os.makedirs(self.cache_dir, exist_ok=True)
 
     @trace()
     def download_asset(self, url: str, filename: str = "") -> str:
         if not filename:
-            parsed_url = urllib.parse.urlparse(url)
-            queryless_url = parsed_url.netloc + parsed_url.path
-            params = urllib.parse.parse_qs(parsed_url.query)
-            # having width in hash as name allows fetching different image resolutions
-            if "width" in params.keys():
-                queryless_url = queryless_url + f"?width={params['width']}"
-            filename = hashlib.sha1(str.encode(queryless_url)).hexdigest()
-            LOG.info("no filename, generated hash: " + filename)
+            filename = self._generate_filename(url)
 
         already_downloaded = glob.glob(self.output_dir + "/assets/" + filename + ".*")
         if already_downloaded:
             return str(Path(already_downloaded[0]).relative_to(self.output_dir)).replace("\\", "/")
 
-        if self.cache_assets and (cached := self._load_from_cache(filename)) is not None:
+        if not ARGS.disable_caching and (cached := self._load_from_cache(filename)) is not None:
             return cached
 
         destination = Path(self.output_dir) / "assets" / filename
@@ -102,8 +94,18 @@ class FileManager:
             return str(destination.relative_to(self.output_dir)).replace("\\", "/")
 
         except Exception as error:
-            LOG.warning(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead \n {error}")
+            LOG.critical(f"error downloading asset on '{url}' - a hyperlink will be used in snapshot instead \n {error}")
             return str(Path(url)).replace("\\", "/")
+
+    def _generate_filename(self, url: str) -> str:
+        parsed_url = urllib.parse.urlparse(url)
+        queryless_url = parsed_url.netloc + parsed_url.path
+        params = urllib.parse.parse_qs(parsed_url.query)
+        # having width in hash as name allows fetching different image resolutions
+        if "width" in params.keys():
+            queryless_url = queryless_url + f"?width={params['width']}"
+        filename = hashlib.sha1(str.encode(queryless_url)).hexdigest()
+        return filename
 
     def _load_from_cache(self, filename: str) -> Optional[str]:
         filename = filename if Path(filename).suffix else filename + ".*"
@@ -138,7 +140,7 @@ class FileManager:
     def get_filename_from_url(self, url: str) -> str:
         id = urllib.parse.urlparse(url).path[1:]
         filename = id[: id.rfind("-")].lower() + ".html"
-        if url == self.url:
+        if url == ARGS.url:
             filename = "index.html"
         return filename
 
@@ -149,14 +151,14 @@ class FileManager:
 
 
 class Scraper:
-    def __init__(self, url: str, soup: BeautifulSoup, driver: webdriver.Chrome, file_manager: FileManager, timeout: float = 10, dark_mode: bool = False):
-        self.url = url
-        self.soup = soup
-        self.driver = driver
+    def __init__(self, file_manager: FileManager):
+        self.url = ARGS.url
+        self.soup = BeautifulSoup(DRIVER.page_source, "html5lib")
+        self.driver = DRIVER
         self.file_manager = file_manager
-        self.timeout = timeout
-        self.dark_mode = dark_mode
-        self.will_visit = set([url])
+        self.timeout = ARGS.timeout
+        self.dark_mode = ARGS.dark_mode
+        self.will_visit = set([ARGS.url])
         self.visited = set()
 
     def run(self) -> None:
@@ -429,12 +431,11 @@ class Scraper:
 
 
 if __name__ == "__main__":
-    args = ArgParser.get_arguments()
-    file_manager = FileManager(args.url, cache_assets=(not args.no_cache))
-    driver = DriverInitializer.get_driver(args)
-    soup = BeautifulSoup(driver.page_source, "html5lib")
+    LOG.debug("test")
+    LOG.info("test")
+    LOG.warning("test")
+    LOG.error("test")
+    LOG.critical("test")
 
-    if args.debug:
-        LOG.setLevel(logging.DEBUG)
-
-    Scraper(args.url, soup, driver, file_manager, timeout=args.timeout, dark_mode=args.dark_mode).run()
+    file_manager = FileManager()
+    Scraper(file_manager).run()

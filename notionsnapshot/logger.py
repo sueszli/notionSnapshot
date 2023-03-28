@@ -1,9 +1,14 @@
 import logging
+
 import traceback
 import functools
+from rich.logging import RichHandler
 import os
 from bs4 import BeautifulSoup
 import cssutils
+
+from argparser import ARGS
+
 
 BANNER_ASCII = """
     _   __      __  _                _____                        __          __ 
@@ -13,30 +18,30 @@ BANNER_ASCII = """
 /_/ |_/\\____/\\__/_/\\____/_/ /_/   /____/_/ /_/\\__,_/ .___/____/_/ /_/\\____/\\__/  
                                                     /_/     
 """
-GREEN_START = "\033[92m"
-GREEN_END = "\033[0m"
+HIGHLIGHTED_WORDS = []
+IGNORED_STACK_FRAMES = 8
 
 
-class LoggingWrapper(logging.LoggerAdapter):
-    # proxy for 'logging' module that adds indentation based on the stack depth
+class LoggerWrapper(logging.LoggerAdapter):
     def process(self, msg, kwargs):
-        tab = " " * 3
-        ignored_stack_frames = 8
-        indentation_level = len(traceback.extract_stack()) - ignored_stack_frames
-        return f"{tab * indentation_level}{msg}", kwargs
+        # add indentation based on stack depth
+        tab_char = " " * 3
+        indentation_level = len(traceback.extract_stack()) - IGNORED_STACK_FRAMES
+        return f"{tab_char * indentation_level}{msg}", kwargs
 
     @staticmethod
-    def get_log() -> logging.LoggerAdapter:
-        logging.basicConfig(level=logging.INFO, format="%(message)s")
+    def configure_log() -> logging.LoggerAdapter:
+        # see: https://rich.readthedocs.io/en/stable/reference/logging.html
+        log_level = logging.DEBUG if ARGS.debug else logging.INFO
+        rich_handler = RichHandler(rich_tracebacks=True, show_time=False, show_path=False, keywords=HIGHLIGHTED_WORDS)
+        logging.basicConfig(level=log_level, format="%(message)s", handlers=[rich_handler])
         cssutils.log.setLevel(logging.CRITICAL)  # type: ignore
-
-        os.system("cls" if os.name == "nt" else "clear")
-        print(BANNER_ASCII)
-
-        return LoggingWrapper(logging.getLogger("scrape-logger"), {})
+        return LoggerWrapper(logging.getLogger("scrape-logger"), {})
 
 
-LOG = LoggingWrapper.get_log()
+os.system("cls" if os.name == "nt" else "clear")
+print(BANNER_ASCII)
+LOG_SINGLETON = LoggerWrapper.configure_log()
 
 
 def trace(print_args: bool = True):
@@ -45,17 +50,17 @@ def trace(print_args: bool = True):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             input_string = "⮕ "
-            input_string += GREEN_START + func.__name__ + "(" + GREEN_END
+            input_string += func.__name__ + "("
             if print_args:
                 not_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
                 input_string += ", ".join([str(arg) for arg in not_html[1:]])
-            input_string += f"\033[92m)\033[0m"
-            LOG.info(input_string)
+            input_string += ")"
+            LOG_SINGLETON.info(input_string)
 
             result = func(*args, **kwargs)
 
             output_string = result if result is not None else ""
-            LOG.info(f"⬅ {output_string if print_args else ''}")
+            LOG_SINGLETON.info(f"⬅ {output_string if print_args else ''}")
             return result
 
         return wrapper
