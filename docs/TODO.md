@@ -8,21 +8,18 @@
 
 - [ ] finish up uniCourseSummary project (see: https://github.com/sueszli/uniCourseSummaries)
 
-- [ ] advertise
-  - [ ] on loconotion
-  - [ ] on reddit (see: https://www.reddit.com/r/Notion/)
-  - [ ] on hackernews (see: https://news.ycombinator.com/item?id=35316679)
+- [ ] advertise on loconotion, reddit, hackernews (see: https://news.ycombinator.com/item?id=35316679)
 
 ---
 
 if the project actually gets some traction, here are some ideas for the future:
 
-- [ ] make project more accessible for people who don't code, don't have python (= most notion users) 
+- [ ] make it more accessible for people who don't code / don't have python (= most notion users) 
   - [ ] build simple gui with tkinter (see: https://github.com/stars/sueszli/lists/python-guis)
   - [ ] build executables for windows and osx
 
 - [ ] make contributing easier
-  - [ ] automated CI/CD end-to-end tests for PRs
+  - [ ] build CI/CD end-to-end tests for PRs
 
 - [ ] improve performance
-  - [ ] concurrently download assets (https://docs.aiohttp.org/en/stable/client_quickstart.html#streaming-response-content)
+  - [ ] concurrently download assets using https://docs.aiohttp.org/en/stable/client_quickstart.html#streaming-response-content
