@@ -1,11 +1,3 @@
-# TODO
-
-- [ ] fix dependencies / issue with poetry, put everything on pypi
-
-- [ ] advertise on loconotion, reddit, hackernews (see: https://news.ycombinator.com/item?id=35316679)
-
----
-
 if the project actually gets some traction, here are some ideas for the future:
 
 - [ ] make it more accessible for people who don't code / don't have python (= most notion users) 
