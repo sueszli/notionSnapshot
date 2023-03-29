@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "notionsnapshot"
 version = "0.1.0"
-description = ""
+description = "Source code available here: https://github.com/sueszli/notionSnapshot/"
 authors = [
   "Yahya Jabary <jabaryyahya@gmail.com>",
   "Marco Reiser <marco.razor@hotmail.com>",
