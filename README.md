@@ -112,6 +112,6 @@ Alternatively you can run some of our test pages which are listed in the `test.s
 Special thanks to:
 
 - Leonardo Cavaletti from the loconotion project (laid the foundation of this project)
-- [MJDeligan](https://github.com/MJDeligan) the main contributor (resoled the hardest issues and contributed a lot of code)
+- [MJDeligan](https://github.com/MJDeligan) the main contributor (resolved the hardest issues and contributed a lot of code)
 
 aswell as Thomas Biedermann and Berndt Uhlig who helped me with the initial setup of this project.
