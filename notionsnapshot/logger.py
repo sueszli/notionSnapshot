@@ -18,17 +18,19 @@ BANNER_ASCII = """
 /_/ |_/\\____/\\__/_/\\____/_/ /_/   /____/_/ /_/\\__,_/ .___/____/_/ /_/\\____/\\__/  
                                                     /_/     
 """
-HIGHLIGHTED_WORDS = []
+HIGHLIGHTED_WORDS = ["saved page"]
 IGNORED_STACK_FRAMES = 8
 
 
-class LoggerWrapper(logging.LoggerAdapter):
+class LogWrapper(logging.LoggerAdapter):
     def process(self, msg, kwargs):
         # add indentation based on stack depth
         tab_char = " " * 3
         indentation_level = len(traceback.extract_stack()) - IGNORED_STACK_FRAMES
         return f"{tab_char * indentation_level}{msg}", kwargs
 
+
+class LogInitializer:
     @staticmethod
     def get_log() -> logging.LoggerAdapter:
         # see: https://rich.readthedocs.io/en/stable/reference/logging.html
@@ -39,14 +41,13 @@ class LoggerWrapper(logging.LoggerAdapter):
 
         os.system("cls" if os.name == "nt" else "clear")
         print(BANNER_ASCII)
-        return LoggerWrapper(logging.getLogger("scrape-logger"), {})
+        return LogWrapper(logging.getLogger("scrape-logger"), {})
 
 
-LOG_SINGLETON = LoggerWrapper.get_log()
+LOG_SINGLETON = LogInitializer.get_log()
 
 
 def trace(print_args: bool = True):
-    # decorator for @trace() to log functions arguments and return values
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -54,7 +55,7 @@ def trace(print_args: bool = True):
             input_string += func.__name__ + "("
             if print_args:
                 not_html = [arg for arg in args if not isinstance(arg, BeautifulSoup)]
-                input_string += ", ".join([str(arg) for arg in not_html[1:]])
+                input_string += ", ".join([str(arg) for arg in not_html])  # arg[0] might be self
             input_string += ")"
             LOG_SINGLETON.info(input_string)
 

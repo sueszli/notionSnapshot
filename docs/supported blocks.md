@@ -12,6 +12,7 @@ this list is based on the [notion snapshot test page](https://sueszli.notion.sit
 - [ ] media
   - [ ] embedded video (mp4)
   - [ ] file attachments (pdf)
+  - [ ] embedded music (mp3)
 - [ ] databases
   - [ ] table view (glitches horizontally, doesn't link to subpages correctly)
   - [ ] timeline view (works, but is too small)

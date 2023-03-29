@@ -1,8 +1,6 @@
 # TODO
 
-- [ ] add missing support for file attachments (also see: [supported blocks](supported%20blocks.md))
-
-- [ ] refactor code
+- [ ] add missing support for file attachments
 
 - [ ] fix dependencies / issue with poetry, put everything on pypi
 
