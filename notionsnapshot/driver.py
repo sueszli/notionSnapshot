@@ -1,4 +1,3 @@
-import argparse
 import logging
 import os
 from selenium import webdriver
@@ -12,7 +11,7 @@ from argparser import ARGS
 
 class DriverInitializer:
     @staticmethod
-    def get_driver(args: argparse.Namespace) -> webdriver.Chrome:
+    def get_driver() -> webdriver.Chrome:
         # see: https://github.com/GoogleChrome/chrome-launcher/blob/main/docs/chrome-flags-for-tools.md
         opts = Options()
         opts.add_argument("--disable-client-side-phishing-detection")
@@ -23,7 +22,7 @@ class DriverInitializer:
         opts.add_argument("--disable-gpu")
         opts.add_argument("--silent")
         opts.add_argument("--disable-logging")
-        opts.add_argument("--headless=new") if not args.show_browser else opts.add_argument("window-size=900,1200")
+        opts.add_argument("--headless=new") if not ARGS.show_browser else opts.add_argument("window-size=900,1200")
         opts.add_experimental_option("excludeSwitches", ["enable-logging"])
         os.environ["WDM_PROGRESS_BAR"] = str(0)
         os.environ["WDM_LOG"] = str(logging.NOTSET)
@@ -33,4 +32,4 @@ class DriverInitializer:
         return driver
 
 
-DRIVER_SINGLETON = DriverInitializer.get_driver(ARGS)
+DRIVER_SINGLETON = DriverInitializer.get_driver()
