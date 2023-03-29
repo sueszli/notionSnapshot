@@ -1,7 +1,5 @@
 # TODO
 
-- [ ] add missing support for file attachments
-
 - [ ] fix dependencies / issue with poetry, put everything on pypi
 
 - [ ] advertise on loconotion, reddit, hackernews (see: https://news.ycombinator.com/item?id=35316679)
