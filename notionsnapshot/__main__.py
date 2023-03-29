@@ -6,8 +6,8 @@ import glob
 import hashlib
 import mimetypes
 import re
-import sys
 import uuid
+import time
 from pathlib import Path
 from typing import List, Optional, Tuple, Set
 
@@ -23,22 +23,22 @@ import cssutils
 from appdirs import user_cache_dir
 
 from argparser import ARGS
-from driver import DRIVER_SINGLETON as DRIVER
+from driver import DriverInitializer
 from logger import LOG_SINGLETON as LOG, trace
 
 
 class FileManager:
     output_dir: str = ""
+    assets_dir: str = ""
     cache_dir: str = ""
     css_injection_file: str = ""
     js_injection_file: str = ""
 
-    @trace()
     @staticmethod
     def setup() -> None:
-        page_id = urllib.parse.urlparse(ARGS.url).path[1:]
-        page_name = page_id[: page_id.rfind("-")].lower()
+        page_name = FileManager.get_page_name()
         FileManager.output_dir = os.path.join("snapshots", page_name)
+        FileManager.assets_dir = os.path.join(FileManager.output_dir, "assets")
 
         cache_base_dir = user_cache_dir(appname="notion-snapshot", appauthor="sueszli")
         FileManager.cache_dir = os.path.join(cache_base_dir, page_name)
@@ -49,11 +49,16 @@ class FileManager:
         FileManager.css_injection_file = css_file
         FileManager.js_injection_file = js_file
 
+    @staticmethod
+    def get_page_name() -> str:
+        page_id = urllib.parse.urlparse(ARGS.url).path[1:]
+        return page_id[: page_id.rfind("-")].lower()
+
     @trace()
     @staticmethod
     def _init_output_dir() -> None:
-        if not ARGS.disable_caching and os.path.exists(FileManager.output_dir + "/assets"):
-            shutil.copytree(FileManager.output_dir + "/assets", FileManager.cache_dir, dirs_exist_ok=True)
+        if not ARGS.disable_caching and os.path.exists(FileManager.assets_dir):
+            shutil.copytree(FileManager.assets_dir, FileManager.cache_dir, dirs_exist_ok=True)
             LOG.info("cached assets from previous snapshot for this url")
 
         if os.path.exists(FileManager.output_dir):
@@ -61,15 +66,15 @@ class FileManager:
             LOG.info(f"removed previous snapshot for this url")
 
         os.makedirs(FileManager.output_dir, exist_ok=True)
-        os.makedirs(FileManager.output_dir + "/assets", exist_ok=True)
+        os.makedirs(FileManager.assets_dir, exist_ok=True)
         if not ARGS.disable_caching:
             os.makedirs(FileManager.cache_dir, exist_ok=True)
 
     @staticmethod
     def _copy_injections_to_assets_dir() -> Tuple[str, str]:
         injection_dir = Path(__file__).parent / "injections"
-        css_out = Path(FileManager.output_dir) / "assets" / "injection.css"
-        js_out = Path(FileManager.output_dir) / "assets" / "injection.js"
+        css_out = Path(FileManager.assets_dir) / "injection.css"
+        js_out = Path(FileManager.assets_dir) / "injection.js"
         shutil.copy(injection_dir / "injection.js", js_out)
         shutil.copy(injection_dir / "injection.css", css_out)
         relative_css_out = str(css_out.relative_to(FileManager.output_dir)).replace("\\", "/")
@@ -82,7 +87,7 @@ class FileManager:
         if not filename:
             filename = FileManager._generate_filename(url)
 
-        already_downloaded = glob.glob(FileManager.output_dir + "/assets/" + filename + ".*")
+        already_downloaded = glob.glob(FileManager.assets_dir + filename + ".*")
         if already_downloaded:
             LOG.info(f"asset '{filename}' was already downloaded")
             return str(Path(already_downloaded[0]).relative_to(FileManager.output_dir)).replace("\\", "/")
@@ -91,7 +96,7 @@ class FileManager:
             LOG.info(f"asset '{filename}' was found in cache")
             return cached
 
-        destination = Path(FileManager.output_dir) / "assets" / filename
+        destination = Path(FileManager.assets_dir) / filename
         try:
             session = requests.Session()
             session.trust_env = False
@@ -122,7 +127,6 @@ class FileManager:
             LOG.critical(f"error downloading asset on '{url}' - the online link to it will be used instead \n\t{error}")
             return str(Path(url)).replace("\\", "/")
 
-    @trace()
     @staticmethod
     def _generate_filename(url: str) -> str:
         parsed_url = urllib.parse.urlparse(url)
@@ -140,18 +144,19 @@ class FileManager:
         cache_path = os.path.join(FileManager.cache_dir, filename)
         cached = glob.glob(cache_path)
         if cached:
-            shutil.copy(cached[0], FileManager.output_dir + "/assets")
+            shutil.copy(cached[0], FileManager.assets_dir)
             return os.path.join("assets", os.path.basename(cached[0]))
         return None
 
     @staticmethod
     def save_page(soup: BeautifulSoup, url: str) -> None:
+        # don't prettify html, it breaks the page
         html_str = str(soup)
         filename = FileManager.get_filename_from_url(url)
         output_path = Path(FileManager.output_dir + "/" + filename)
         with open(output_path, "wb") as f:
             f.write(html_str.encode("utf-8").strip())
-        LOG.info(f"saved page of '{url}' \n\n\n\n\n\n\n\n\n")
+        LOG.info(f"saved page for '{url}' \n\n\n\n\n\n\n")
 
     @staticmethod
     def get_filename_from_url(url: str) -> str:
@@ -163,6 +168,9 @@ class FileManager:
 
 
 class Scraper:
+    driver_download_path: str = os.path.abspath("snapshots/" + FileManager.get_page_name() + "/assets")
+    driver: webdriver.Chrome = DriverInitializer.get_driver(driver_download_path)
+
     will_visit: Set[str] = set([ARGS.url])
     visited: Set[str] = set()
 
@@ -173,19 +181,20 @@ class Scraper:
 
             Scraper._load_page(url)
             Scraper._expand_toggle_blocks()
-            soup = BeautifulSoup(DRIVER.page_source, "html5lib")
+            soup = BeautifulSoup(Scraper.driver.page_source, "html5lib")
             Scraper._clean_up(soup)
             Scraper._download_images(soup)
             Scraper._download_stylesheets(soup)
+            Scraper._download_pdfs(soup)
             Scraper._insert_injection_hooks(soup)
-            subpage_urls = Scraper._link_to_subpages(soup)
             Scraper._link_to_table_view_subpages(soup)
-
+            subpage_urls = Scraper._link_anchors(soup)
             FileManager.save_page(soup, url)
+
             Scraper.visited.add(url)
             Scraper.will_visit.update(page for page in subpage_urls if page not in Scraper.visited)
 
-        DRIVER.quit()
+        Scraper.driver.quit()
 
     @trace()
     @staticmethod
@@ -208,26 +217,26 @@ class Scraper:
             prev_page = d.page_source
             return False
 
-        DRIVER.get(url)
+        Scraper.driver.get(url)
         try:
-            WebDriverWait(DRIVER, ARGS.timeout).until(is_page_loaded)
+            WebDriverWait(Scraper.driver, ARGS.timeout).until(is_page_loaded)
         except TimeoutException:
             LOG.critical("timed out waiting for page to load, proceeding anyways (might be because of infinite spinners)")
         LOG.info("page loaded")
 
         mode = "dark" if ARGS.dark_mode else "light"
-        DRIVER.execute_script("__console.environment.ThemeStore.setState({ mode: '" + mode + "' })")
+        Scraper.driver.execute_script("__console.environment.ThemeStore.setState({ mode: '" + mode + "' })")
         LOG.info(f"set theme to {mode}-mode")
 
     @trace(print_args=False)
     @staticmethod
     def _expand_toggle_blocks(expanded_toggle_blocks=[]) -> None:
         def get_toggle_blocks() -> List[WebElement]:
-            toggle_blocks = DRIVER.find_elements(By.CLASS_NAME, "notion-toggle-block")
+            toggle_blocks = Scraper.driver.find_elements(By.CLASS_NAME, "notion-toggle-block")
             header_toggle_blocks = []
             queries = [f"notion-selectable.notion-{type}-block" for type in ["header", "sub_header", "sub_sub_header"]]
             for query in queries:
-                blocks = DRIVER.find_elements(By.CLASS_NAME, query)
+                blocks = Scraper.driver.find_elements(By.CLASS_NAME, query)
                 for block in blocks:
                     if block.find_elements(By.CSS_SELECTOR, "div[role=button]"):
                         header_toggle_blocks.append(block)
@@ -247,9 +256,9 @@ class Scraper:
             toggle_block_button = block.find_element(By.CSS_SELECTOR, "div[role=button]")
             is_expanded = "(180deg)" in (toggle_block_button.find_element(By.TAG_NAME, "svg").get_attribute("style"))
             if not is_expanded:
-                DRIVER.execute_script("arguments[0].click();", toggle_block_button)
+                Scraper.driver.execute_script("arguments[0].click();", toggle_block_button)
                 try:
-                    WebDriverWait(DRIVER, ARGS.timeout).until(lambda d: is_block_expanded(block))
+                    WebDriverWait(Scraper.driver, ARGS.timeout).until(lambda d: is_block_expanded(block))
                 except TimeoutException:
                     LOG.critical("timeout while expanding block - manually check if it's expanded in the snapshot")
                     continue
@@ -260,7 +269,6 @@ class Scraper:
         if nested_toggle_blocks:
             Scraper._expand_toggle_blocks(expanded_toggle_blocks)
 
-    @trace()
     @staticmethod
     def _clean_up(soup: BeautifulSoup) -> None:
         for script in soup.findAll("script"):
@@ -285,7 +293,6 @@ class Scraper:
             unwanted_og_tag = soup.find("meta", attrs={"property": tag})
             if unwanted_og_tag and isinstance(unwanted_og_tag, Tag):
                 unwanted_og_tag.decompose()
-        LOG.info("removed unwanted tags from html")
 
     @trace()
     @staticmethod
@@ -355,6 +362,35 @@ class Scraper:
 
     @trace()
     @staticmethod
+    def _download_pdfs(soup: BeautifulSoup) -> None:
+        fileblocks = Scraper.driver.find_elements(By.CLASS_NAME, "notion-file-block")
+        for fileblock in fileblocks:
+            driver_filename = fileblock.text.strip().replace("\n", "").replace("\t", "")
+            driver_filename = re.sub(r"\d.*$", "", driver_filename)
+            if driver_filename.endswith(".pdf"):
+                num_assets_before = len(os.listdir(FileManager.assets_dir))
+                fileblock.click()
+                while len(os.listdir(FileManager.assets_dir)) is not num_assets_before + 1:
+                    time.sleep(1)
+                LOG.info(f"downloaded '{driver_filename}'")
+
+                success = False
+                soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
+                for soup_block in soup_blocks:
+                    soup_filename = soup_block.text.strip().replace("\n", "").replace("\t", "")
+                    soup_filename = re.sub(r"\d.*$", "", soup_filename)
+                    if soup_filename == driver_filename:
+                        soup_block.name = "a"
+
+                        soup_block["href"] = "./assets/" + driver_filename
+                        soup_block["style"] = "text-decoration: none; color: inherit;"
+                        soup_block["target"] = "_blank"
+                        LOG.info("linked to download in soup")
+                        success = True
+                        break
+                assert success, f"could not find '{driver_filename}' in soup"
+
+    @staticmethod
     def _insert_injection_hooks(soup: BeautifulSoup) -> None:
         # add ids and classes for 'injection.js' to work
         toggle_blocks = soup.findAll("div", {"class": "notion-toggle-block"})
@@ -378,6 +414,7 @@ class Scraper:
     @trace()
     @staticmethod
     def _link_to_table_view_subpages(soup: BeautifulSoup) -> None:
+        # this function broke with a recent notion update
         tables = soup.findAll("div", {"class": "notion-table-view"})
         LOG.info(f"found {len(tables)} tables")
         for table in tables:
@@ -395,8 +432,9 @@ class Scraper:
 
     @trace()
     @staticmethod
-    def _link_to_subpages(soup: BeautifulSoup) -> List[str]:
+    def _link_anchors(soup: BeautifulSoup) -> List[str]:
         subpage_urls = []
+
         domain = f'{ARGS.url.split("notion.site")[0]}notion.site'
         anchors = soup.find_all("a", href=True)
         for a in anchors:
@@ -419,11 +457,14 @@ class Scraper:
                 url = arr[0]
                 a["href"] = f"#{arr[-1]}"
                 a["class"] = a.get("class", []) + ["notionsnapshot-anchor-link"]
+
             elif is_scroller:
                 filename = FileManager.get_filename_from_url(url)
                 a["href"] = filename
                 subpage_urls.append(url)
+
             else:
+                # remove all other links
                 del a["href"]
                 a.name = "span"
                 children = [child for child in ([a] + a.find_all()) if child.has_attr("style")]
@@ -437,5 +478,4 @@ class Scraper:
 
 if __name__ == "__main__":
     FileManager.setup()
-    Scraper.run()
-    LOG.info("done")
+    Scraper().run()
