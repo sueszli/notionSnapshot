@@ -368,12 +368,15 @@ class Scraper:
             driver_filename = fileblock.text.strip().replace("\n", "").replace("\t", "")
             driver_filename = re.sub(r"\d.*$", "", driver_filename)
             if driver_filename.endswith(".pdf"):
-                num_assets_before = len(os.listdir(FileManager.assets_dir))
-                fileblock.click()
-                while len(os.listdir(FileManager.assets_dir)) is not num_assets_before + 1:
-                    LOG.info("\tloading...")
-                    time.sleep(1)
-                LOG.info(f"downloaded '{driver_filename}'")
+
+                if not ARGS.disable_caching and (cached := FileManager._load_from_cache(driver_filename)) is not None:
+                    LOG.info(f"pdf '{driver_filename}' was found in cache")
+                else:
+                    num_assets_before = len(os.listdir(FileManager.assets_dir))
+                    fileblock.click()
+                    while len(os.listdir(FileManager.assets_dir)) is not num_assets_before + 1:
+                        time.sleep(1)
+                    LOG.info(f"downloaded '{driver_filename}'")
 
                 success = False
                 soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
@@ -384,8 +387,7 @@ class Scraper:
                         soup_block.name = "a"
                         soup_block["href"] = "./assets/" + driver_filename
                         soup_block["style"] = "text-decoration: none; color: inherit;"
-                        soup_block["target"] = "_blank"
-                        LOG.info("linked to download in soup")
+                        # soup_block["target"] = "_blank"
                         success = True
                         break
                 assert success, f"could not find '{driver_filename}' in soup"

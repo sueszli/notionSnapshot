@@ -86,7 +86,8 @@ a[data-token-index] svg.page {
   .notion-page-content > .notion-collection_view-block,
   .notion-page-content > .notion-collection_view-block > div,
   .notion-page-content > .notion-collection_view-block > .notion-scroller > div {
-    width: 100vw !important;
+    width: 90vw !important; /* <-- adapt padding in mobile view */
+    margin: auto !important;
     /* max-width: unset !important; */
     padding-right: 0 !important;
     padding-left: 0 !important;
