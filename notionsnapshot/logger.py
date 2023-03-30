@@ -49,6 +49,7 @@ LOG_SINGLETON = LogInitializer.get_log()
 
 def trace(print_args: bool = True):
     def decorator(func):
+        # see: https://realpython.com/primer-on-python-decorators/#debugging-code
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             input_string = "⮕ "
