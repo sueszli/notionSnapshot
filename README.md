@@ -103,11 +103,11 @@ Alternatively you can run some of our test pages which are listed in the `test.s
 
 <br>
 
-### Caution
+### Things to keep in mind
 
-If you are scraping something important, you should use the `--disable-caching` option because otherwise the script will use the cached version of the page and not the latest version.
-    
-We assumed that every file/asset-name is unique but you may have stored 2 assets with different content under the same name. This is not something we can fix, because comparing the content of the files would be too slow.
+Files get compared by name, not by content. This means that if you have 2 files with the same name but different content, the script will not download the second file.
+
+Same thing applies to caching: the script will not download the updated version of a file with the same name if you don't use the `--disable-caching` option.
 
 <br><br>
 
