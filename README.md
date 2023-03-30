@@ -10,9 +10,9 @@ The HTML export tool for Notion that actually works!
 
 ```
 
-Default export              |  **✨NotionSnapshot✨**  | Original page 
-:-------------------------:|:-------------------------:|:-------------------------:
 <img width="685" src="docs/assets/export.jpeg">  |  <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> 
+:-------------------------:|:-------------------------:|:-------------------------:
+Default export              |  **✨NotionSnapshot✨**  | Original page 
 
 <br>
 
