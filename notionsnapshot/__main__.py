@@ -370,8 +370,6 @@ class Scraper:
         LOG.info(f"found {len(driver_pairs)} pdfs to download")
 
         for driver_name, driver_block in driver_pairs:
-            LOG.info(f"downloading '{driver_name}'")
-
             if driver_name in os.listdir(FileManager.assets_dir):
                 LOG.info("pdf with same name was found in assets")
             elif not ARGS.disable_caching and (cached := FileManager._load_from_cache(driver_name)) is not None:
@@ -385,7 +383,7 @@ class Scraper:
                     new_files = set(os.listdir(FileManager.assets_dir)) - assets_before_download
                     if len(new_files) == 1 and driver_name in new_files:
                         has_downloaded = True
-                LOG.info("finished downloading")
+                LOG.info(f"finished downloading '{driver_name}'")
 
             soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
             soup_names = [[c.text for c in b.find_all("div")][-2] for b in soup_blocks]
