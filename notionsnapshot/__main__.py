@@ -369,17 +369,17 @@ class Scraper:
             driver_filename = re.sub(r"\d.*$", "", driver_filename)
             if driver_filename.endswith(".pdf"):
 
+                if driver_filename in os.listdir(FileManager.assets_dir):
+                    LOG.critical(f"duplicate pdf '{driver_filename}' already exists in assets folder")
+
                 if not ARGS.disable_caching and (cached := FileManager._load_from_cache(driver_filename)) is not None:
                     LOG.info(f"pdf '{driver_filename}' was found in cache")
                 else:
                     fileblock.click()
-                    has_downloaded = False
-                    while not has_downloaded:
+                    while not driver_filename in os.listdir(FileManager.assets_dir):
                         time.sleep(0.25)
-                        has_downloaded = driver_filename in os.listdir(FileManager.assets_dir)
                     LOG.info(f"downloaded '{driver_filename}'")
 
-                print(os.listdir(FileManager.assets_dir))
                 linked_to_soup = False
                 soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
                 for soup_block in soup_blocks:
