@@ -374,11 +374,11 @@ class Scraper:
                 else:
                     num_assets_before = len(os.listdir(FileManager.assets_dir))
                     fileblock.click()
-                    while len(os.listdir(FileManager.assets_dir)) is not num_assets_before + 1:
+                    while (num_assets_before + 1) is not (num_assets_now := len(os.listdir(FileManager.assets_dir))):
                         time.sleep(1)
                     LOG.info(f"downloaded '{driver_filename}'")
 
-                success = False
+                linked_to_soup = False
                 soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
                 for soup_block in soup_blocks:
                     soup_filename = soup_block.text.strip().replace("\n", "").replace("\t", "")
@@ -387,10 +387,12 @@ class Scraper:
                         soup_block.name = "a"
                         soup_block["href"] = "./assets/" + driver_filename
                         soup_block["style"] = "text-decoration: none; color: inherit;"
-                        # soup_block["target"] = "_blank"
-                        success = True
+                        soup_block["target"] = "_blank"
+                        linked_to_soup = True
                         break
-                assert success, f"could not find '{driver_filename}' in soup"
+                assert linked_to_soup, f"could not find '{driver_filename}' in soup"
+                assets_contain_download = any([driver_filename in asset for asset in os.listdir(FileManager.assets_dir)])
+                assert assets_contain_download, f"could not find '{driver_filename}' in assets"
 
     @staticmethod
     def _insert_injection_hooks(soup: BeautifulSoup) -> None:
