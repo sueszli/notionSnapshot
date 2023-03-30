@@ -101,6 +101,14 @@ python3 notionsnapshot <notion page url>
 
 Alternatively you can run some of our test pages which are listed in the `test.sh` file.
 
+<br>
+
+### Caution
+
+If you are scraping something important, you should use the `--disable-caching` option because otherwise the script will use the cached version of the page and not the latest version.
+    
+We assumed that every file/asset-name is unique but you may have stored 2 assets with different content under the same name. This is not something we can fix, because comparing the content of the files would be too slow.
+
 <br><br>
 
 ---
