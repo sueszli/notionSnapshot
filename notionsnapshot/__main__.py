@@ -372,12 +372,14 @@ class Scraper:
                 if not ARGS.disable_caching and (cached := FileManager._load_from_cache(driver_filename)) is not None:
                     LOG.info(f"pdf '{driver_filename}' was found in cache")
                 else:
-                    num_assets_before = len(os.listdir(FileManager.assets_dir))
                     fileblock.click()
-                    while (num_assets_before + 1) is not (num_assets_now := len(os.listdir(FileManager.assets_dir))):
-                        time.sleep(1)
+                    has_downloaded = False
+                    while not has_downloaded:
+                        time.sleep(0.25)
+                        has_downloaded = driver_filename in os.listdir(FileManager.assets_dir)
                     LOG.info(f"downloaded '{driver_filename}'")
 
+                print(os.listdir(FileManager.assets_dir))
                 linked_to_soup = False
                 soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
                 for soup_block in soup_blocks:
@@ -391,8 +393,6 @@ class Scraper:
                         linked_to_soup = True
                         break
                 assert linked_to_soup, f"could not find '{driver_filename}' in soup"
-                assets_contain_download = any([driver_filename in asset for asset in os.listdir(FileManager.assets_dir)])
-                assert assets_contain_download, f"could not find '{driver_filename}' in assets"
 
     @staticmethod
     def _insert_injection_hooks(soup: BeautifulSoup) -> None:
