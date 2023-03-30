@@ -371,6 +371,7 @@ class Scraper:
                 num_assets_before = len(os.listdir(FileManager.assets_dir))
                 fileblock.click()
                 while len(os.listdir(FileManager.assets_dir)) is not num_assets_before + 1:
+                    LOG.info("\tloading...")
                     time.sleep(1)
                 LOG.info(f"downloaded '{driver_filename}'")
 
