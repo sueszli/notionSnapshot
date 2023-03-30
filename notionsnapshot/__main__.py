@@ -363,36 +363,41 @@ class Scraper:
     @trace()
     @staticmethod
     def _download_pdfs(soup: BeautifulSoup) -> None:
-        fileblocks = Scraper.driver.find_elements(By.CLASS_NAME, "notion-file-block")
-        for fileblock in fileblocks:
-            driver_filename = fileblock.text.strip().replace("\n", "").replace("\t", "")
-            driver_filename = re.sub(r"\d.*$", "", driver_filename)
-            if driver_filename.endswith(".pdf"):
+        driver_blocks = Scraper.driver.find_elements(By.CLASS_NAME, "notion-file-block")
+        driver_names = [[c.text for c in b.find_elements(By.XPATH, ".//*")][-2] for b in driver_blocks]
+        assert len(driver_blocks) == len(driver_names), "number of driver blocks and names do not match"
+        driver_pairs = [nb for nb in list(zip(driver_names, driver_blocks)) if nb[0].endswith(".pdf")]
+        LOG.info(f"found {len(driver_pairs)} pdfs to download")
 
-                if driver_filename in os.listdir(FileManager.assets_dir):
-                    LOG.critical(f"duplicate pdf '{driver_filename}' already exists in assets folder")
+        for driver_name, driver_block in driver_pairs:
+            LOG.info(f"downloading '{driver_name}'")
 
-                if not ARGS.disable_caching and (cached := FileManager._load_from_cache(driver_filename)) is not None:
-                    LOG.info(f"pdf '{driver_filename}' was found in cache")
-                else:
-                    fileblock.click()
-                    while not driver_filename in os.listdir(FileManager.assets_dir):
-                        time.sleep(0.25)
-                    LOG.info(f"downloaded '{driver_filename}'")
+            if driver_name in os.listdir(FileManager.assets_dir):
+                LOG.info("pdf with same name was found in assets")
+            elif not ARGS.disable_caching and (cached := FileManager._load_from_cache(driver_name)) is not None:
+                LOG.info("pdf with same name was found in cache")
+            else:
+                assets_before_download = set(os.listdir(FileManager.assets_dir))
+                driver_block.click()
+                has_downloaded = False
+                while not has_downloaded:
+                    time.sleep(0.25)
+                    new_files = set(os.listdir(FileManager.assets_dir)) - assets_before_download
+                    if len(new_files) == 1 and driver_name in new_files:
+                        has_downloaded = True
+                LOG.info("finished downloading")
 
-                linked_to_soup = False
-                soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
-                for soup_block in soup_blocks:
-                    soup_filename = soup_block.text.strip().replace("\n", "").replace("\t", "")
-                    soup_filename = re.sub(r"\d.*$", "", soup_filename)
-                    if soup_filename == driver_filename:
-                        soup_block.name = "a"
-                        soup_block["href"] = "./assets/" + driver_filename
-                        soup_block["style"] = "text-decoration: none; color: inherit;"
-                        soup_block["target"] = "_blank"
-                        linked_to_soup = True
-                        break
-                assert linked_to_soup, f"could not find '{driver_filename}' in soup"
+            soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
+            soup_names = [[c.text for c in b.find_all("div")][-2] for b in soup_blocks]
+            assert len(soup_blocks) == len(soup_names), "number of soup blocks and names do not match"
+            assert driver_name in soup_names, "driver name not found in soup names"
+            for soup_name, soup_block in zip(soup_names, soup_blocks):
+                if soup_name == driver_name:
+                    soup_block.name = "a"
+                    soup_block["href"] = "./assets/" + driver_name
+                    soup_block["style"] = "text-decoration: none; color: inherit;"
+                    soup_block["target"] = "_blank"
+                    break
 
     @staticmethod
     def _insert_injection_hooks(soup: BeautifulSoup) -> None:
