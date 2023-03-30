@@ -381,7 +381,6 @@ class Scraper:
                     soup_filename = re.sub(r"\d.*$", "", soup_filename)
                     if soup_filename == driver_filename:
                         soup_block.name = "a"
-
                         soup_block["href"] = "./assets/" + driver_filename
                         soup_block["style"] = "text-decoration: none; color: inherit;"
                         soup_block["target"] = "_blank"
