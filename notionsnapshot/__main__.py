@@ -87,7 +87,7 @@ class FileManager:
         if not filename:
             filename = FileManager._generate_filename(url)
 
-        already_downloaded = glob.glob(FileManager.assets_dir + filename + ".*")
+        already_downloaded = glob.glob(os.path.join(FileManager.assets_dir, filename + ".*"))
         if already_downloaded:
             LOG.info(f"asset '{filename}' was already downloaded")
             return str(Path(already_downloaded[0]).relative_to(FileManager.output_dir)).replace("\\", "/")
@@ -156,7 +156,7 @@ class FileManager:
         output_path = Path(FileManager.output_dir + "/" + filename)
         with open(output_path, "wb") as f:
             f.write(html_str.encode("utf-8").strip())
-        LOG.info(f"saved page for '{url}' \n\n\n\n\n\n\n")
+        LOG.info(f"saved page\n\n\n\n\n\n\n")
 
     @staticmethod
     def get_filename_from_url(url: str) -> str:
@@ -193,6 +193,7 @@ class Scraper:
 
             Scraper.visited.add(url)
             Scraper.will_visit.update(page for page in subpage_urls if page not in Scraper.visited)
+            LOG.info(f"pages left to scrape: {len(Scraper.will_visit)}")
 
         Scraper.driver.quit()
 
@@ -221,7 +222,8 @@ class Scraper:
         try:
             WebDriverWait(Scraper.driver, ARGS.timeout).until(is_page_loaded)
         except TimeoutException:
-            LOG.critical("timed out waiting for page to load, proceeding anyways (might be because of infinite spinners)")
+            LOG.info("timed out waiting for page to load, proceeding anyways (might be because of infinite spinners)")
+            time.sleep(10)
         LOG.info("page loaded")
 
         mode = "dark" if ARGS.dark_mode else "light"
@@ -265,7 +267,7 @@ class Scraper:
             expanded_toggle_blocks.append(block)
 
         nested_toggle_blocks = [block for block in get_toggle_blocks() if block not in expanded_toggle_blocks]
-        LOG.info(f"expanded {len(expanded_toggle_blocks)} toggle blocks so far - found {len(nested_toggle_blocks)} to expand next")
+        LOG.info(f"expanded {len(expanded_toggle_blocks)} toggle blocks so far - found {len(nested_toggle_blocks)} nested blocks expand next")
         if nested_toggle_blocks:
             Scraper._expand_toggle_blocks(expanded_toggle_blocks)
 
@@ -337,23 +339,23 @@ class Scraper:
                 stylesheet = cssutils.parseString(f.read())
 
                 # additionally download fonts used in the stylesheet
-                for rule in stylesheet.cssRules:
-                    if rule.type == cssutils.css.CSSRule.FONT_FACE_RULE:
-                        # for some reason the url becomes https:/www.notion.so/https:/not.../<the url>
-                        url_regex = re.compile(r"url\((/?https:/www.notion.so)*(.+?)\).*")
-                        LOG.debug(rule.style["src"])
-                        m = url_regex.match(rule.style["src"])
-                        if m is None:
-                            raise ValueError("could not parse stylesheet source of font face rule")
-                        # first capture group the repeating notion url
-                        font_file = re.sub(r"assets/", "", m.group(2))
-                        parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
-                        LOG.debug("parent_css_path: " + parent_css_path)
-                        LOG.debug("font_file: " + font_file)
-                        font_download_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
-                        LOG.debug("font_download_url: " + font_download_url)
-                        font_download_path = FileManager.download_asset(font_download_url, Path(font_file).name)
-                        rule.style["src"] = f"url({font_download_path})"
+                css_rules = [rule for rule in stylesheet.cssRules if rule.type == cssutils.css.CSSRule.FONT_FACE_RULE]
+                for rule in css_rules:
+                    # for some reason the url becomes https:/www.notion.so/https:/not.../<the url>
+                    url_regex = re.compile(r"url\((/?https:/www.notion.so)*(.+?)\).*")
+                    LOG.debug(rule.style["src"])
+                    m = url_regex.match(rule.style["src"])
+                    if m is None:
+                        raise ValueError("could not parse stylesheet source of font face rule")
+                    # first capture group the repeating notion url
+                    font_file = re.sub(r"assets/", "", m.group(2))
+                    parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
+                    LOG.debug("parent_css_path: " + parent_css_path)
+                    LOG.debug("font_file: " + font_file)
+                    font_download_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
+                    LOG.debug("font_download_url: " + font_download_url)
+                    font_download_path = FileManager.download_asset(font_download_url, Path(font_file).name)
+                    rule.style["src"] = f"url({font_download_path})"
                 f.seek(0)
                 f.truncate()
                 f.write(stylesheet.cssText)
@@ -369,33 +371,39 @@ class Scraper:
         driver_pairs = [nb for nb in list(zip(driver_names, driver_blocks)) if nb[0].endswith(".pdf")]
         LOG.info(f"found {len(driver_pairs)} pdfs to download")
 
+        # notion unpredictably adds spaces to names
+        is_equal = lambda str1, str2: str1.replace(" ", "") == str2.replace(" ", "")
+        is_in_list = lambda str1, str_list: any(is_equal(str1, str2) for str2 in str_list)
+
         for driver_name, driver_block in driver_pairs:
-            if driver_name in os.listdir(FileManager.assets_dir):
+            download_name = driver_name.replace("/", "_").replace(":", "_")
+            LOG.info(f"downloading '{driver_name}'")
+
+            if download_name in os.listdir(FileManager.assets_dir):
                 LOG.info("pdf with same name was found in assets")
-            elif not ARGS.disable_caching and (cached := FileManager._load_from_cache(driver_name)) is not None:
+
+            elif not ARGS.disable_caching and FileManager._load_from_cache(download_name) is not None:
                 LOG.info("pdf with same name was found in cache")
+
             else:
                 assets_before_download = set(os.listdir(FileManager.assets_dir))
                 driver_block.click()
-                has_downloaded = False
-                while not has_downloaded:
-                    time.sleep(0.25)
-                    new_files = set(os.listdir(FileManager.assets_dir)) - assets_before_download
-                    if len(new_files) == 1 and driver_name in new_files:
-                        has_downloaded = True
-                LOG.info(f"finished downloading '{driver_name}'")
+                get_new_files = lambda: set(os.listdir(FileManager.assets_dir)) - assets_before_download
+                is_downloaded = lambda: len(get_new_files()) == 1 and is_in_list(download_name, list(get_new_files()))
+                WebDriverWait(Scraper.driver, ARGS.timeout).until(lambda d: is_downloaded())
+                LOG.info(f"downloaded '{download_name}'")
+                assert not re.compile(rf"{download_name} \(\d+\)\.pdf") in get_new_files(), "found multiple blocks with same name"
 
             soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
             soup_names = [[c.text for c in b.find_all("div")][-2] for b in soup_blocks]
             assert len(soup_blocks) == len(soup_names), "number of soup blocks and names do not match"
-            assert driver_name in soup_names, "driver name not found in soup names"
-            for soup_name, soup_block in zip(soup_names, soup_blocks):
-                if soup_name == driver_name:
-                    soup_block.name = "a"
-                    soup_block["href"] = "./assets/" + driver_name
-                    soup_block["style"] = "text-decoration: none; color: inherit;"
-                    soup_block["target"] = "_blank"
-                    break
+            assert is_in_list(driver_name, soup_names), "driver name not found in soup names"
+
+            soup_block = soup_blocks[soup_names.index(next(n for n in soup_names if is_equal(n, driver_name)))]
+            soup_block.name = "a"
+            soup_block["href"] = "./assets/" + download_name
+            soup_block["style"] = "text-decoration: none; color: inherit;"
+            soup_block["target"] = "_blank"
 
     @staticmethod
     def _insert_injection_hooks(soup: BeautifulSoup) -> None:
@@ -405,13 +413,12 @@ class Scraper:
             header_toggle_blocks = soup.findAll("div", {"class": f"notion-selectable notion-{query}-block"})
             [toggle_blocks.append(block) for block in header_toggle_blocks if block.select_one("div[role=button]") is not None]
         for toggle_block in toggle_blocks:
-            toggle_id = uuid.uuid4()
             toggle_button = toggle_block.select_one("div[role=button]")
             toggle_content = toggle_block.find("div", {"class": None, "style": ""})
             if toggle_button and toggle_content:
                 toggle_button["class"] = toggle_block.get("class", []) + ["notionsnapshot-toggle-button"]
                 toggle_content["class"] = toggle_content.get("class", []) + ["notionsnapshot-toggle-content"]
-                toggle_content.attrs["notionsnapshot-toggle-id"] = toggle_button.attrs["notionsnapshot-toggle-id"] = toggle_id
+                toggle_content.attrs["notionsnapshot-toggle-id"] = toggle_button.attrs["notionsnapshot-toggle-id"] = uuid.uuid4()
 
         assert soup.head is not None
         soup.head.insert(-1, soup.new_tag("link", rel="stylesheet", href=FileManager.css_injection_file))

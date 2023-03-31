@@ -76,6 +76,10 @@ But for a small script like this it is fine and it makes the code a lot easier t
 
 I don't know if this project will ever get any traction, but if it does, here are some ideas for the future:
 
+
+- [ ] support more blocks
+  - [ ] all kinds of file attachments with selenium actions (see: https://www.selenium.dev/selenium/docs/api/py/webdriver/selenium.webdriver.common.action_chains.html)
+
 - [ ] make it more accessible for people who don't code / don't have python (= most notion users) 
   - [ ] build simple gui with tkinter (see: https://github.com/stars/sueszli/lists/python-guis) + executables for windows and osx
   - [ ] integrate into github actions such that people just need to enter their URL and immediately get a hosted version of the snapshot
