@@ -18,7 +18,7 @@ BANNER_ASCII = """
 /_/ |_/\\____/\\__/_/\\____/_/ /_/   /____/_/ /_/\\__,_/ .___/____/_/ /_/\\____/\\__/  
                                                     /_/     
 """
-HIGHLIGHTED_WORDS = ["saved page"]
+HIGHLIGHTED_WORDS = ["pages left to scrape:"]
 IGNORED_STACK_FRAMES = 8
 
 

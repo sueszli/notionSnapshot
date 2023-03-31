@@ -72,10 +72,14 @@ a[data-token-index] svg.page {
 
 /* mobile fixes */
 @media only screen and (max-width: 960px) {
+  :root {
+    --mobile-width: 90vw;
+  }
+
   /* normalize banner / page title width */
   .notion-scroller > div:not([class]),
   .notion-scroller > div > div:not([class]) {
-    width: 90vw !important; /* <-- adapt padding in mobile view */
+    width: var(--mobile-width) !important;
     margin: auto !important;
 
     max-width: 960px !important;
@@ -88,7 +92,7 @@ a[data-token-index] svg.page {
   .notion-page-content > .notion-collection_view-block,
   .notion-page-content > .notion-collection_view-block > div,
   .notion-page-content > .notion-collection_view-block > .notion-scroller > div {
-    width: 90vw !important; /* <-- adapt padding in mobile view */
+    width: var(--mobile-width) !important;
     margin: auto !important;
     
     /* max-width: unset !important; */
