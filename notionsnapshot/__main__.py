@@ -332,7 +332,6 @@ class Scraper:
         stylesheets = [link for link in soup.findAll("link", rel="stylesheet") if is_stylesheet(link)]
 
         for link in stylesheets:
-            LOG.debug("link:" + link["href"])
             download_path = FileManager.download_asset(f'https://www.notion.so{link["href"]}')
 
             with open(os.path.join(FileManager.output_dir, download_path), "rb+") as f:
@@ -343,17 +342,13 @@ class Scraper:
                 for rule in css_rules:
                     # for some reason the url becomes https:/www.notion.so/https:/not.../<the url>
                     url_regex = re.compile(r"url\((/?https:/www.notion.so)*(.+?)\).*")
-                    LOG.debug(rule.style["src"])
                     m = url_regex.match(rule.style["src"])
                     if m is None:
                         raise ValueError("could not parse stylesheet source of font face rule")
                     # first capture group the repeating notion url
                     font_file = re.sub(r"assets/", "", m.group(2))
                     parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
-                    LOG.debug("parent_css_path: " + parent_css_path)
-                    LOG.debug("font_file: " + font_file)
                     font_download_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
-                    LOG.debug("font_download_url: " + font_download_url)
                     font_download_path = FileManager.download_asset(font_download_url, Path(font_file).name)
                     rule.style["src"] = f"url({font_download_path})"
                 f.seek(0)
@@ -390,7 +385,12 @@ class Scraper:
                 driver_block.click()
                 get_new_files = lambda: set(os.listdir(FileManager.assets_dir)) - assets_before_download
                 is_downloaded = lambda: len(get_new_files()) == 1 and is_in_list(download_name, list(get_new_files()))
-                WebDriverWait(Scraper.driver, ARGS.timeout).until(lambda d: is_downloaded())
+                if ARGS.debug:
+                    while not is_downloaded():
+                        time.sleep(0.25)
+                        LOG.info(f"new files: {get_new_files()} does not contain '{download_name}'")
+                else:
+                    WebDriverWait(Scraper.driver, ARGS.timeout).until(lambda d: is_downloaded())
                 LOG.info(f"downloaded '{download_name}'")
                 assert not re.compile(rf"{download_name} \(\d+\)\.pdf") in get_new_files(), "found multiple blocks with same name"
 
