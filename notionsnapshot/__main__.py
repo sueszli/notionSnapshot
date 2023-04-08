@@ -15,7 +15,7 @@ from selenium import webdriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, ElementClickInterceptedException
 from bs4 import BeautifulSoup, Tag
 import html5lib  # implicitly used by bs4
 import requests
@@ -372,7 +372,7 @@ class Scraper:
 
         for driver_name, driver_block in driver_pairs:
             download_name = driver_name.replace("/", "_").replace(":", "_")
-            LOG.info(f"downloading '{driver_name}'")
+            LOG.info(f"downloading file named '{download_name}'")
 
             if download_name in os.listdir(FileManager.assets_dir):
                 LOG.info("pdf with same name was found in assets")
@@ -382,17 +382,21 @@ class Scraper:
 
             else:
                 assets_before_download = set(os.listdir(FileManager.assets_dir))
-                driver_block.click()
+
+                try:
+                    driver_block.click()
+                except ElementClickInterceptedException:
+                    webdriver.ActionChains(Scraper.driver).move_to_element(driver_block).click(driver_block).perform()
+                    Scraper.driver.execute_script("arguments[0].click();", driver_block)
+                    LOG.critical("clicking on pdf block was unsuccessful, consider running again with '-b' and clicking on it yourself")
+
                 get_new_files = lambda: set(os.listdir(FileManager.assets_dir)) - assets_before_download
                 is_downloaded = lambda: len(get_new_files()) == 1 and is_in_list(download_name, list(get_new_files()))
-                if ARGS.debug:
-                    while not is_downloaded():
-                        time.sleep(0.25)
-                        LOG.info(f"new files: {get_new_files()} does not contain '{download_name}'")
-                else:
-                    WebDriverWait(Scraper.driver, ARGS.timeout).until(lambda d: is_downloaded())
+                while not is_downloaded():
+                    time.sleep(0.25)
+                    LOG.info(f"{get_new_files()} doesn't contain '{download_name}' yet")
                 LOG.info(f"downloaded '{download_name}'")
-                assert not re.compile(rf"{download_name} \(\d+\)\.pdf") in get_new_files(), "found multiple blocks with same name"
+                assert not re.compile(rf"{download_name} \(\d+\)\.pdf") in get_new_files(), "downloaded same pdf multiple times"
 
             soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
             soup_names = [[c.text for c in b.find_all("div")][-2] for b in soup_blocks]
