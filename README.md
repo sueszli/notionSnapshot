@@ -101,14 +101,6 @@ python3 notionsnapshot <notion page url>
 
 Alternatively you can run some of our test pages which are listed in the `test.sh` file.
 
-<br>
-
-### Things to keep in mind
-
-Files get compared by name, not by content. This means that if you have 2 files with the same name but different content, the script will not download the second file.
-
-Same thing applies to caching: the script will not download the updated version of a file with the same name if you don't use the `--disable-caching` option.
-
 <br><br>
 
 ---

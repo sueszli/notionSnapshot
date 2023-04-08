@@ -35,7 +35,6 @@ class LogInitializer:
     def get_log() -> logging.LoggerAdapter:
         # see: https://rich.readthedocs.io/en/stable/reference/logging.html
         rich_handler = RichHandler(rich_tracebacks=True, show_time=False, show_path=False, keywords=HIGHLIGHTED_WORDS)
-        # log set to info: otherwise libraries like selenium will log too much
         logging.basicConfig(level=logging.INFO, format="%(message)s", handlers=[rich_handler])
         cssutils.log.setLevel(logging.CRITICAL)  # type: ignore
 
