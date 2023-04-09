@@ -26,7 +26,7 @@ With this tool you now can:
 - use Notion as your content management system
 - share your content with custom domain names instead of notion.site URLs
 
-<br><br>
+<br><br><br><br>
 
 ## Installation
 
@@ -101,13 +101,9 @@ python3 notionsnapshot <notion page url>
 
 Alternatively you can run some of our test pages which are listed in the `test.sh` file.
 
-<br><br>
+<br><br><br><br>
 
 ---
-
-<br><br>
-
-## Thanks everyone!
 
 Special thanks to:
 
