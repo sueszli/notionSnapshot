@@ -28,7 +28,7 @@ With this tool you now can:
 
 <br><br><br><br>
 
-## Installation
+# Installation
 
 First you must set the page that you want to export to be publicly accessible:
 
@@ -41,7 +41,7 @@ Make sure to store the link you just copied somewhere safe, you will need it lat
 
 <br>
 
-### 1. Installing Python
+#### 1. Installing Python
 
 If you are on a Windows machine, you first need to install [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install).
 
@@ -64,7 +64,7 @@ rm -rf google-chrome-stable_current_amd64.deb
 
 <br>
 
-### 2. Cloning the repository
+#### 2. Cloning the repository
 
 ```bash
 git clone https://github.com/sueszli/notionSnapshot.git
@@ -73,7 +73,7 @@ cd notionSnapshot
 
 <br>
 
-### 3. Installing dependencies
+#### 3. Installing dependencies
 
 ```bash
 poetry install --sync
@@ -83,7 +83,7 @@ But be careful because some dependencies might still be missing after this step.
 
 <br>
 
-### 4. Running the application
+#### 4. Running the application
 
 Use the `-h` or `--help` flag when running the script to see all the options that are available:
 
