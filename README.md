@@ -1,18 +1,23 @@
+# Why this fork?
+
+- Added possibility to export other files in addition to .pdf files.
+- Added possibility to scrape additional data which could be used to
+
 ```
-    _   __      __  _                _____                        __          __ 
+    _   __      __  _                _____                        __          __
    / | / /___  / /_(_)___  ____     / ___/____  ____ _____  _____/ /_  ____  / /_
   /  |/ / __ \/ __/ / __ \/ __ \    \__ \/ __ \/ __ `/ __ \/ ___/ __ \/ __ \/ __/
- / /|  / /_/ / /_/ / /_/ / / / /   ___/ / / / / /_/ / /_/ (__  ) / / / /_/ / /_  
-/_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/  
-                                                    /_/     
+ / /|  / /_/ / /_/ / /_/ / / / /   ___/ / / / / /_/ / /_/ (__  ) / / / /_/ / /_
+/_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/
+                                                    /_/
 
 The HTML export tool for Notion that actually works!
 
 ```
 
-<img width="685" src="docs/assets/export.jpeg">  |  <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> 
-:-------------------------:|:-------------------------:|:-------------------------:
-Default export              |  **✨NotionSnapshot✨**  | Original page 
+| <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
+| :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
+|                 Default export                  |              **✨NotionSnapshot✨**               |                   Original page                   |
 
 <br>
 
@@ -68,7 +73,7 @@ rm -rf google-chrome-stable_current_amd64.deb
 
 ```bash
 git clone https://github.com/sueszli/notionSnapshot.git
-cd notionSnapshot      
+cd notionSnapshot
 ```
 
 <br>
@@ -88,7 +93,7 @@ But be careful because some dependencies might still be missing after this step.
 Use the `-h` or `--help` flag when running the script to see all the options that are available:
 
 ```bash
-python3 notionsnapshot --help      
+python3 notionsnapshot --help
 ```
 
 You can for instance scrape the pages in dark mode by using the `--dark-mode` option or display the browser while scraping by using the `--show-browser` option.
@@ -96,7 +101,7 @@ You can for instance scrape the pages in dark mode by using the `--dark-mode` op
 Once you've made up your mind, you can run the script with the URL of the Notion page you want to scrape:
 
 ```bash
-python3 notionsnapshot <notion page url>      
+python3 notionsnapshot <notion page url>
 ```
 
 Alternatively you can run some of our test pages which are listed in the `test.sh` file.
