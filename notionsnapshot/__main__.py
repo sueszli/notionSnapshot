@@ -8,6 +8,7 @@ import mimetypes
 import re
 import uuid
 import time
+import json
 from pathlib import Path
 from typing import List, Optional, Tuple, Set
 
@@ -165,6 +166,14 @@ class FileManager:
         if url == ARGS.url:
             filename = "index.html"
         return filename
+    
+    @staticmethod
+    def save_dictionary(total_dict: List[dict[str,object]]) -> None:
+        output_path = Path(FileManager.output_dir + "/" + "dictionary.json")
+
+        with open(output_path, "w") as json_file:
+            # Write the data to the file
+            json.dump(total_dict, json_file, indent=4, ensure_ascii=False)
 
 
 class Scraper:
@@ -176,16 +185,20 @@ class Scraper:
 
     @staticmethod
     def run() -> None:
+        total_dict = []
         while Scraper.will_visit:
             url = Scraper.will_visit.pop()
 
             Scraper._load_page(url)
             Scraper._expand_toggle_blocks()
             soup = BeautifulSoup(Scraper.driver.page_source, "html5lib")
+            page_dict = Scraper._create_dictionary(url, soup)
+            total_dict.append(page_dict)
             Scraper._clean_up(soup)
             Scraper._download_images(soup)
             Scraper._download_stylesheets(soup)
-            Scraper._download_pdfs(soup)
+            Scraper._download_files_with_extension(soup, "pdf")
+            Scraper._download_files_with_extension(soup, "gh")
             Scraper._insert_injection_hooks(soup)
             Scraper._link_to_table_view_subpages(soup)
             subpage_urls = Scraper._link_anchors(soup)
@@ -194,6 +207,8 @@ class Scraper:
             Scraper.visited.add(url)
             Scraper.will_visit.update(page for page in subpage_urls if page not in Scraper.visited)
             LOG.info(f"pages left to scrape: {len(Scraper.will_visit)}")
+
+        FileManager.save_dictionary(total_dict)
 
         Scraper.driver.quit()
 
@@ -229,6 +244,26 @@ class Scraper:
         mode = "dark" if ARGS.dark_mode else "light"
         Scraper.driver.execute_script("__console.environment.ThemeStore.setState({ mode: '" + mode + "' })")
         LOG.info(f"set theme to {mode}-mode")
+
+    @staticmethod
+    def _create_dictionary(url: str, soup: BeautifulSoup) -> dict[str, object]:
+        page_title_block = soup.find_all(class_="notion-page-block")
+        page_title = page_title_block[0].findChildren()
+        content_table_block = soup.find_all(class_="notion-table_of_contents-block")
+        content_table = []
+        if len(content_table_block) > 0 or content_table_block is not None:
+            content_table_list = content_table_block[0].find_all(class_="notranslate")
+            for content in content_table_list:
+                content_table.append(content.text)
+        
+
+        return {
+            "url": url,
+            "title": page_title[0].text,
+            "content_table": content_table
+        }
+        
+        
 
     @trace(print_args=False)
     @staticmethod
@@ -359,12 +394,12 @@ class Scraper:
 
     @trace()
     @staticmethod
-    def _download_pdfs(soup: BeautifulSoup) -> None:
+    def _download_files_with_extension(soup: BeautifulSoup, extension: str) -> None:
         driver_blocks = Scraper.driver.find_elements(By.CLASS_NAME, "notion-file-block")
         driver_names = [[c.text for c in b.find_elements(By.XPATH, ".//*")][-2] for b in driver_blocks]
         assert len(driver_blocks) == len(driver_names), "number of driver blocks and names do not match"
-        driver_pairs = [nb for nb in list(zip(driver_names, driver_blocks)) if nb[0].endswith(".pdf")]
-        LOG.info(f"found {len(driver_pairs)} pdfs to download")
+        driver_pairs = [nb for nb in list(zip(driver_names, driver_blocks)) if nb[0].endswith("." + extension)]
+        LOG.info(f"found {len(driver_pairs)} {extension}s to download")
 
         # notion unpredictably adds spaces to names
         is_equal = lambda str1, str2: str1.replace(" ", "") == str2.replace(" ", "")
@@ -375,10 +410,10 @@ class Scraper:
             LOG.info(f"downloading file named '{download_name}'")
 
             if download_name in os.listdir(FileManager.assets_dir):
-                LOG.info("pdf with same name was found in assets")
+                LOG.info(f"{extension} with same name was found in assets")
 
             elif not ARGS.disable_caching and FileManager._load_from_cache(download_name) is not None:
-                LOG.info("pdf with same name was found in cache")
+                LOG.info(f"{extension} with same name was found in cache")
 
             else:
                 assets_before_download = set(os.listdir(FileManager.assets_dir))
@@ -388,7 +423,7 @@ class Scraper:
                 except ElementClickInterceptedException:
                     webdriver.ActionChains(Scraper.driver).move_to_element(driver_block).click(driver_block).perform()
                     Scraper.driver.execute_script("arguments[0].click();", driver_block)
-                    LOG.critical("clicking on pdf block was unsuccessful, consider running again with '-b' and clicking on it yourself")
+                    LOG.critical(f"clicking on {extension} block was unsuccessful, consider running again with '-b' and clicking on it yourself")
 
                 get_new_files = lambda: set(os.listdir(FileManager.assets_dir)) - assets_before_download
                 is_downloaded = lambda: len(get_new_files()) == 1 and is_in_list(download_name, list(get_new_files()))
@@ -396,7 +431,7 @@ class Scraper:
                     time.sleep(0.25)
                     LOG.info(f"{get_new_files()} doesn't contain '{download_name}' yet")
                 LOG.info(f"downloaded '{download_name}'")
-                assert not re.compile(rf"{download_name} \(\d+\)\.pdf") in get_new_files(), "downloaded same pdf multiple times"
+                assert not re.compile(rf"{download_name} \(\d+\)\.{extension}") in get_new_files(), f"downloaded same {extension} multiple times"
 
             soup_blocks = soup.findAll("div", {"class": "notion-file-block"})
             soup_names = [[c.text for c in b.find_all("div")][-2] for b in soup_blocks]
