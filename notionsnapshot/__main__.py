@@ -179,36 +179,40 @@ class FileManager:
 class Scraper:
     driver_download_path: str = os.path.abspath("snapshots/" + FileManager.get_page_name() + "/assets")
     driver: webdriver.Chrome = DriverInitializer.get_driver(driver_download_path)
-
+    page_id = 0
     will_visit: Set[str] = set([ARGS.url])
     visited: Set[str] = set()
 
     @staticmethod
     def run() -> None:
         total_dict = []
-        while Scraper.will_visit:
-            url = Scraper.will_visit.pop()
+        page_id = 0
+        try:
+            while Scraper.will_visit:
+                url = Scraper.will_visit.pop()
 
-            Scraper._load_page(url)
-            Scraper._expand_toggle_blocks()
-            soup = BeautifulSoup(Scraper.driver.page_source, "html5lib")
-            page_dict = Scraper._create_dictionary(url, soup)
-            total_dict.append(page_dict)
-            Scraper._clean_up(soup)
-            Scraper._download_images(soup)
-            Scraper._download_stylesheets(soup)
-            Scraper._download_files_with_extension(soup, "pdf")
-            Scraper._download_files_with_extension(soup, "gh")
-            Scraper._insert_injection_hooks(soup)
-            Scraper._link_to_table_view_subpages(soup)
-            subpage_urls = Scraper._link_anchors(soup)
-            FileManager.save_page(soup, url)
+                Scraper._load_page(url)
+                Scraper._expand_toggle_blocks()
+                soup = BeautifulSoup(Scraper.driver.page_source, "html5lib")
 
-            Scraper.visited.add(url)
-            Scraper.will_visit.update(page for page in subpage_urls if page not in Scraper.visited)
-            LOG.info(f"pages left to scrape: {len(Scraper.will_visit)}")
+                Scraper._clean_up(soup)
+                Scraper._download_images(soup)
+                Scraper._download_stylesheets(soup)
+                Scraper._download_files_with_extension(soup, "pdf")
+                Scraper._download_files_with_extension(soup, "gh")
+                Scraper._insert_injection_hooks(soup)
+                Scraper._link_to_table_view_subpages(soup)
+                subpage_urls = Scraper._link_anchors(soup)
+                FileManager.save_page(soup, url)
+                page_dict = Scraper._create_dictionary(url, soup, page_id)
+                total_dict.append(page_dict)
 
-        FileManager.save_dictionary(total_dict)
+                Scraper.visited.add(url)
+                Scraper.will_visit.update(page for page in subpage_urls if page not in Scraper.visited)
+                LOG.info(f"pages left to scrape: {len(Scraper.will_visit)}")
+                page_id = page_id + 1
+        finally:
+            FileManager.save_dictionary(total_dict)
 
         Scraper.driver.quit()
 
@@ -246,18 +250,22 @@ class Scraper:
         LOG.info(f"set theme to {mode}-mode")
 
     @staticmethod
-    def _create_dictionary(url: str, soup: BeautifulSoup) -> dict[str, object]:
+    def _create_dictionary(url: str, soup: BeautifulSoup, id: int) -> dict[str, object]:
+        peek_renderer = soup.find_all(class_="notion-peek-renderer")
+
         page_title_block = soup.find_all(class_="notion-page-block")
-        page_title = page_title_block[0].findChildren()
+        title_index = 1 if len(peek_renderer) > 0 else 0
+        page_title = page_title_block[title_index].findChildren()
+
         content_table_block = soup.find_all(class_="notion-table_of_contents-block")
         content_table = []
-        if len(content_table_block) > 0 or content_table_block is not None:
+        if len(content_table_block) > 0 and content_table_block is not None:
             content_table_list = content_table_block[0].find_all(class_="notranslate")
             for content in content_table_list:
                 content_table.append(content.text)
         
-
         return {
+            "id": id,
             "url": url,
             "title": page_title[0].text,
             "content_table": content_table
