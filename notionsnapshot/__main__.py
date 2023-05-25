@@ -258,6 +258,8 @@ class Scraper:
 
         page_title_text = ''
         if len(page_title_block) > 0 and page_title_block is not None:
+            if len(page_title_block) == 1:
+                title_index = 0
             page_title = page_title_block[title_index].findChildren()
             page_title_text = page_title[0].text
 
