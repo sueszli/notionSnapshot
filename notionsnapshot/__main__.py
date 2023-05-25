@@ -255,7 +255,11 @@ class Scraper:
 
         page_title_block = soup.find_all(class_="notion-page-block")
         title_index = 1 if len(peek_renderer) > 0 else 0
-        page_title = page_title_block[title_index].findChildren()
+
+        page_title_text = ''
+        if len(page_title_block) > 0 and page_title_block is not None:
+            page_title = page_title_block[title_index].findChildren()
+            page_title_text = page_title[0].text
 
         content_table_block = soup.find_all(class_="notion-table_of_contents-block")
         content_table = []
@@ -267,7 +271,7 @@ class Scraper:
         return {
             "id": id,
             "url": url,
-            "title": page_title[0].text,
+            "title": page_title_text,
             "content_table": content_table
         }
         
