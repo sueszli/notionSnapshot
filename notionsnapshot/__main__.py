@@ -435,9 +435,11 @@ class Scraper:
 
                 get_new_files = lambda: set(os.listdir(FileManager.assets_dir)) - assets_before_download
                 is_downloaded = lambda: len(get_new_files()) == 1 and is_in_list(download_name, list(get_new_files()))
-                while not is_downloaded():
+                number_of_retries = 30
+                while not is_downloaded() and number_of_retries > 0:
                     time.sleep(0.25)
                     LOG.info(f"{get_new_files()} doesn't contain '{download_name}' yet")
+                    number_of_retries = number_of_retries - 1
                 LOG.info(f"downloaded '{download_name}'")
                 assert not re.compile(rf"{download_name} \(\d+\)\.{extension}") in get_new_files(), f"downloaded same {extension} multiple times"
 
