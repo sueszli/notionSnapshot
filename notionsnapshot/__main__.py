@@ -174,7 +174,31 @@ class FileManager:
         with open(output_path, "w") as json_file:
             # Write the data to the file
             json.dump(total_dict, json_file, indent=4, ensure_ascii=False)
+    
+    @staticmethod
+    def save_page_list(page_list: Set[str]) -> None:
+        output_path = Path(FileManager.output_dir + "/" + "page_list.json")
 
+        def serialize_sets(obj):
+            if isinstance(obj, set):
+                return list(obj)
+
+            return obj
+
+        with open(output_path, "w") as json_file:
+            # Write the data to the file
+            json.dump(page_list, json_file, indent=4, ensure_ascii=False, default=serialize_sets)
+
+    @staticmethod
+    def load_page_list() -> str:
+        file_path = os.path.join("notionsnapshot","page_relation_map.json")
+        f = open(file_path)
+        data = json.load(f)
+        f.close()
+
+        return data
+
+    
 
 class Scraper:
     driver_download_path: str = os.path.abspath("snapshots/" + FileManager.get_page_name() + "/assets")
@@ -186,6 +210,7 @@ class Scraper:
     @staticmethod
     def run() -> None:
         total_dict = []
+        page_map = FileManager.load_page_list()
         page_id = 0
         try:
             while Scraper.will_visit:
@@ -202,7 +227,7 @@ class Scraper:
                 Scraper._download_files_with_extension(soup, "gh")
                 Scraper._insert_injection_hooks(soup)
                 Scraper._link_to_table_view_subpages(soup)
-                subpage_urls = Scraper._link_anchors(soup)
+                subpage_urls = Scraper._link_anchors(soup, page_map)
                 FileManager.save_page(soup, url)
                 page_dict = Scraper._create_dictionary(url, soup, page_id)
                 total_dict.append(page_dict)
@@ -213,6 +238,7 @@ class Scraper:
                 page_id = page_id + 1
         finally:
             FileManager.save_dictionary(total_dict)
+            FileManager.save_page_list(Scraper.visited)
 
         Scraper.driver.quit()
 
@@ -501,7 +527,7 @@ class Scraper:
 
     @trace()
     @staticmethod
-    def _link_anchors(soup: BeautifulSoup) -> List[str]:
+    def _link_anchors(soup: BeautifulSoup, page_map: str) -> List[str]:
         subpage_urls = []
 
         domain = f'{ARGS.url.split("notion.site")[0]}notion.site'
@@ -511,7 +537,9 @@ class Scraper:
 
             is_relative_url = url.startswith("/")
             if is_relative_url:
-                url = f'{domain}/{a["href"].split("/")[-1]}'
+                mapping_string = a["href"].split("/")[-1]
+                mapped_url = mapping_string if "?v=" in url or "#" in url or mapping_string not in page_map else page_map[mapping_string]
+                url = f'{domain}/{mapped_url}'
 
             is_external_url = not url.startswith(domain)
             if is_external_url:
