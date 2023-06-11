@@ -18,5 +18,6 @@ class DependencyManager:
             exit(1)
 
         os.system("python3 -m pip install --upgrade pip > /dev/null")
+
         # DependencyManager._update_requirements()
         os.system("pip3 install -r requirements.txt > /dev/null")
