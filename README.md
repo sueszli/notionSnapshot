@@ -47,8 +47,8 @@ First install the following dependencies:
 
 -   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you are on a Windows machine, as this tool is developed for Unix
 -   [Python 3](https://www.python.org/downloads/)
--   [Pip](https://pip.pypa.io/en/stable/installation/)
--   [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer)
+
+
 -   [Chrome](https://www.google.com/chrome/)
 
 Installing Chrome on WSL/Ubuntu can be a little bit tricky, but here is what worked for me:
