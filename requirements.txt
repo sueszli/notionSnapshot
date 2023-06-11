@@ -1,0 +1,8 @@
+appdirs==1.4.4
+beautifulsoup4==4.11.2
+cssutils==2.6.0
+html5lib==1.1
+Requests==2.31.0
+rich==13.4.1
+selenium==4.10.0
+webdriver_manager==3.8.5

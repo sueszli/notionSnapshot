@@ -41,7 +41,7 @@ Make sure to store the link you just copied somewhere you will find again later.
 
 <br>
 
-#### 1. Installing dependencies
+### 1. Installing dependencies
 
 First install the following dependencies:
 
@@ -63,7 +63,9 @@ rm -rf google-chrome-stable_current_amd64.deb
 
 <br>
 
-#### 2. Cloning the repository
+### 2. Cloning the repository
+
+Next clone this repository:
 
 ```bash
 git clone https://github.com/sueszli/notionSnapshot.git
@@ -72,7 +74,9 @@ cd notionSnapshot
 
 <br>
 
-#### 4. Running the application
+### 4. Running the application
+
+Finally run the application.
 
 Use the `-h` or `--help` flag when running the script to see all the options that are available:
 

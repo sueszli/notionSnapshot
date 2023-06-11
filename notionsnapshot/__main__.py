@@ -22,6 +22,7 @@ import requests
 import cssutils
 from appdirs import user_cache_dir
 
+from depmanager import DependencyManager
 from argparser import ARGS
 from driver import DriverInitializer
 from logger import LOG_SINGLETON as LOG, trace
@@ -245,7 +246,8 @@ class Scraper:
             toggle_blocks += header_toggle_blocks
             return toggle_blocks
 
-        def is_block_expanded(b: WebElement) -> bool:
+        def is_block_expanded(b: WebElement | str | None) -> bool:
+            assert isinstance(b, WebElement)
             content = b.find_element(By.CSS_SELECTOR, "div:not([style]")
             unknown_children = b.find_elements(By.CLASS_NAME, "notion-unknown-block")
             is_loading = b.find_elements(By.CLASS_NAME, "loading-spinner")
@@ -256,6 +258,7 @@ class Scraper:
 
         for block in toggle_blocks:
             toggle_block_button = block.find_element(By.CSS_SELECTOR, "div[role=button]")
+            block = toggle_block_button.find_element(By.TAG_NAME, "svg").get_attribute("style")
             is_expanded = "(180deg)" in (toggle_block_button.find_element(By.TAG_NAME, "svg").get_attribute("style"))
             if not is_expanded:
                 Scraper.driver.execute_script("arguments[0].click();", toggle_block_button)
@@ -495,5 +498,6 @@ class Scraper:
 
 
 if __name__ == "__main__":
+    DependencyManager.run()
     FileManager.setup()
     Scraper().run()
