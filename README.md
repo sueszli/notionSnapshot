@@ -22,9 +22,9 @@ Our snapshots not only look almost identical to the original page, but it also s
 
 With this tool you now can:
 
-- free yourself from the Notion lock-in
-- use Notion as your content management system
-- share your content with custom domain names instead of notion.site URLs
+-   free yourself from the Notion lock-in
+-   use Notion as your content management system
+-   share your content with custom domain names instead of notion.site URLs
 
 <br><br><br><br>
 
@@ -41,15 +41,15 @@ Make sure to store the link you just copied somewhere you will find again later.
 
 <br>
 
-#### 1. Installing Python
+#### 1. Installing dependencies
 
-You require the following dependencies:
+First install the following dependencies:
 
-- [Python 3](https://www.python.org/downloads/)
-- [Pip](https://pip.pypa.io/en/stable/installation/)
-- [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer)
-- [Chrome](https://www.google.com/chrome/)
-- If you are on a Windows machine, you additionally first need to install [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install).
+-   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you are on a Windows machine, as this tool is developed for Unix
+-   [Python 3](https://www.python.org/downloads/)
+-   [Pip](https://pip.pypa.io/en/stable/installation/)
+-   [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer)
+-   [Chrome](https://www.google.com/chrome/)
 
 Installing Chrome on WSL/Ubuntu can be a little bit tricky, but here is what worked for me:
 
@@ -69,16 +69,6 @@ rm -rf google-chrome-stable_current_amd64.deb
 git clone https://github.com/sueszli/notionSnapshot.git
 cd notionSnapshot
 ```
-
-<br>
-
-#### 3. Installing dependencies
-
-```bash
-poetry install --sync
-```
-
-But be careful because some dependencies might still be missing after this step. You then might have to install them again with pip manually (e.g. `pip install <missing dependency>`).
 
 <br>
 
@@ -106,7 +96,7 @@ Alternatively you can run some of our test pages which are listed in the `test.s
 
 Special thanks to:
 
-- Leonardo Cavaletti who laid the foundation of this project with his lovely loconotion project
-- [MJDeligan](https://github.com/MJDeligan) the main contributor, who resolved the hardest issues and added the most important features
+-   Leonardo Cavaletti who laid the foundation of this project with his lovely loconotion project
+-   [MJDeligan](https://github.com/MJDeligan) the main contributor, who resolved the hardest issues and added the most important features
 
 aswell as Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me with the initial setup of this project.
