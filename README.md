@@ -5,23 +5,15 @@
  / /|  / /_/ / /_/ / /_/ / / / /   ___/ / / / / /_/ / /_/ (__  ) / / / /_/ / /_
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/
                                                     /_/
+
+Back up your data – free yourself from the Notion lock-in.
 ```
+
+Notion's default HTML export lacks style (and even content), while our files retain the original page's appearance and remove unnecessary JavaScript resulting in smaller file sizes and faster load times.
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |                 Default export                  |              **✨NotionSnapshot✨**               |                   Original page                   |
-
-<br>
-
-If you have ever used the default HTML export feature in Notion, you already know that the exported files are not very useful. They are not styled the same way as the original page and even miss some content.
-
-Our snapshots not only look almost identical to the original page, but it also strip out all the unnecessary bloat, like Notion's analytics, vendors scripts, vendors styles, and javascript left in to enable collaboration – this significantly reduces the page size and load time.
-
-With this tool you now can:
-
--   free yourself from the Notion lock-in
--   use Notion as your content management system
--   share your content with custom domain names instead of notion.site URLs
 
 <br><br><br><br>
 
