@@ -15,71 +15,62 @@ Back up your data – free yourself from the Notion lock-in.
 
 Notion's default HTML export lacks style (and even content), while our files retain the original page's appearance and remove unnecessary JavaScript resulting in smaller file sizes and faster load times.
 
-<br><br><br><br>
+<br><br><br>
 
-# Installation
+## How to use
 
-First you must set the page that you want to export to be publicly accessible:
+To export a page from Notion to HTML and make it publicly accessible, follow these steps:
 
-1. Open the page you want to export to HTML in Notion
-2. Click on the `Publish` tab
-3. Click on the `Publish to web` button
-4. Copy the link to the page by clicking on the `Copy web link` button
+1. Open the desired page in Notion
+2. Navigate to the `Publish` tab
+3. Locate the `Publish to web` button and click on it
+4. A link to the page will be generated. Click on the `Copy web link` button to save the link
 
-Make sure to store the link you just copied somewhere you will find again later.
+Remember to store the copied link in a place where you can easily find it later.
 
 <br>
 
-### 1. Installing dependencies
+Next, ensure that you have the necessary apps installed on your machine:
 
-First install the following dependencies:
+-   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you're running Windows, as this tool is designed for Unix systems
 
--   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you are on a Windows machine, as this tool is developed for Unix
 -   [Python 3](https://www.python.org/downloads/)
+
 -   [Chrome](https://www.google.com/chrome/)
 
-Installing Chrome on WSL/Ubuntu can be a little bit tricky, but here is what worked for me:
+    Installing Chrome on WSL/Ubuntu may require a few extra steps, but you can follow this method:
 
-```bash
-sudo apt update && sudo apt upgrade -y
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo dpkg -i google-chrome-stable_current_amd64.deb
-sudo apt --fix-broken install
-rm -rf google-chrome-stable_current_amd64.deb
-```
+    ```bash
+    sudo apt update && sudo apt upgrade -y
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo dpkg -i google-chrome-stable_current_amd64.deb
+    sudo apt --fix-broken install
+    rm -rf google-chrome-stable_current_amd64.deb
+    ```
+
 
 <br>
 
-### 2. Cloning the repository
-
-Next clone this repository:
+Then just run the script like so:
 
 ```bash
 git clone https://github.com/sueszli/notionSnapshot.git
 cd notionSnapshot
+python3 notionsnapshot <insert your url here>
 ```
 
-<br>
-
-### 3. Running the application
-
-Finally run the application.
-
-Use the `-h` or `--help` flag when running the script to see all the options that are available:
+To view all the available options, you can use the `-h` or `--help` flag when running the script:
 
 ```bash
 python3 notionsnapshot --help
 ```
 
-You can for instance scrape the pages in dark mode by using the `--dark-mode` option or display the browser while scraping by using the `--show-browser` option.
+You can customize the scraping behavior with the following options:
 
-Once you've made up your mind, you can run the script with the URL of the Notion page you want to scrape:
+- Use the `--dark-mode` option to scrape the pages in dark mode.
+- Use the `--show-browser` option to display the browser while scraping.
 
-```bash
-python3 notionsnapshot <notion page url>
-```
-
-Alternatively you can run some of our test pages which are listed in the `test.sh` file.
+If you're unsure about how to proceed, you can run the script with the URL of one of our test pages, which are listed in the `test.sh` file.
 
 <br><br><br><br>
 
@@ -88,6 +79,5 @@ Alternatively you can run some of our test pages which are listed in the `test.s
 Special thanks to:
 
 -   Leonardo Cavaletti who laid the foundation of this project with his lovely loconotion project
--   [MJDeligan](https://github.com/MJDeligan) the main contributor, who resolved the hardest issues and added the most important features
-
-aswell as Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me with the initial setup of this project.
+-   [MJDeligan](https://github.com/MJDeligan) the main contributor
+-   Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me set the project up
