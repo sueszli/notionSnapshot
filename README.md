@@ -47,8 +47,6 @@ First install the following dependencies:
 
 -   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you are on a Windows machine, as this tool is developed for Unix
 -   [Python 3](https://www.python.org/downloads/)
-
-
 -   [Chrome](https://www.google.com/chrome/)
 
 Installing Chrome on WSL/Ubuntu can be a little bit tricky, but here is what worked for me:
@@ -74,7 +72,7 @@ cd notionSnapshot
 
 <br>
 
-### 4. Running the application
+### 3. Running the application
 
 Finally run the application.
 
