@@ -42,15 +42,15 @@ Next, ensure that you have the necessary apps installed on your machine:
 
 -   [Chrome](https://www.google.com/chrome/)
 
-    Installing Chrome on WSL/Ubuntu may require a few extra steps, but you can follow this method:
+Installing Chrome on WSL/Ubuntu may require a few extra steps, but you can follow this method:
 
-    ```bash
-    sudo apt update && sudo apt upgrade -y
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    sudo dpkg -i google-chrome-stable_current_amd64.deb
-    sudo apt --fix-broken install
-    rm -rf google-chrome-stable_current_amd64.deb
-    ```
+```bash
+sudo apt update && sudo apt upgrade -y
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+sudo apt --fix-broken install
+rm -rf google-chrome-stable_current_amd64.deb
+```
 
 <br>
 
