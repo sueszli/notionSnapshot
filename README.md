@@ -17,7 +17,9 @@ Notion's default HTML export lacks style (and even content), while our files ret
 
 <br><br><br>
 
-## How to use
+# How to use
+
+### 1. Make Notion page public
 
 To export a page from Notion to HTML and make it publicly accessible, follow these steps:
 
@@ -29,6 +31,8 @@ To export a page from Notion to HTML and make it publicly accessible, follow the
 Remember to store the copied link in a place where you can easily find it later.
 
 <br>
+
+### 2. Install Python and Chrome
 
 Next, ensure that you have the necessary apps installed on your machine:
 
@@ -48,8 +52,9 @@ Next, ensure that you have the necessary apps installed on your machine:
     rm -rf google-chrome-stable_current_amd64.deb
     ```
 
-
 <br>
+
+### 3. Run script
 
 Then just run the script like so:
 
