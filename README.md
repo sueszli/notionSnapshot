@@ -56,7 +56,7 @@ Then just run the script like so:
 ```bash
 git clone https://github.com/sueszli/notionSnapshot.git
 cd notionSnapshot
-python3 notionsnapshot <insert your url here>
+python3 notionsnapshot --dark-mode <insert your url here>
 ```
 
 To view all the available options, you can use the `-h` or `--help` flag when running the script:
@@ -64,11 +64,6 @@ To view all the available options, you can use the `-h` or `--help` flag when ru
 ```bash
 python3 notionsnapshot --help
 ```
-
-You can customize the scraping behavior with the following options:
-
-- Use the `--dark-mode` option to scrape the pages in dark mode.
-- Use the `--show-browser` option to display the browser while scraping.
 
 If you're unsure about how to proceed, you can run the script with the URL of one of our test pages, which are listed in the `test.sh` file.
 
@@ -81,3 +76,4 @@ Special thanks to:
 -   Leonardo Cavaletti who laid the foundation of this project with his lovely loconotion project
 -   [MJDeligan](https://github.com/MJDeligan) the main contributor
 -   Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me set the project up
+
