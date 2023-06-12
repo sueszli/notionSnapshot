@@ -11,7 +11,7 @@ Back up your data – free yourself from the Notion lock-in.
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
-|                 Default export                  |              **✨NotionSnapshot✨**               |                   Original page                   |
+|                 Export with Notion              |        Export with **✨NotionSnapshot✨**          |                   Original page                   |
 
 Notion's default HTML export lacks style (and even content), while our files retain the original page's appearance and remove unnecessary JavaScript resulting in smaller file sizes and faster load times.
 
