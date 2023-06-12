@@ -62,15 +62,12 @@ Then just run the script like so:
 git clone https://github.com/sueszli/notionSnapshot.git
 cd notionSnapshot
 python3 notionsnapshot --dark-mode <insert your url here>
+
+# for help run:
+# python3 notionsnapshot --help
 ```
 
-To view all the available options, you can use the `-h` or `--help` flag when running the script:
-
-```bash
-python3 notionsnapshot --help
-```
-
-If you're unsure about how to proceed, you can run the script with the URL of one of our test pages, which are listed in the `test.sh` file.
+Our test pages are listed in the `test.sh` file.
 
 <br><br><br><br>
 
