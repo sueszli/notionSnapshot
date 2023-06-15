@@ -1,71 +1,62 @@
-# Progress
+# progress
 
-### Choosing a strategy to download the content of a Notion page
+currently when exporting pages directly through the notion app or the notion api as done in [notion4ever](https://github.com/merkulovdaniil/notion4ever/tree/main/notion4ever) leads to the loss of formatting data and in some cases even page content.
 
-There are two ways to download the content of a Notion page:
-
-1. Using the official Notion.so API as done in [notion4ever](https://github.com/MerkulovDaniil/notion4ever/tree/main/notion4ever). Has the disadvantage that it does not include any formatting related data.
-
-2. Scraping the HTML of the page.
+therefore the best way to recreate the original look of the pages is to simply scrape them with a webscraper.
 
 <br><br>
 
-### Choosing a scraping library
+### choosing a scraping library
 
-The following libraries were considered because they are the most popular and well supported (for Python as of March 2023):
+the following libraries were considered because they are the most popular and well supported (for python as of march 2023):
 
--   Playwright: https://playwright.dev/python/docs/intro
--   Selenium: https://selenium-python.readthedocs.io/ ✅
+-   playwright: https://playwright.dev/python/docs/intro
+-   selenium: https://selenium-python.readthedocs.io/ ✅
 
-Usually when installing a web driver you have to download the driver and add it to your `$PATH`. This is inconvenient for the end user.
+usually when installing a web driver you have to download the driver and add it to your `$path`. this is inconvenient for the end user.
 
-Playwright mitigates this problem by downloading the driver automatically when you install the library with your operating system's package manager. But this is again inconvenient, as we want this tool to be as easy to use as possible.
+playwright mitigates this problem by downloading the driver automatically when you install the library with your operating system's package manager. but this is again inconvenient, as we want this tool to be as easy to use as possible.
 
-(This sucks because Playwright is also a lot more performant than Selenium and supports async/await.)
+but we managed to find a way to install selenium directly through pip by using the `webdriver_manager` library.
 
-But we managed to find a way to install Selenium directly through pip by using the `webdriver_manager` library.
-
-This makes Selenium the best option for our use case and makes using Python just as convenient as Node.js for this project.
+this makes selenium the best option for our use case and makes using python just as convenient as node.js for this project.
 
 <br><br>
 
-### Building on top of similar projects
+### building on top of similar projects
 
-There are already a few tools that do something very similar to what we want to do. We should try to build on top of these tools instead of reinventing the wheel.
+there are already a few tools that do something very similar to what we want to do. we should try to build on top of these tools instead of reinventing the wheel.
 
-I did a lot of research (I really mean a lot - I spent like 2 full days on this) and found the following tools to have the best replication of the original styling:
+i did a lot of research (i really mean a lot - i spent like 2 full days on this) and found the following tools to have the best replication of the original styling:
 
--   Loconotion: https://github.com/leoncvlt/loconotion/ (clearly the best option but it does not support all features - such as file attachments)
--   Fruition: https://github.com/stephenou/fruitionsite/ (this one inspired Locotion)
+-   loconotion: https://github.com/leoncvlt/loconotion/ (clearly the best option but it does not support all features - such as file attachments)
+-   fruition: https://github.com/stephenou/fruitionsite/ (this one inspired locotion)
 
-We should just continue where Loconotion left off, because it is the best option although it is far from perfect.
+we should just continue where loconotion left off, because it is the best option although it is far from perfect.
 
-We should make loconotion simpler and more opinionated such that the tools becomes more accessible to the average user.
+we should make loconotion simpler and more opinionated such that the tools becomes more accessible to the average user.
 
 <br><br>
 
-### What's next?
+### what's next?
 
-I don't know if this project will ever get any traction. I told a few people about it and made some posts on reddit - we will see.
+i don't know if this project will ever get any traction but here are some ideas for the future:
 
-But if this gets any attention, here are some ideas for the future:
+-   [ ] support more blocks (ie. file attachmet types) with selenium actions (see: https://www.selenium.dev/selenium/docs/api/py/webdriver/selenium.webdriver.common.action_chains.html)
 
--   [ ] support more blocks with selenium actions (see: https://www.selenium.dev/selenium/docs/api/py/webdriver/selenium.webdriver.common.action_chains.html)
+-   [ ] make using it more convenient by writing a "github actions" script to automatically scrape and deploy pages after entering an url
 
--   [ ] turn it into an accessible plug and play tool that can be used by anyone
-
-    -   [ ] build simple gui with tkinter (see: https://github.com/stars/sueszli/lists/python-guis) + executables for windows and osx
-    -   [ ] integrate into github actions such that people just need to enter their URL and immediately get a hosted version of the snapshot
+-   [ ] experiment alternative backup methods such as styling the exports from the notion app themselves: https://gist.github.com/aboutdavid/35402fb563d0420a6430392bee98ab18
 
 <br><br><br>
 
-# Blocks supported by the current version
+# blocks supported by the current version
 
-This list is based on the notion snapshot test page (see: `test.sh`)
+this list is based on the notion snapshot test page (see: `test.sh`)
 
 <br>
 
-### Blocks
+### blocks
 
 -   [x] basic blocks
 -   [ ] media
@@ -81,7 +72,7 @@ This list is based on the notion snapshot test page (see: `test.sh`)
 
 <br>
 
-### Pages
+### pages
 
 -   [x] comments
 -   [x] serif page

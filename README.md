@@ -36,7 +36,7 @@ Remember to store the copied link in a place where you can easily find it later.
 
 Next, ensure that you have the necessary apps installed on your machine:
 
--   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you're running Windows, as this tool is designed for Unix systems
+-   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you're running Windows, as this tool is designed for MacOS / Linux
 
 -   [Python 3](https://www.python.org/downloads/)
 
@@ -63,8 +63,7 @@ git clone https://github.com/sueszli/notionSnapshot.git
 cd notionSnapshot
 python3 notionsnapshot --dark-mode <insert your url here>
 
-# for help run:
-# python3 notionsnapshot --help
+# for help run: python3 notionsnapshot --help
 ```
 
 Our test pages are listed in the `test.sh` file.
@@ -73,9 +72,12 @@ Our test pages are listed in the `test.sh` file.
 
 ---
 
+<br>
+
 Special thanks to:
 
--   Leonardo Cavaletti who laid the foundation of this project with his lovely loconotion project
--   [MJDeligan](https://github.com/MJDeligan) the main contributor
+-   Leonardo Cavaletti who laid the foundation of this project through Loconotion
+-   [MJDeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
+-   [DivyaeM](https://github.com/divyaeM) who cleaned up the dependencies and implemented support for more downlaod types
 -   Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me set the project up
 
