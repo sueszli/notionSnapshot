@@ -23,6 +23,7 @@ import requests
 import cssutils
 from appdirs import user_cache_dir
 
+from depmanager import DependencyManager
 from argparser import ARGS
 from driver import DriverInitializer
 from logger import LOG_SINGLETON as LOG, trace
@@ -328,13 +329,18 @@ class Scraper:
 
         toggle_blocks = get_toggle_blocks()
         toggle_blocks = [block for block in toggle_blocks if block not in expanded_toggle_blocks]
+        assert all(isinstance(block, WebElement) for block in toggle_blocks), "toggle blocks should be web elements"
 
         for block in toggle_blocks:
             toggle_block_button = block.find_element(By.CSS_SELECTOR, "div[role=button]")
-            is_expanded = "(180deg)" in (toggle_block_button.find_element(By.TAG_NAME, "svg").get_attribute("style"))
+            block_style = toggle_block_button.find_element(By.TAG_NAME, "svg").get_attribute("style")
+            assert isinstance(block_style, str), "toggle block style should be string"
+            assert block_style is not None
+            is_expanded = "(180deg)" in block_style
             if not is_expanded:
                 Scraper.driver.execute_script("arguments[0].click();", toggle_block_button)
                 try:
+                    assert isinstance(block, WebElement), "toggle block should be web element"
                     WebDriverWait(Scraper.driver, ARGS.timeout).until(lambda d: is_block_expanded(block))
                 except TimeoutException:
                     LOG.critical("timeout while expanding block - manually check if it's expanded in the snapshot")
@@ -574,5 +580,6 @@ class Scraper:
 
 
 if __name__ == "__main__":
+    DependencyManager.run()
     FileManager.setup()
     Scraper().run()
