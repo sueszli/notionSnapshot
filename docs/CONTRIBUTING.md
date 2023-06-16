@@ -46,8 +46,6 @@ i don't know if this project will ever get any traction but here are some ideas 
 
 -   [ ] make using it more convenient by writing a "github actions" script to automatically scrape and deploy pages after entering an url
 
--   [ ] experiment alternative backup methods such as styling the exports from the notion app themselves: https://gist.github.com/aboutdavid/35402fb563d0420a6430392bee98ab18
-
 <br><br><br>
 
 # blocks supported by the current version
