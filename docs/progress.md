@@ -1,12 +1,6 @@
-# progress
+# Progress on building a Notion scraper
 
-currently when exporting pages directly through the notion app or the notion api as done in [notion4ever](https://github.com/merkulovdaniil/notion4ever/tree/main/notion4ever) leads to the loss of formatting data and in some cases even page content.
-
-therefore the best way to recreate the original look of the pages is to simply scrape them with a webscraper.
-
-<br><br>
-
-### choosing a scraping library
+### Choosing a scraping library
 
 the following libraries were considered because they are the most popular and well supported (for python as of march 2023):
 
@@ -23,7 +17,7 @@ this makes selenium the best option for our use case and makes using python just
 
 <br><br>
 
-### building on top of similar projects
+### Building on top of similar projects
 
 there are already a few tools that do something very similar to what we want to do. we should try to build on top of these tools instead of reinventing the wheel.
 
@@ -38,7 +32,7 @@ we should make loconotion simpler and more opinionated such that the tools becom
 
 <br><br>
 
-### what's next?
+### What's next?
 
 i don't know if this project will ever get any traction but here are some ideas for the future:
 
@@ -48,7 +42,7 @@ i don't know if this project will ever get any traction but here are some ideas 
 
 <br><br><br>
 
-# blocks supported by the current version
+# Supported blocks
 
 this list is based on the notion snapshot test page (see: `test.sh`)
 
