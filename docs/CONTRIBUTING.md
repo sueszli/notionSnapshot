@@ -52,8 +52,6 @@ i don't know if this project will ever get any traction but here are some ideas 
 
 this list is based on the notion snapshot test page (see: `test.sh`)
 
-<br>
-
 ### blocks
 
 -   [x] basic blocks
