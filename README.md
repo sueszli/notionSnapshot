@@ -78,6 +78,5 @@ Special thanks to:
 
 -   Leonardo Cavaletti who laid the foundation of this project through Loconotion
 -   [MJDeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
--   [DivyaeM](https://github.com/divyaeM) who cleaned up the dependencies and implemented support for downloading more file types
 -   Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me set the project up
 
