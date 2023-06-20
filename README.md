@@ -7,7 +7,7 @@
                                                     /_/
 ```
 
-Make cute websites that retain the original page's appearance and remove unnecessary JavaScript resulting in smaller file sizes and faster load times!
+Export your Notion pages to html, keep the original appearance and remove unnecessary JavaScript resulting in smaller file sizes and faster load times!
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
