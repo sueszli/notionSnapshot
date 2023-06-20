@@ -17,7 +17,7 @@ Turn your Notion pages into html files that look just like the originals. No ext
 
 # How to use
 
-Note: This app downloads all your pages and their assets through web-scraping. This preserves the appearance of the notion page, but it is not a secure way to back up your data. If you prefer a more reliable backup method, you can try “[NotionBackup](https://github.com/sueszli/notionBackup)”, which improves the HTML exports from the notion app itself.
+Note: This app downloads all your pages and their assets through web-scraping. This preserves the appearance of the notion page, but it is not a secure way to back up your data. If you prefer a more reliable backup method, you can try “[NotionBackup](https://github.com/sueszli/notionBackup)”, which enhances the HTML exports from the Notion app itself.
 
 <br>
 
