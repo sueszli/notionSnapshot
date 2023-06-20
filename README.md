@@ -17,6 +17,10 @@ Turn your Notion pages into html files that look just like the originals. No ext
 
 # How to use
 
+Before we begin, please note that this app uses web scraping to download every notion page and its assets. This preserves the appearance of the notion page, but it is not a secure way to back up your data. If you prefer a more reliable backup method, you can try “[NotionBackup](https://github.com/sueszli/notionBackup)”, which improves the HTML exports from the notion app itself.
+
+<br>
+
 ### 1. Make Notion page public
 
 To export a page from Notion to HTML and make it publicly accessible, follow these steps:
