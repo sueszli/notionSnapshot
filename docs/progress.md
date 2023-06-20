@@ -1,4 +1,4 @@
-# Progress on building a Notion scraper
+# Progress
 
 ### Choosing a scraping library
 
