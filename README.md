@@ -59,7 +59,7 @@ rm -rf google-chrome-stable_current_amd64.deb
 
 ### 3. Run script
 
-Then just run the script like so:
+Then just run the following bash script:
 
 ```bash
 # clone
