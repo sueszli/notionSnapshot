@@ -61,14 +61,22 @@ rm -rf google-chrome-stable_current_amd64.deb
 Then just run the script like so:
 
 ```bash
+# clone
 git clone https://github.com/sueszli/notionSnapshot.git
 cd notionSnapshot
-python3 notionsnapshot --dark-mode <insert your url here>
 
-# for help run: python3 notionsnapshot --help
+# install dependencies
+if command -v python3 &>/dev/null; then echo "Python 3 is installed."; else echo "Python 3 is not installed."; fi
+python3 -m pip install --upgrade pip > /dev/null
+pip3 install pipreqs > /dev/null && rm -rf requirements.txt > /dev/null && pipreqs . > /dev/null
+p3 install -r requirements.txt > /dev/null
+
+# run
+python3 notionsnapshot --help
+
+# example usage
+python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
 ```
-
-Our test pages are listed in the `test.sh` file.
 
 <br><br><br><br>
 
