@@ -7,11 +7,12 @@
                                                     /_/
 ```
 
-Export your Notion pages to html, keep the original appearance and remove unnecessary JavaScript resulting in smaller file sizes and faster load times!
+Turn your Notion pages into html files that look just like the originals. No extra JavaScript, no extra bulk, no extra wait!
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |                 Export with Notion              |        Export with **✨NotionSnapshot✨**          |                   Original page                   |
+
 
 
 <br><br><br>
