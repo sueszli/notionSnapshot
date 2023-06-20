@@ -11,7 +11,7 @@
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |                 Export with Notion              |        Export with **✨NotionSnapshot✨**          |                   Original page                   |
 
-Notion's default HTML export lacks style (and even content), while our files retain the original page's appearance and remove unnecessary JavaScript resulting in smaller file sizes and faster load times.
+Make cute websites that retain the original page's appearance and remove unnecessary JavaScript resulting in smaller file sizes and faster load times.
 
 <br><br><br>
 
