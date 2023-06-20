@@ -44,9 +44,10 @@ Next, ensure that you have the necessary apps installed on your machine:
 
 -   [Chrome](https://www.google.com/chrome/)
 
-Installing Chrome on WSL/Ubuntu may require a few extra steps, but you can follow this method:
+Installing Chrome on WSL/Ubuntu may require a few extra steps:
 
 ```bash
+# install chrome on wsl/ubuntu
 sudo apt update && sudo apt upgrade -y
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
@@ -69,7 +70,7 @@ cd notionSnapshot
 if command -v python3 &>/dev/null; then echo "Python 3 is installed."; else echo "Python 3 is not installed."; fi
 python3 -m pip install --upgrade pip > /dev/null
 pip3 install pipreqs > /dev/null && rm -rf requirements.txt > /dev/null && pipreqs . > /dev/null
-p3 install -r requirements.txt > /dev/null
+pip3 install -r requirements.txt > /dev/null
 
 # run
 python3 notionsnapshot --help
