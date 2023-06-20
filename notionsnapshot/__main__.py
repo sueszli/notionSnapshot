@@ -501,6 +501,5 @@ class Scraper:
 
 
 if __name__ == "__main__":
-    DependencyManager.run()
     FileManager.setup()
     Scraper().run()
