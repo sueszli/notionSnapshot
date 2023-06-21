@@ -12,7 +12,7 @@ No extra JavaScript, no extra bulk, no extra wait!
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
-|                 Export with Notion              |        Export with **✨NotionSnapshot✨**          |                   Original page                   |
+|               Export with Notion                |        Scraped with **✨NotionSnapshot✨**         |                   Original page                   |
 
 <br><br><br>
 
