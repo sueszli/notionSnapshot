@@ -5,9 +5,10 @@
  / /|  / /_/ / /_/ / /_/ / / / /   ___/ / / / / /_/ / /_/ (__  ) / / / /_/ / /_
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/
                                                     /_/
-```
 
-Turn your Notion pages into html files that look just like the originals. No extra JavaScript, no extra bulk, no extra wait!
+Turn your Notion pages into html files that look just like the originals.
+No extra JavaScript, no extra bulk, no extra wait!
+```
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
