@@ -6,7 +6,7 @@
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/
                                                     /_/
 
-Turn your Notion pages into html files that look just like the originals.
+A web scraper for Notion.
 No extra JavaScript, no extra bulk, no extra wait!
 ```
 
