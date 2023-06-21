@@ -7,7 +7,7 @@
                                                     /_/
 
 A web scraper for Notion.
-No extra JavaScript, no extra bulk, no extra wait!
+Get offline duplicates of your pages: No extra JavaScript, no extra bulk, no extra wait!
 ```
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
