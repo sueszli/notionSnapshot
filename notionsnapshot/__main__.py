@@ -22,7 +22,6 @@ import requests
 import cssutils
 from appdirs import user_cache_dir
 
-from depmanager import DependencyManager
 from argparser import ARGS
 from driver import DriverInitializer
 from logger import LOG_SINGLETON as LOG, trace
