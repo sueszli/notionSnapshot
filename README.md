@@ -18,7 +18,7 @@ Get offline duplicates of your pages: No extra JavaScript, no extra bulk, no ext
 
 # How to use
 
-Note: This app downloads all your pages and their assets through web-scraping. This preserves the appearance of the notion page, but it is not a secure way to back up your data. If you prefer a more reliable backup method, you can try “[NotionBackup](https://github.com/sueszli/notionBackup)”, which enhances the HTML exports from the Notion app itself.
+Note: This app downloads all your pages and their assets through web-scraping. This preserves the appearance of the notion page, but it is not a secure way to back up your data. If you prefer a more reliable backup method, you can try “[NotionBackup](https://github.com/sueszli/notionBackup)”, which formats and fixes the HTML exports from the Notion app itself.
 
 <br>
 
