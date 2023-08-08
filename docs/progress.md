@@ -1,6 +1,6 @@
-# Progress
+# progress
 
-### Choosing a scraping library
+### choosing a scraping library
 
 the following libraries were considered because they are the most popular and well supported (for python as of march 2023):
 
@@ -17,7 +17,7 @@ this makes selenium the best option for our use case and makes using python just
 
 <br><br>
 
-### Building on top of similar projects
+### building on top of similar projects
 
 there are already a few tools that do something very similar to what we want to do. we should try to build on top of these tools instead of reinventing the wheel.
 
@@ -32,7 +32,7 @@ we should make loconotion simpler and more opinionated such that the tools becom
 
 <br><br>
 
-### What's next?
+### what's next?
 
 i don't know if this project will ever get any traction but here are some ideas for the future:
 
@@ -42,7 +42,7 @@ i don't know if this project will ever get any traction but here are some ideas 
 
 <br><br><br>
 
-# Supported blocks
+# supported blocks
 
 this list is based on the notion snapshot test page (see: `test.sh`)
 

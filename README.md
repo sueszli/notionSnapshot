@@ -7,78 +7,82 @@
                                                     /_/
 
 A web scraper for Notion.
-Get offline duplicates of your pages: No extra JavaScript, no extra bulk, no extra wait!
+Get pretty offline duplicates of your pages: No extra JavaScript, no extra bulk, no extra wait!
 ```
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**         |                   Original page                   |
 
-<br><br><br>
+<br>
+
+> _Before using, keep in mind:_ \
+> The goal of this project is to keep the aesthetics – not to back your data up.
+> Webscraping keeps your Notion pages' nice looks, but isn't a safe backup method.\
+> For a more reliable option, check out '[NotionBackup](https://github.com/sueszli/notionBackup)' which just fixes Notion's original HTML exports.
+
+<br><br><br><br>
 
 # How to use
 
-Note: This app downloads all your pages and their assets through web-scraping. This preserves the appearance of the notion page, but it is not a secure way to back up your data. If you prefer a more reliable backup method, you can try “[NotionBackup](https://github.com/sueszli/notionBackup)”, which formats and fixes the HTML exports from the Notion app itself.
+<br>
+
+1. Share Notion page on the web
+
+    To be able to scrape a Notion page, it has to be publicly accessible.
+    
+    On your Notion page, navigate to the `Publish` tab and publish your page to the web.
 
 <br>
 
-### 1. Make Notion page public
+2. Install Python and Chrome
 
-To export a page from Notion to HTML and make it publicly accessible, follow these steps:
+    Next, ensure that you have the necessary apps installed on your machine:
 
-1. Open the desired page in Notion
-2. Navigate to the `Publish` tab
-3. Locate the `Publish to web` button and click on it
-4. A link to the page will be generated. Click on the `Copy web link` button to save the link
+    -   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you're running Windows, as this tool is designed for MacOS / Linux
 
-Remember to store the copied link in a place where you can easily find it later.
+    -   [Python 3](https://www.python.org/downloads/)
 
-<br>
+    -   [Chrome](https://www.google.com/chrome/)
 
-### 2. Install Python and Chrome
+        <details>
+        <summary>Installing chrome on WSL2/Ubuntu can be a bit difficult</summary>
 
-Next, ensure that you have the necessary apps installed on your machine:
+        Installing headless Chrome on a Debian system may require a few extra steps:
 
--   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you're running Windows, as this tool is designed for MacOS / Linux
-
--   [Python 3](https://www.python.org/downloads/)
-
--   [Chrome](https://www.google.com/chrome/)
-
-Installing Chrome on WSL/Ubuntu may require a few extra steps:
-
-```bash
-# install chrome on wsl/ubuntu
-sudo apt update && sudo apt upgrade -y
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo dpkg -i google-chrome-stable_current_amd64.deb
-sudo apt --fix-broken install
-rm -rf google-chrome-stable_current_amd64.deb
-```
+        ```bash
+        # install chrome on wsl/ubuntu
+        sudo apt update && sudo apt upgrade -y
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo dpkg -i google-chrome-stable_current_amd64.deb
+        sudo apt --fix-broken install
+        rm -rf google-chrome-stable_current_amd64.deb
+        ```
+        </details>
 
 <br>
 
-### 3. Run script
+3. Run script
 
-Then just run the following bash script:
+    Then just run the following bash script:
 
-```bash
-# clone
-git clone https://github.com/sueszli/notionSnapshot.git
-cd notionSnapshot
+    ```bash
+    # clone
+    git clone https://github.com/sueszli/notionSnapshot.git
+    cd notionSnapshot
 
-# install dependencies
-if command -v python3 &>/dev/null; then echo "Python 3 is installed."; else echo "Python 3 is not installed."; fi
-python3 -m pip install --upgrade pip > /dev/null
-pip3 install pipreqs > /dev/null && rm -rf requirements.txt > /dev/null && pipreqs . > /dev/null
-pip3 install -r requirements.txt > /dev/null
+    # install dependencies
+    if command -v python3 &>/dev/null; then echo "Python 3 is installed."; else echo "Python 3 is not installed."; fi
+    python3 -m pip install --upgrade pip > /dev/null
+    pip3 install pipreqs > /dev/null && rm -rf requirements.txt > /dev/null && pipreqs . > /dev/null
+    pip3 install -r requirements.txt > /dev/null
 
-# run
-python3 notionsnapshot --help
+    # run
+    python3 notionsnapshot --help
 
-# example usage
-python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
-```
+    # example usage
+    python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
+    ```
 
 <br><br><br><br>
 
@@ -86,9 +90,12 @@ python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Te
 
 <br>
 
+<span style="color:grey;">
+
 Special thanks to:
 
 -   Leonardo Cavaletti who laid the foundation of this project through Loconotion
--   [MJDeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
+-   Marco / MJDeligan who heavily optimized the performance and implemented the caching and recursive crawling functionality
 -   Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me set the project up
 
+</span>
