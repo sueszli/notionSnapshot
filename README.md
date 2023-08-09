@@ -16,9 +16,9 @@ Get pretty offline duplicates of your pages: No extra JavaScript, no extra bulk,
 
 <br>
 
-> _Before using, keep in mind:_ \
+> _Before using, keep in mind:_ Webscraping is not safe backup method. \
 > This project aims to generate look-alike copies of your Notion pages – not to back your data up. 
-> Webscraping is not safe backup method. For a more reliable option, check out '[NotionBackup](https://github.com/sueszli/notionBackup)' which just fixes Notion's original HTML exports.
+> For a more reliable option, check out '[NotionBackup](https://github.com/sueszli/notionBackup)' which just fixes Notion's original HTML exports.
 
 <br><br><br><br>
 
