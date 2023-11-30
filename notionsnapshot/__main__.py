@@ -446,7 +446,7 @@ class Scraper:
             for row in rows:
                 subpage_path = "/" + row["data-block-id"].replace("-", "")
                 row_name_span = row.find("span")
-                row_name_span["style"] = row_name_span["style"].replace("pointer-events: none;", "")
+                # row_name_span["style"] = row_name_span["style"].replace("pointer-events: none;", "")
                 subpage_anchor = soup.new_tag(
                     "a",
                     attrs={"href": subpage_path, "style": "cursor: pointer; color: inherit; text-decoration: none; fill: inherit;"},
