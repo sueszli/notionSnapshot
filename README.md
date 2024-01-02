@@ -14,15 +14,14 @@ Get pretty offline duplicates of your pages: No extra JavaScript, no extra bulk,
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**         |                   Original page                   |
 
-<br>
-
-> _Before using, keep in mind:_ Webscraping is not safe backup method. \
-> This project aims to generate look-alike copies of your Notion pages – not to back your data up. 
-> For a more reliable option, check out '[NotionBackup](https://github.com/sueszli/notionBackup)' which fixes Notion's standard HTML exports.
-
-<br><br><br><br>
+<br><br>
 
 # How to use
+
+> [!TIP]
+> Before using, keep in mind: Webscraping is not safe backup method. \
+> This project aims to generate look-alike copies of your Notion pages – not to back your data up. 
+> For a more reliable option, check out '[NotionBackup](https://github.com/sueszli/notionBackup)' which fixes Notion's standard HTML exports.
 
 <br>
 
