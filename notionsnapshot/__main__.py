@@ -333,32 +333,36 @@ class Scraper:
     @trace()
     @staticmethod
     def _download_stylesheets(soup: BeautifulSoup) -> None:
-        is_stylesheet = lambda link: link.has_attr("href") and link["href"].startswith("/") and not "vendors~" in link["href"]
+        def is_stylesheet(link):
+            return link.has_attr("href") and link["href"].startswith("/") and "vendors~" not in link["href"]
+
         stylesheets = [link for link in soup.findAll("link", rel="stylesheet") if is_stylesheet(link)]
+        base_url = "https://www.notion.so"
 
         for link in stylesheets:
-            download_path = FileManager.download_asset(f'https://www.notion.so{link["href"]}')
+            download_path = FileManager.download_asset(f'{base_url}{link["href"]}')
 
-            with open(os.path.join(FileManager.output_dir, download_path), "rb+") as f:
-                stylesheet = cssutils.parseString(f.read())
+            css_file_path = os.path.join(FileManager.output_dir, download_path)
+            with open(css_file_path, "r+") as f:
+                css_content = f.read()
 
-                # additionally download fonts used in the stylesheet
-                css_rules = [rule for rule in stylesheet.cssRules if rule.type == cssutils.css.CSSRule.FONT_FACE_RULE]
-                for rule in css_rules:
-                    # for some reason the url becomes https:/www.notion.so/https:/not.../<the url>
-                    url_regex = re.compile(r"url\((/?https:/www.notion.so)*(.+?)\).*")
-                    m = url_regex.match(rule.style["src"])
-                    if m is None:
-                        raise ValueError("could not parse stylesheet source of font face rule")
-                    # first capture group the repeating notion url
-                    font_file = re.sub(r"assets/", "", m.group(2))
-                    parent_css_path = os.path.split(urllib.parse.urlparse(link["href"]).path)[0]
-                    font_download_url = "/".join(p.strip("/") for p in ["https://www.notion.so", parent_css_path, font_file] if p.strip("/"))
-                    font_download_path = FileManager.download_asset(font_download_url, Path(font_file).name)
-                    rule.style["src"] = f"url({font_download_path})"
+                url_pattern = re.compile(r"url\((https?:\/\/www\.notion\.so)?(\/[^)]+)\)")
+
+                def url_replacer(match):
+                    full_url, partial_url = match.groups()
+                    if not full_url:
+                        font_file_name = os.path.basename(partial_url)
+                        font_download_url = f"{base_url}{partial_url}"
+                        font_local_path = FileManager.download_asset(font_download_url, font_file_name)
+                        return f"url({font_local_path})"
+                    return match.group(0)
+
+                # Replace the URLs in the CSS content
+                modified_css_content = url_pattern.sub(url_replacer, css_content)
+
                 f.seek(0)
                 f.truncate()
-                f.write(stylesheet.cssText)
+                f.write(modified_css_content)
 
             link["href"] = download_path
 
