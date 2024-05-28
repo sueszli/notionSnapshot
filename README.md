@@ -31,8 +31,6 @@ Get pretty offline duplicates of your pages: No extra JavaScript, no extra bulk,
     
     On your Notion page, navigate to the `Publish` tab and publish your page to the web.
 
-<br>
-
 2. Install Python and Chrome
 
     Next, ensure that you have the necessary apps installed on your machine:
@@ -57,8 +55,6 @@ Get pretty offline duplicates of your pages: No extra JavaScript, no extra bulk,
         rm -rf google-chrome-stable_current_amd64.deb
         ```
         </details>
-
-<br>
 
 3. Run script
 
