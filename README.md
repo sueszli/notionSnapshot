@@ -84,12 +84,8 @@ Get pretty offline duplicates of your pages: No extra JavaScript, no extra bulk,
 
 <br>
 
-<span style="color:grey;">
-
 Special thanks to:
 
 -   [Leonardo Cavaletti](https://github.com/leoncvlt) who laid the foundation of this project through Loconotion (this project is a complete rewrite)
 -   Marco / MJDeligan who heavily optimized the performance and implemented the caching and recursive crawling functionality
 -   Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me set the project up
-
-</span>
