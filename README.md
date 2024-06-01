@@ -13,16 +13,14 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**         |                   Original page                   |
 
-<br><br>
-
-# How to use
-
 > [!WARNING]
 > Project not actively maintained, but pull-requests are welcome.
 >
-> Also: Webscraping is not a safe backup method. This project creates look-alikes of your pages but for backups check out [NotionBackup](https://github.com/sueszli/notionBackup) which fixes Notion's standard HTML exports.
+> Also: this is not a safe backup method. Check out the improved version [NotionBackup](https://github.com/sueszli/notionBackup) which also fixes Notion's standard HTML exports.
 
-<br>
+<br><br><br>
+
+# How to use
 
 1. Share Notion page on the web
 
@@ -79,12 +77,8 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 
 <br><br><br><br>
 
----
-
-<br>
-
-Special thanks to:
-
--   [Leonardo Cavaletti](https://github.com/leoncvlt) who laid the foundation of this project through Loconotion (this project is a complete rewrite)
--   Marco / MJDeligan who heavily optimized the performance and implemented the caching and recursive crawling functionality
--   Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me set the project up
+> Special thanks to:
+> 
+> -   [Leonardo Cavaletti](https://github.com/leoncvlt) who laid the foundation of this project through Loconotion (this project is a complete rewrite)
+> -   Marco / MJDeligan who heavily optimized the performance and implemented the caching and recursive crawling functionality
+> -   Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me set the project up
