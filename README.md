@@ -30,9 +30,7 @@ Get pretty lookalike duplicates of your pages by web-scraping.
     
     On your Notion page, navigate to the `Publish` tab and publish your page to the web.
 
-2. Install Chrome (in addition to python)
-
-    Use Linux, MacOS or WSL (on Windows).
+2. Install Google Chrome (in addition to python)
 
     Download google chrome here: https://www.google.com/chrome/
 
@@ -52,6 +50,8 @@ Get pretty lookalike duplicates of your pages by web-scraping.
     </details>
 
 3. Run script
+
+    Use Linux, MacOS or WSL (on Windows).
 
     ```bash
     # clone
