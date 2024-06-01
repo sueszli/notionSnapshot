@@ -26,40 +26,34 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 
 # How to use
 
-1. Share Notion page on the web
+1. Make your notion website publically accessible
 
     To be able to scrape a Notion page, it has to be publicly accessible.
     
     On your Notion page, navigate to the `Publish` tab and publish your page to the web.
 
-2. Install Python and Chrome
+2. Install Chrome (in addition to python)
 
-    Next, ensure that you have the necessary apps installed on your machine:
+    Use Linux, MacOS or WSL (on Windows).
 
-    -   [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install) if you're running Windows, as this tool is designed for MacOS / Linux
+    Download google chrome here: https://www.google.com/chrome/
 
-    -   [Python 3](https://www.python.org/downloads/)
+    <details>
+    <summary>Installing chrome on WSL2/Ubuntu can be a bit difficult</summary>
 
-    -   [Chrome](https://www.google.com/chrome/)
+    Installing headless Chrome on a Debian system may require a few extra steps:
 
-        <details>
-        <summary>Installing chrome on WSL2/Ubuntu can be a bit difficult</summary>
-
-        Installing headless Chrome on a Debian system may require a few extra steps:
-
-        ```bash
-        # install chrome on wsl/ubuntu
-        sudo apt update && sudo apt upgrade -y
-        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        sudo dpkg -i google-chrome-stable_current_amd64.deb
-        sudo apt --fix-broken install
-        rm -rf google-chrome-stable_current_amd64.deb
-        ```
-        </details>
+    ```bash
+    # install chrome on wsl/ubuntu
+    sudo apt update && sudo apt upgrade -y
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo dpkg -i google-chrome-stable_current_amd64.deb
+    sudo apt --fix-broken install
+    rm -rf google-chrome-stable_current_amd64.deb
+    ```
+    </details>
 
 3. Run script
-
-    Then just run the following bash script:
 
     ```bash
     # clone
