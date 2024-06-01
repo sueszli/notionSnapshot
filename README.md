@@ -6,8 +6,7 @@
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/
                                                     /_/
 
-A web scraper for Notion.
-Get pretty offline duplicates of your pages: No extra JavaScript, no extra bulk, no extra wait!
+Get pretty lookalike duplicates of your pages by web-scraping.
 ```
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
