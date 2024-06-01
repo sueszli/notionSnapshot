@@ -9,9 +9,13 @@
 Get pretty lookalike duplicates of your pages by web-scraping.
 ```
 
+<br>
+
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**         |                   Original page                   |
+
+<br>
 
 > [!WARNING]
 > Project not actively maintained, but pull-requests are welcome.
