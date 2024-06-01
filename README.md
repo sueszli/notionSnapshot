@@ -27,8 +27,6 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 # How to use
 
 1. Make your Notion pages publicly accessible
-
-    To be able to scrape a Notion page, it has to be publicly accessible.
     
     On your Notion page, navigate to the `Publish` tab and publish your page to the web.
 
