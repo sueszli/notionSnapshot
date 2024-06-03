@@ -20,7 +20,7 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 > [!WARNING]
 > Project not actively maintained, but pull-requests are welcome.
 >
-> Also: this is not a safe backup method. Check out the improved version [NotionBackup](https://github.com/sueszli/notionBackup) which also fixes Notion's standard HTML exports.
+> Also: this is not a safe backup method. Check out the improved version [NotionBackup](https://github.com/sueszli/notionBackup) which fixes Notion's standard HTML exports.
 
 <br><br><br>
 
