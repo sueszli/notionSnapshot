@@ -71,7 +71,7 @@ Get pretty lookalike duplicates of your pages by web-scraping.
     python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
     ```
 
-<br><br><br><br>
+<br><br><br>
 
 > Special thanks to:
 > 
