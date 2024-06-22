@@ -30,13 +30,9 @@ we should make loconotion simpler and more opinionated such that the tools becom
 
 ## what's next?
 
-i don't know if this project will ever get any traction but here are some ideas for the future:
-
 -   [ ] support more blocks (ie. file attachmet types) with selenium actions (see: https://www.selenium.dev/selenium/docs/api/py/webdriver/selenium.webdriver.common.action_chains.html)
 
 -   [ ] make using it more convenient by writing a "github actions" script to automatically scrape and deploy pages after entering an url
-
-<br><br><br>
 
 # supported blocks
 
