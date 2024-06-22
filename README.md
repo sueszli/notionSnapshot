@@ -13,7 +13,7 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
-|               Export with Notion                |        Scraped with **✨NotionSnapshot✨**         |                   Original page                   |
+|               Export with Notion                |        Scraped with **✨NotionSnapshot✨**        |                   Original page                   |
 
 <br>
 
@@ -27,7 +27,7 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 # How to use
 
 1. Make your Notion pages publicly accessible
-    
+
     On your Notion page, navigate to the `Publish` tab and publish your page to the web.
 
 2. Install Google Chrome (in addition to python)
@@ -47,6 +47,7 @@ Get pretty lookalike duplicates of your pages by web-scraping.
     sudo apt --fix-broken install
     rm -rf google-chrome-stable_current_amd64.deb
     ```
+
     </details>
 
 3. Run script
@@ -54,15 +55,10 @@ Get pretty lookalike duplicates of your pages by web-scraping.
     Use Linux, MacOS or WSL (on Windows).
 
     ```bash
-    # clone
-    git clone https://github.com/sueszli/notionSnapshot.git
-    cd notionSnapshot
-
     # install dependencies
-    if command -v python3 &>/dev/null; then echo "Python 3 is installed."; else echo "Python 3 is not installed."; fi
-    python3 -m pip install --upgrade pip > /dev/null
-    pip3 install pipreqs > /dev/null && rm -rf requirements.txt > /dev/null && pipreqs . > /dev/null
-    pip3 install -r requirements.txt > /dev/null
+    pip install pipreqs
+    rm -rf requirements.txt && pipreqs .
+    pip install -r requirements.txt
 
     # run
     python3 notionsnapshot --help
@@ -74,7 +70,7 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 <br><br><br>
 
 > Special thanks to:
-> 
+>
 > -   [@leoncvlt](https://github.com/leoncvlt) who laid the foundation of this project through Loconotion (this project is a complete rewrite)
 > -   [@mjdeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
 > -   [@stefnotch](https://github.com/stefnotch/) and [@thomasbiede](https://github.com/ThomasBiede) who helped me set the project up
