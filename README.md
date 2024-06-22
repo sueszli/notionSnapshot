@@ -75,6 +75,6 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 
 > Special thanks to:
 > 
-> -   [Leonardo Cavaletti](https://github.com/leoncvlt) who laid the foundation of this project through Loconotion (this project is a complete rewrite)
-> -   Marco / MJDeligan who heavily optimized the performance and implemented the caching and recursive crawling functionality
-> -   Stefan Brandmair, Thomas Biedermann and Berndt Uhlig who helped me set the project up
+> -   [@leoncvlt](https://github.com/leoncvlt) who laid the foundation of this project through Loconotion (this project is a complete rewrite)
+> -   [@mjdeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
+> -   [@stefnotch](https://github.com/stefnotch/) and [@thomasbiede](https://github.com/ThomasBiede) who helped me set the project up
