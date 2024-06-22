@@ -42,7 +42,7 @@ i don't know if this project will ever get any traction but here are some ideas 
 
 this list is based on the notion snapshot test page (see: `test.sh`)
 
-### blocks
+_blocks_
 
 -   [x] basic blocks
 -   [ ] media
@@ -56,9 +56,7 @@ this list is based on the notion snapshot test page (see: `test.sh`)
 -   [ ] embeds
     -   [ ] embedded pdfs
 
-<br>
-
-### pages
+_pages_
 
 -   [x] comments
 -   [x] serif page
