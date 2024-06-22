@@ -1,6 +1,6 @@
 # progress
 
-### choosing a scraping library
+## choosing a scraping library
 
 the following libraries were considered because they are the most popular and well supported (for python as of march 2023):
 
@@ -15,7 +15,7 @@ but we managed to find a way to install selenium directly through pip by using t
 
 this makes selenium the best option for our use case and makes using python just as convenient as node.js for this project.
 
-### building on top of similar projects
+## building on top of similar projects
 
 there are already a few tools that do something very similar to what we want to do. we should try to build on top of these tools instead of reinventing the wheel.
 
@@ -28,7 +28,7 @@ we should just continue where loconotion left off, because it is the best option
 
 we should make loconotion simpler and more opinionated such that the tools becomes more accessible to the average user.
 
-### what's next?
+## what's next?
 
 i don't know if this project will ever get any traction but here are some ideas for the future:
 
