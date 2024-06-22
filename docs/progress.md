@@ -15,8 +15,6 @@ but we managed to find a way to install selenium directly through pip by using t
 
 this makes selenium the best option for our use case and makes using python just as convenient as node.js for this project.
 
-<br><br>
-
 ### building on top of similar projects
 
 there are already a few tools that do something very similar to what we want to do. we should try to build on top of these tools instead of reinventing the wheel.
@@ -29,8 +27,6 @@ i did a lot of research (i really mean a lot - i spent like 2 full days on this)
 we should just continue where loconotion left off, because it is the best option although it is far from perfect.
 
 we should make loconotion simpler and more opinionated such that the tools becomes more accessible to the average user.
-
-<br><br>
 
 ### what's next?
 
