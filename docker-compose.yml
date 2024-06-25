@@ -1,0 +1,11 @@
+services:
+    main:
+        container_name: notionsnapshot
+        build: .
+
+        # mount volume
+        volumes:
+            - type: bind
+              source: .
+              target: /workspace
+        working_dir: /workspace
