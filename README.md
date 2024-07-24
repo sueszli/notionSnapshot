@@ -55,9 +55,10 @@ Get pretty lookalike duplicates of your pages by web-scraping.
     Use Linux, MacOS or WSL (on Windows).
 
     ```bash
-    # example usage
     pip install -r requirements.txt
     python3 notionsnapshot --help
+    
+    # example usage
     python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
     ```
 
