@@ -482,14 +482,14 @@ class Scraper:
             is_topbar = topbar_parent is not None and len(topbar_parent) > 0
             is_table_of_contents = "#" in url
 
-            if is_table_of_contents or is_topbar:
+            if is_table_of_contents:
                 # add ids and classes for 'injection.js' to work
                 arr = url.split("#")
                 url = arr[0]
                 a["href"] = f"#{arr[-1]}"
                 a["class"] = a.get("class", []) + ["notionsnapshot-anchor-link"]
 
-            elif is_scroller:
+            elif is_scroller or is_topbar:
                 filename = FileManager.get_filename_from_url(url)
                 a["href"] = filename
                 subpage_urls.append(url)
