@@ -4,7 +4,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.service import Service
 
 from argparser import ARGS
 
@@ -37,7 +36,12 @@ class DriverInitializer:
         os.environ["WDM_PROGRESS_BAR"] = str(0)
         os.environ["WDM_LOG"] = str(logging.NOTSET)
 
-        executable_path = ChromeDriverManager().install()
-        chrome_executable: Service = ChromeService(executable_path=executable_path)
-        driver = webdriver.Chrome(service=chrome_executable, options=opts)
+        # ChromeDriverManagerを使ってドライバーをインストール
+        chrome_service = ChromeService(executable_path=ChromeDriverManager().install())
+        # Chromeドライバーの初期化
+        driver = webdriver.Chrome(service=chrome_service, options=opts)
+
+        #executable_path = ChromeDriverManager().install()
+        #chrome_executable: Service = ChromeService(executable_path=executable_path)
+        #driver = webdriver.Chrome(service=chrome_executable, options=opts)
         return driver
