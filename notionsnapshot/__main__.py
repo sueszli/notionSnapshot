@@ -464,6 +464,7 @@ class Scraper:
 
         domain = f'{ARGS.url.split("notion.site")[0]}notion.site'
         anchors = soup.find_all("a", href=True)
+
         for a in anchors:
             url = a["href"]
 
@@ -477,8 +478,11 @@ class Scraper:
 
             scroller_parent = a.find_parent("div", class_="notion-scroller")
             is_scroller = scroller_parent is not None and len(scroller_parent) > 0
+            topbar_parent = a.find_parent("div", class_="notion-topbar")
+            is_topbar = topbar_parent is not None and len(topbar_parent) > 0
             is_table_of_contents = "#" in url
-            if is_table_of_contents:
+
+            if is_table_of_contents or is_topbar:
                 # add ids and classes for 'injection.js' to work
                 arr = url.split("#")
                 url = arr[0]
