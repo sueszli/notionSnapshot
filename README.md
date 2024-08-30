@@ -64,7 +64,7 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 
 <br><br><br>
 
-> Special thanks to:
+> Thanks:
 >
 > -   [@leoncvlt](https://github.com/leoncvlt) who laid the foundation of this project through Loconotion (this project is a complete rewrite)
 > -   [@mjdeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
