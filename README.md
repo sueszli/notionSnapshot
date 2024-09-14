@@ -9,16 +9,18 @@
 get pretty lookalikes of your pages through web-scraping
 ```
 
-> [!IMPORTANT]  
-> this project is unmaintained, for a reliable backup method check out: [NotionBackup](https://github.com/sueszli/notionBackup)
->
-> pull requests are welcome. a docker script is provided for reproducability.
-
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**        |                   Original page                   |
 
+<br><br>
+
 # Usage
+
+> [!IMPORTANT]  
+> this project is unmaintained, for a reliable backup method check out: [NotionBackup](https://github.com/sueszli/notionBackup)
+>
+> pull requests are welcome. a docker script is provided for reproducability.
 
 1. Generate a public link to your pages.
 
@@ -54,8 +56,10 @@ get pretty lookalikes of your pages through web-scraping
     python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
     ```
 
-> Thanks to:
->
-> -   [@leoncvlt](https://github.com/leoncvlt) who laid the foundation of this project through loconotion (this project is a complete rewrite)
-> -   [@mjdeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
-> -   [@stefnotch](https://github.com/stefnotch/) and [@thomasbiede](https://github.com/ThomasBiede) who helped me set the project up
+# Thanks
+
+Thanks to:
+
+-   [@leoncvlt](https://github.com/leoncvlt) who laid the foundation of this project through loconotion (this project is a complete rewrite)
+-   [@mjdeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
+-   [@stefnotch](https://github.com/stefnotch/) and [@thomasbiede](https://github.com/ThomasBiede) who helped me set the project up
