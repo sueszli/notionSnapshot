@@ -9,19 +9,9 @@
 get pretty lookalikes of your pages through web-scraping
 ```
 
-<br>
-
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**        |                   Original page                   |
-
-<br>
-
-> [!NOTE]  
-> web scraping is not a safe backup method. to fix notions standard HTML exports check out: [NotionBackup](https://github.com/sueszli/notionBackup)
-
-> [!WARNING]
-> this project not actively maintained anymore, but all pull-requests are welcome.
 
 <br><br>
 
@@ -63,7 +53,14 @@ get pretty lookalikes of your pages through web-scraping
 
 <br><br>
 
-> Thanks:
+
+> [!NOTE]  
+> web scraping is not a safe backup method. to fix notions standard HTML exports check out: [NotionBackup](https://github.com/sueszli/notionBackup)
+
+> [!WARNING]
+> this project not actively maintained anymore, but all pull-requests are welcome.
+
+> thanks:
 >
 > -   [@leoncvlt](https://github.com/leoncvlt) who laid the foundation of this project through Loconotion (this project is a complete rewrite)
 > -   [@mjdeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
