@@ -17,7 +17,7 @@ get pretty lookalikes of your pages through web-scraping
 
 <br>
 
-> [!WARNING]
+> [!NOTE]  
 > web scraping is not a safe backup method. to fix notions standard HTML exports check out: [NotionBackup](https://github.com/sueszli/notionBackup)
 
 > [!WARNING]
