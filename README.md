@@ -15,8 +15,6 @@ get pretty lookalikes of your pages through web-scraping
 
 <br><br>
 
-# Usage
-
 > [!IMPORTANT]  
 > this project is unmaintained, for a reliable backup method check out: [NotionBackup](https://github.com/sueszli/notionBackup)
 >
@@ -30,6 +28,9 @@ sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt --fix-broken install
 rm -rf google-chrome-stable_current_amd64.deb
 
+# clone project
+git clone https://github.com/sueszli/notionSnapshot/edit/master/README.md
+cd notionSnapshot
 pip install -r requirements.txt
 python3 notionsnapshot --help
 
