@@ -60,7 +60,7 @@ get pretty lookalikes of your pages through web-scraping
 > [!WARNING]
 > this project not actively maintained anymore, but all pull-requests are welcome.
 
-> Thanks:
+> Thanks to:
 >
 > -   [@leoncvlt](https://github.com/leoncvlt) who laid the foundation of this project through loconotion (this project is a complete rewrite)
 > -   [@mjdeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
