@@ -53,78 +53,7 @@ docker-clean:
 	docker volume ls
 	docker network ls
 
-# --------------------------------------------------------------- conda
-
-.PHONY: conda-get-yaml # convert requirements.txt to env.yaml file (idempotent)
-conda-get-yaml:
-	conda update -n base -c defaults conda
-	# conda config --env --set subdir osx-64
-	# conda config --env --set subdir osx-arm64
-	conda config --set auto_activate_base false
-	conda info
-	@bash -c '\
-		source $$(conda info --base)/etc/profile.d/conda.sh; conda activate base; \
-		conda create --yes --name con python=3.11; \
-		source $$(conda info --base)/etc/profile.d/conda.sh; conda activate con; \
-		\
-		pip install -r requirements.txt; \
-		\
-		conda env export --no-builds | grep -v "prefix:" > env.yml; \
-		source $$(conda info --base)/etc/profile.d/conda.sh; conda deactivate; \
-		conda remove --yes --name con --all; \
-	'
-
-.PHONY: conda-install # install conda from env.yaml file
-conda-install:
-	@bash -c '\
-		source $$(conda info --base)/etc/profile.d/conda.sh; conda activate base; \
-		conda env create --file env.yml; \
-	'
-
-.PHONY: conda-clean # wipe conda environment
-conda-clean:
-	# conda clean --all
-	@bash -c '\
-		source $$(conda info --base)/etc/profile.d/conda.sh; conda activate base; \
-		conda remove --yes --name con --all; \
-		source $$(conda info --base)/etc/profile.d/conda.sh; conda deactivate; \
-	'
-
 # --------------------------------------------------------------- utils
-
-.PHONY: monitor # create nohup with restart on failure
-monitor:
-	@if [ "$(filepath)" = "" ]; then echo "missing 'path' argument"; exit 1; fi
-	@bash -c '\
-		monitor() { \
-			while true; do \
-				if ! ps -p $$(cat "monitor-process.pid" 2>/dev/null) > /dev/null 2>&1; then \
-					echo "$$(date): process not running or died, (re)starting..." >> monitor.log; \
-					nohup ./.venv/bin/python3 "$(filepath)" > "monitor-process.log" 2>&1 & \
-					echo $$! > "monitor-process.pid"; \
-					echo "$$(date): started process with PID $$(cat monitor-process.pid)" >> monitor.log; \
-				fi; \
-				sleep 5; \
-			done; \
-		}; \
-		monitor >> "monitor.log" 2>&1 & \
-		echo $$! > "monitor.pid"; \
-		echo "$$(date): monitor started" >> "monitor.log"; \
-	'
-
-.PHONY: monitor-tail # tail log of nohup process
-monitor-tail:
-	while true; do clear; tail -n 100 monitor-process.log; sleep 0.1; done
-	# watch -n 0.1 "tail -n 100 monitor-process.log"
-
-.PHONY: monitor-kill # kill nohup process
-monitor-kill:
-	-kill -9 $$(cat monitor.pid)
-	rm -rf monitor.pid
-	rm -rf monitor.log
-	-kill -9 $$(cat monitor-process.pid)
-	rm -rf monitor-process.pid
-	rm -rf monitor-process.log
 
 .PHONY: fmt # format codebase
 fmt:
