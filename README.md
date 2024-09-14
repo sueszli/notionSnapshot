@@ -20,6 +20,8 @@ get pretty lookalikes of your pages through web-scraping
 >
 > pull requests are welcome. a docker script is provided for reproducability.
 
+<br>
+
 ```bash
 # install chrome driver
 sudo apt update && sudo apt upgrade -y
