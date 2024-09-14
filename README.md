@@ -9,16 +9,17 @@
 get pretty lookalikes of your pages through web-scraping
 ```
 
+> [!IMPORTANT]  
+> this project is unmaintained, for a reliable backup method check out: [NotionBackup](https://github.com/sueszli/notionBackup)
+>
+> pull requests are welcome. a docker script is provided for reproducability.
+
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**        |                   Original page                   |
 
 <br><br>
 
-> [!WARNING]
-> this project is unmaintained, for a reliable backup method check out: [NotionBackup](https://github.com/sueszli/notionBackup)
->
-> pull requests are welcome. docker script provided for reproducability.
 
 # Usage
 
