@@ -18,9 +18,6 @@ get pretty lookalikes of your pages through web-scraping
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**        |                   Original page                   |
 
-<br><br>
-
-
 # Usage
 
 1. Generate a public link to your pages.
@@ -56,8 +53,6 @@ get pretty lookalikes of your pages through web-scraping
     # example usage
     python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
     ```
-
-<br><br>
 
 > Thanks to:
 >
