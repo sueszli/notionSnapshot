@@ -18,9 +18,9 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 <br>
 
 > [!WARNING]
-> Project not actively maintained, but pull-requests are welcome.
->
-> Also: this is not a safe backup method. Check out [NotionBackup](https://github.com/sueszli/notionBackup) to fix Notion's standard HTML exports.
+> Project not actively maintained, but pull-requests are welcome. I highly recommend using the provided docker script.
+> 
+> Also: web scraping is not a safe backup method. Check out [NotionBackup](https://github.com/sueszli/notionBackup) to fix Notion's standard HTML exports.
 
 <br><br><br>
 
