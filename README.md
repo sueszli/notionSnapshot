@@ -22,15 +22,15 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 > 
 > Also: web scraping is not a safe backup method. Check out [NotionBackup](https://github.com/sueszli/notionBackup) to fix Notion's standard HTML exports.
 
-<br><br><br>
+<br><br>
 
-# How to use
+# Usage
 
-1. Make your Notion pages publicly accessible
+1. Generate a public link to your pages.
 
     On your Notion page, navigate to the `Publish` tab and publish your page to the web.
 
-2. Install Google Chrome (in addition to python)
+2. Install Google Chrome (in addition to Python)
 
     Download google chrome here: https://www.google.com/chrome/
 
@@ -52,8 +52,6 @@ Get pretty lookalike duplicates of your pages by web-scraping.
 
 3. Run script
 
-    Use Linux, MacOS or WSL (on Windows).
-
     ```bash
     pip install -r requirements.txt
     python3 notionsnapshot --help
@@ -62,7 +60,7 @@ Get pretty lookalike duplicates of your pages by web-scraping.
     python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
     ```
 
-<br><br><br>
+<br><br>
 
 > Thanks:
 >
