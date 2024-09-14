@@ -62,6 +62,6 @@ get pretty lookalikes of your pages through web-scraping
 
 > thanks:
 >
-> -   [@leoncvlt](https://github.com/leoncvlt) who laid the foundation of this project through Loconotion (this project is a complete rewrite)
+> -   [@leoncvlt](https://github.com/leoncvlt) who laid the foundation of this project through loconotion (this project is a complete rewrite)
 > -   [@mjdeligan](https://github.com/MJDeligan) who heavily optimized the performance and implemented the caching and recursive crawling functionality
 > -   [@stefnotch](https://github.com/stefnotch/) and [@thomasbiede](https://github.com/ThomasBiede) who helped me set the project up
