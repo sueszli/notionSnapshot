@@ -20,8 +20,6 @@ get pretty lookalikes of your pages through web-scraping
 >
 > pull requests are welcome. a docker script is provided for reproducability.
 
-# usage
-
 ```bash
 # install chrome driver
 sudo apt update && sudo apt upgrade -y
@@ -40,7 +38,7 @@ python3 notionsnapshot --help
 python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
 ```
 
-# thanks
+<br>
 
 many thanks to:
 
