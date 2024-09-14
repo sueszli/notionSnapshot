@@ -13,6 +13,8 @@ get pretty lookalikes of your pages through web-scraping
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**        |                   Original page                   |
 
+<br><br>
+
 > [!IMPORTANT]  
 > this project is unmaintained, for a reliable backup method check out: [NotionBackup](https://github.com/sueszli/notionBackup)
 >
@@ -37,6 +39,8 @@ python3 notionsnapshot --help
 # example usage (see test.sh)
 python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
 ```
+
+<br>
 
 Thanks to:
 
