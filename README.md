@@ -6,7 +6,7 @@
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/
                                                     /_/
 
-Get pretty lookalike duplicates of your pages by web-scraping.
+get pretty lookalikes of your pages through web-scraping.
 ```
 
 <br>
