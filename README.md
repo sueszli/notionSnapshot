@@ -22,6 +22,8 @@ get pretty lookalikes of your pages through web-scraping
 >
 > pull requests are welcome. a docker script is provided for reproducability.
 
+<br>
+
 1. Generate a public link to your pages.
 
     On your Notion page, navigate to the `Publish` tab and publish your page to the web.
@@ -56,7 +58,7 @@ get pretty lookalikes of your pages through web-scraping
     python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
     ```
 
-# Thanks
+<br><br>
 
 Thanks to:
 
