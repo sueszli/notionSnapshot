@@ -22,41 +22,20 @@ get pretty lookalikes of your pages through web-scraping
 >
 > pull requests are welcome. a docker script is provided for reproducability.
 
-<br>
+```bash
+# install chrome driver
+sudo apt update && sudo apt upgrade -y
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+sudo apt --fix-broken install
+rm -rf google-chrome-stable_current_amd64.deb
 
-1. Generate a public link to your pages.
+pip install -r requirements.txt
+python3 notionsnapshot --help
 
-    On your Notion page, navigate to the `Publish` tab and publish your page to the web.
-
-2. Install Google Chrome (in addition to Python)
-
-    Download google chrome here: https://www.google.com/chrome/
-
-    <details>
-    <summary>Installing chrome on WSL2/Ubuntu can be a bit difficult</summary>
-
-    Installing headless Chrome on a Debian system may require a few extra steps:
-
-    ```bash
-    # install chrome on wsl/ubuntu
-    sudo apt update && sudo apt upgrade -y
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    sudo dpkg -i google-chrome-stable_current_amd64.deb
-    sudo apt --fix-broken install
-    rm -rf google-chrome-stable_current_amd64.deb
-    ```
-
-    </details>
-
-3. Run script
-
-    ```bash
-    pip install -r requirements.txt
-    python3 notionsnapshot --help
-    
-    # example usage
-    python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
-    ```
+# example usage (see test.sh)
+python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
+```
 
 <br><br>
 
