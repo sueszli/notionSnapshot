@@ -15,6 +15,11 @@ get pretty lookalikes of your pages through web-scraping
 
 <br><br>
 
+> [!WARNING]
+> this project is unmaintained, for a reliable backup method check out: [NotionBackup](https://github.com/sueszli/notionBackup)
+>
+> pull requests are welcome. docker script provided for reproducability.
+
 # Usage
 
 1. Generate a public link to your pages.
@@ -52,13 +57,6 @@ get pretty lookalikes of your pages through web-scraping
     ```
 
 <br><br>
-
-
-> [!NOTE]  
-> web scraping is not a safe backup method. to fix notions standard HTML exports check out: [NotionBackup](https://github.com/sueszli/notionBackup)
-
-> [!WARNING]
-> this project not actively maintained anymore, but all pull-requests are welcome.
 
 > Thanks to:
 >
