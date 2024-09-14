@@ -6,7 +6,7 @@
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/
                                                     /_/
 
-get pretty lookalikes of your pages through web-scraping.
+get pretty lookalikes of your pages through web-scraping
 ```
 
 <br>
@@ -18,9 +18,10 @@ get pretty lookalikes of your pages through web-scraping.
 <br>
 
 > [!WARNING]
-> Project not actively maintained, but pull-requests are welcome. I highly recommend using the provided docker script.
-> 
-> Also: web scraping is not a safe backup method. Check out [NotionBackup](https://github.com/sueszli/notionBackup) to fix Notion's standard HTML exports.
+> web scraping is not a safe backup method. to fix notions standard HTML exports check out: [NotionBackup](https://github.com/sueszli/notionBackup)
+
+> [!WARNING]
+> this project not actively maintained anymore, but all pull-requests are welcome.
 
 <br><br>
 
