@@ -23,7 +23,7 @@ get pretty lookalikes of your pages through web-scraping
 <br>
 
 ```bash
-# install chrome driver
+# install chrome (in wsl)
 sudo apt update && sudo apt upgrade -y
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
