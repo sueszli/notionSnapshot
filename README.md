@@ -34,10 +34,10 @@ rm -rf google-chrome-stable_current_amd64.deb
 git clone https://github.com/sueszli/notionSnapshot/edit/master/README.md
 cd notionSnapshot
 pip install -r requirements.txt
-python3 notionsnapshot --help
+python notionsnapshot --help
 
 # example usage (see test.sh)
-python3 notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
+python notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
 ```
 
 <br>
