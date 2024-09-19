@@ -16,7 +16,7 @@ get pretty lookalikes of your pages through web-scraping
 <br><br>
 
 > [!IMPORTANT]  
-> this project is unmaintained. for a reliable backup method check out: [NotionBackup](https://github.com/sueszli/notionBackup)
+> this project is unmaintained. for a reliable backup strategy check out: [NotionBackup](https://github.com/sueszli/notionBackup)
 >
 > pull requests are welcome. a docker script is provided for reproducability.
 
