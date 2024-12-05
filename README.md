@@ -5,22 +5,18 @@
  / /|  / /_/ / /_/ / /_/ / / / /   ___/ / / / / /_/ / /_/ (__  ) / / / /_/ / /_
 /_/ |_/\____/\__/_/\____/_/ /_/   /____/_/ /_/\__,_/ .___/____/_/ /_/\____/\__/
                                                     /_/
-
-get pretty lookalikes of your pages through web-scraping
 ```
 
 | <img width="685" src="docs/assets/export.jpeg"> | <img width="685" src="docs/assets/snapshot.jpeg"> | <img width="685" src="docs/assets/original.jpeg"> |
 | :---------------------------------------------: | :-----------------------------------------------: | :-----------------------------------------------: |
 |               Export with Notion                |        Scraped with **✨NotionSnapshot✨**        |                   Original page                   |
 
-<br><br>
+# usage
 
 > [!IMPORTANT]  
 > this project is unmaintained – but pull requests are welcome. a docker script is provided for reproducibility.
 >
 > for a reliable backup strategy check out: [NotionBackup](https://github.com/sueszli/notionBackup)
-
-<br>
 
 ```bash
 # install chrome (in wsl)
@@ -34,13 +30,12 @@ rm -rf google-chrome-stable_current_amd64.deb
 git clone https://github.com/sueszli/notionSnapshot/edit/master/README.md
 cd notionSnapshot
 pip install -r requirements.txt
-python notionsnapshot --help
 
-# example usage (see test.sh)
+# dmeo
+python notionsnapshot --help
 python notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
 ```
-
-<br>
+# kudos
 
 many thanks to:
 
