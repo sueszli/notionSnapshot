@@ -31,7 +31,7 @@ git clone https://github.com/sueszli/notionSnapshot/edit/master/README.md
 cd notionSnapshot
 pip install -r requirements.txt
 
-# dmeo
+# demo
 python notionsnapshot --help
 python notionsnapshot --dark-mode https://sueszli.notion.site/NotionSnapshot-Test-tiny-page-4dfa05657f774b45993542da4a8530c2
 ```
