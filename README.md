@@ -27,7 +27,7 @@ sudo apt --fix-broken install
 rm -rf google-chrome-stable_current_amd64.deb
 
 # clone project
-git clone https://github.com/sueszli/notionSnapshot/edit/master/README.md
+git clone https://github.com/sueszli/notionSnapshot
 cd notionSnapshot
 pip install -r requirements.txt
 
