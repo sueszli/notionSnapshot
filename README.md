@@ -19,7 +19,7 @@
 > for a reliable backup strategy check out: [NotionBackup](https://github.com/sueszli/notionBackup)
 
 ```bash
-# install chrome (in wsl)
+# install chrome (in case you're using windows subsystem for linux)
 sudo apt update && sudo apt upgrade -y
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
