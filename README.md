@@ -14,9 +14,9 @@
 # usage
 
 > [!IMPORTANT]  
-> this project is unmaintained – but pull requests are welcome. a docker script is provided for reproducibility.
+> this project is unmaintained, but functional. but pull requests are welcome. a docker script is provided for reproducibility.
 >
-> for a reliable backup strategy check out: [NotionBackup](https://github.com/sueszli/notionBackup)
+> for a more reliable backup strategy check out: [NotionBackup](https://github.com/sueszli/notionBackup)
 
 ```bash
 # install chrome (in case you're using windows subsystem for linux)
