@@ -343,9 +343,12 @@ class Scraper:
             download_path = FileManager.download_asset(f'{base_url}{link["href"]}')
 
             css_file_path = os.path.join(FileManager.output_dir, download_path)
-            with open(css_file_path, "r+") as f:
+            # Open file with UTF-8 encoding
+            with open(css_file_path, "r", encoding="utf-8") as f:
                 css_content = f.read()
 
+            # Write back with UTF-8 encoding
+            with open(css_file_path, "w", encoding="utf-8") as f:
                 url_pattern = re.compile(r"url\((https?:\/\/www\.notion\.so)?(\/[^)]+)\)")
 
                 def url_replacer(match):
@@ -359,9 +362,6 @@ class Scraper:
 
                 # Replace the URLs in the CSS content
                 modified_css_content = url_pattern.sub(url_replacer, css_content)
-
-                f.seek(0)
-                f.truncate()
                 f.write(modified_css_content)
 
             link["href"] = download_path
